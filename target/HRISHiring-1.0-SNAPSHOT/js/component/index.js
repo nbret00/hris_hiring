@@ -5,6 +5,9 @@
  */
 $(document).ready(function () {
 
+    var login_url = "http://localhost:8080/hris_hiring/webresources/hrisaccount/validate";
+    var home_url = "http://localhost:8080/hris_hiring/home.html";
+    var login_page_url = "http://localhost:8080/hris_hiring/index.html?noaccount";
     //init
     //TODO: 1. should check if the user was authenticated therefore load the home instead
     
@@ -50,9 +53,7 @@ $(document).ready(function () {
         
         $.ajax({
             type: 'POST',
-            //url: 'http://lowcost-env.f6cahdjuip.ap-southeast-1.elasticbeanstalk.com/webresources/com.nino.app.hrishiring.company/',
-            //url: 'http://localhost:8080/HRISHiring/webresources/com.nino.app.hrishiring.hrisaccount/add',
-            url: 'http://localhost:8080/HRISHiring/webresources/hrisaccount/validate',
+            url: login_url,
             contentType: 'application/x-www-form-urlencoded',
             //dataType: 'jsonp',
             data: data,
@@ -61,9 +62,9 @@ $(document).ready(function () {
             success: function (data) {
                 if ("success" == data){
                     console.log("success");
-                    window.location.href = "http://localhost:8080/HRISHiring/home.html";
+                    window.location.href = home_url;
                 }else{
-                    window.location.href = "http://localhost:8080/HRISHiring/index.html?noaccount";
+                    window.location.href = login_page_url;
                     console.log("not authenticated");
                 }
             },
