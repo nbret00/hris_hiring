@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 $(document).ready(function () {
-
+    
     alert("working_person_id" + working_person_id);
+    var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
     var working_person_id = "";
     var cand_name = "";
     var personProfile;
@@ -30,21 +31,6 @@ $(document).ready(function () {
         }
     });
 
-    /*
-     $.ajax({
-     type: 'GET',
-     url: 'http://localhost:8080/hris_hiring/webresources/applicant/removeSession',
-     success: function (data) {
-     //alert("done get" + data)
-     if (data == "success") {
-     //alert("success");
-     } else {
-     window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
-     }
-     }
-     });
-     */
-
     //load the default panel and data
     $("#section1").load("htmlcomponents/quickpage.html", function () {
         alert("Load was performed.");
@@ -55,9 +41,6 @@ $(document).ready(function () {
         //initQuickPage("");
         //$("#quickpage_button").value = 'Add New';
     });
-
-
-
     //nav bars
     $("#canprofile").on("click", function (e) {
         $("#panel").remove();
@@ -80,9 +63,8 @@ $(document).ready(function () {
     });
     $("#contact").on("click", function (e) {
         $("#panel").remove();
-        $("#section1").load("contact.html");
+        $("#section1").load("htmlcomponents/contactInfo.html");
     });
-
     $("#jobqualification").on("click", function (e) {
         $("#panel").remove();
         $("#section1").load("htmlcomponents/jobqualification.html", function () {
@@ -94,8 +76,7 @@ $(document).ready(function () {
 
         });
     });
-
-
+    //search button... key up checking for enter key up only
     $("#searchStr").keyup(function (e) {
 
         e.preventDefault();
@@ -104,9 +85,9 @@ $(document).ready(function () {
             $("#submitSearch").trigger("click");
         }
     });
-
+    //logout
     $("#logout").submit(function (event) {
-        //alert("loging out");
+//alert("loging out");
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8080/hris_hiring/webresources/hrisaccount/logout',
@@ -118,13 +99,13 @@ $(document).ready(function () {
                 }
             }
         });
-    })
-
+    });
+    //checking global variables
     $("#globalvar").click(function (event) {
         console.log("global - name " + cand_name);
         console.log("global - id " + working_person_id);
-    })
-    //get only
+    });
+    //submit of search
     $("#submitSearch").click(function (event) {
         //alert("clicked!");
         event.preventDefault();
@@ -132,10 +113,8 @@ $(document).ready(function () {
         searchStr = $("#searchStr").val();
         cand_name = "";
         working_person_id = "";
-
-
         if (isNaN(searchStr)) {
-            alert("Application ID should be a number.");
+            alert("Rec # should be a number.");
             //$('#Searchresults').pprog.append('..');
             //search for name
         } else {
@@ -143,13 +122,11 @@ $(document).ready(function () {
             $.ajax({
                 type: 'GET',
                 url: 'http://localhost:8080/hris_hiring/webresources/person/' + searchStr,
-                //acontentType: "application/json",
-                //dataType: 'json',
                 success: function (data) {
                     console.log("person:" + data);
-                    personProfile = data;//register to global variable
+                    personProfile = data; //register to global variable
                     if (data == null) {
-                        alert("No record for " + searchStr);
+                        alert("No record found for rec#: " + searchStr);
                     } else {
                         $(data).find("person").each(function () {
                             cand_name = $(this).find("name").text(); // 
@@ -158,13 +135,6 @@ $(document).ready(function () {
                             document.getElementById("activePerson").innerHTML = "<h4>" + working_person_id + " - " + cand_name + "</h4>";
                         });
                     }
-                    /*
-                     for (var i = 0; i < data.length; ++i)
-                     {
-                     $('#Searchresults').append('<br>' + data[i].companyName);
-                     }
-                     */
-                    //alert("Success" + data);
                 },
                 error: function (jqXHR, status) {
                     alert("Status: " + status);
@@ -198,8 +168,7 @@ $(document).ready(function () {
          */
 
     });
-
-    //handlerssssssssss
+    //handlers
     function initQuickPage(id) {
         //if id not set
         alert("initQuickPage");
@@ -222,7 +191,6 @@ $(document).ready(function () {
     }
 //----------------------------------------------------- Person Profile
     function prepPersonProfileForm(personXMLdata) {
-
         $(personXMLdata).find("person").each(function () {
             document.getElementById("name").value = ifnull($(this).find("name").text());
             document.getElementById("lastName").value = ifnull($(this).find("lastName").text());
@@ -233,26 +201,44 @@ $(document).ready(function () {
         })
     }
     ;
-
     function personProfileSave(profile) {
         $("#personform").submit(function (event) {
             event.preventDefault();
             console.log("clicked " + $("#personProfileBut").text());
-            if ($("#personProfileBut").text() == "Save"){
+            
+            if ($("#personProfileBut").text() == "Save") {
+                
                 var data = {
                     Name: $('#Name').val(),
                     FirstName: $('#FirstName').val(),
                     LastName: $('#LastName').val(),
-                    DateOfBirth: $('#DateOfBirth').val(),
-                    Gender: $('#Gender').val(),
-                }                
-                
+                    DateOfBirth: $('#DOB').val(),
+                    Gender: $('#Gender').val()
+                };
+                console.log("dob "+$('#Gender').val());
+               /*
+                                var Person = '<person><name>'+$("#Name").val()+'</name><firstName>'+$('#FirstName').val()+'</firstName><lastName>'+$('#LastName').val()+'</lastName><dateOfBirth>'+$('#DateOfBirth').val()+'</dateOfBirth><gender>'+$('#Gender').val()+'</gender></person>';
+                  $dd = $( Person ),
+                  //$title = $xml.find( "title" );        
+                  */
+
+                $.ajax({    
+                    type: 'POST',
+                    url: create_personalprofile_url,
+                    contentType: 'application/x-www-form-urlencoded',
+                    //contentType: 'application/xml',
+                    //dataType: 'jsonp',
+                    data: data,
+                    //crossDomain: true,
+                    //"Access-Control-Allow-Origin: " : "*",
+                    success: function (data) {
+                        alert("created!!");
+                    }
+                });
             }
-            
         });
     }
     ;
-
 //----------------------------------------------------- Person Profile END
 //-------------------------start utils
 

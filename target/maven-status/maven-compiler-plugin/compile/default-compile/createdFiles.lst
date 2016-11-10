@@ -25,6 +25,7 @@ com\nino\app\hrishiring\Sourcing_.class
 com\nino\app\hrishiring\Contact_.class
 com\nino\app\hrishiring\service\PersonFacadeREST.class
 com\nino\app\hrishiring\HrisAccount_.class
+com\nino\app\hrishiring\custom\service\PersonRestService.class
 com\nino\app\hrishiring\service\JobQualificationFacadeREST.class
 com\nino\app\hrishiring\Industries.class
 com\nino\app\hrishiring\service\PayrateFacadeREST.class

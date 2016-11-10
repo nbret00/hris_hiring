@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.nino.app.hrishiring.custom.service.AccountRESTService.class);
         resources.add(com.nino.app.hrishiring.custom.service.ApplicantRestservice.class);
+        resources.add(com.nino.app.hrishiring.custom.service.PersonRestService.class);
         resources.add(com.nino.app.hrishiring.filter.NewJaxRsFilter.class);
         resources.add(com.nino.app.hrishiring.service.CompanyFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.ContactFacadeREST.class);

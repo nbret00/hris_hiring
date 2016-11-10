@@ -37,7 +37,7 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
 
     @POST
     @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
     public void create(Person entity) {
         super.create(entity);
     }
