@@ -83,6 +83,7 @@ public class JobQualificationFacadeREST extends AbstractFacade<JobQualification>
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public JobQualification find(@PathParam("id") PathSegment id) {
+        System.out.print("find() ");
         com.nino.app.hrishiring.JobQualificationPK key = getPrimaryKey(id);
         return super.find(key);
     }
