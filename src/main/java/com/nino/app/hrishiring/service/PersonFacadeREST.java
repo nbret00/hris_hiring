@@ -6,6 +6,9 @@
 package com.nino.app.hrishiring.service;
 
 import com.nino.app.hrishiring.Person;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -38,17 +41,20 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-    public void create(Person entity) {
+    public void create(Person entity) {     
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Person entity) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public void edit(@PathParam("id") int idPerson, Person entity) {
+        System.out.println(idPerson + "------ edit --------" + entity.getFirstName());
+        entity.setIdPerson(idPerson);
+        entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
+        entity.setLastUpdatePersonID(idPerson);
         super.edit(entity);
     }
-    
 
     @DELETE
     @Path("{id}")
@@ -69,9 +75,8 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
     public List<Person> findAll() {
         return super.findAll();
     }
-    
-    //public List<Person> seachByName()
 
+    //public List<Person> seachByName()
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -90,5 +95,5 @@ public class PersonFacadeREST extends AbstractFacade<Person> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

@@ -27,7 +27,7 @@ import javax.ws.rs.core.PathSegment;
  * @author nbret00
  */
 @Stateless
-@Path("com.nino.app.hrishiring.jobqualification")
+@Path("jobqualification")
 public class JobQualificationFacadeREST extends AbstractFacade<JobQualification> {
 
     @PersistenceContext(unitName = "com.nino.app_HRISHiring_war_1.0-SNAPSHOTPU")

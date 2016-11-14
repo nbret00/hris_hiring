@@ -16,6 +16,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -34,35 +35,23 @@ public class PersonRestService {
 
     @POST
     @Path("save")
-    @Consumes("application/x-www-form-urlencoded")
-    public Response save(
-            @FormParam("Name") String name,
-            @FormParam("FirstName") String fname,
-            @FormParam("LastName") String lname,
-            @FormParam("DateOfBirth") String dob,
-            @FormParam("Gender") String gender
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response save(Person person
     ) {
-        System.out.println("createNew " + name + "-" + fname + "-" + lname + "-" + dob + "-" + gender);
-
-        Person newPerson = new Person();
-        newPerson.setIdPerson(2);
-        newPerson.setFirstName(fname);
-        newPerson.setLastName(lname);
-        newPerson.setName(name);
-        newPerson.setGender(gender);
-        SimpleDateFormat dt = new SimpleDateFormat("MM/DD/YYYY");
-        //SimpleDateFormat dt = new SimpleDateFormat("MM/DD/YYYY");
         try {
-        newPerson.setLastUpdateDate(new Timestamp(new Date().getTime()));
-        newPerson.setLastUpdatePersonID(1);
-            newPerson.setDateOfBirth(dt.parse(dob));
-            em.persist(newPerson);
+            System.out.println("createNew " + person.getFirstName());
+            person.setLastUpdateDate(new Timestamp(new Date().getTime()));
+            person.setLastUpdatePersonID(1);
+            //person.setDateOfBirth(dt.parse);
+            em.persist(person);
+            em.flush();
+            System.out.println(person.getIdPerson());
+            return Response.ok(person).build();
         } catch (Exception e) {
             e.printStackTrace();
+            return Response.ok(e.getMessage()).build();
         }
 
-        
-        return Response.ok("notok").build();
     }
 
     //@Path("")

@@ -4,13 +4,16 @@
  * and open the template in the editor.
  */
 $(document).ready(function () {
-    
-    alert("working_person_id" + working_person_id);
-    var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
+
+    //alert("working_person_id" + working_person_id);
     var working_person_id = "";
+    var working_panel = "quickpagebutton";//initially loaded
     var cand_name = "";
     var personProfile;
-    var jobqualification;
+    var jobQualification;
+
+    $("#searchStr").val("");
+
     //alert("loaded...")
     //inits
     //1. check authentication
@@ -33,7 +36,7 @@ $(document).ready(function () {
 
     //load the default panel and data
     $("#section1").load("htmlcomponents/quickpage.html", function () {
-        alert("Load was performed.");
+        //alert("Load was performed.");
         //console.log($("#quickpagebutton").inner);
         document.getElementById("quickpagebutton").innerHTML = "tesstt";
         console.log(document.getElementById("quickpagebutton").innerHTML);
@@ -41,20 +44,7 @@ $(document).ready(function () {
         //initQuickPage("");
         //$("#quickpage_button").value = 'Add New';
     });
-    //nav bars
-    $("#canprofile").on("click", function (e) {
-        $("#panel").remove();
-        $("#section1").load("htmlcomponents/personalprofile.html", function () {
-            if (personProfile == null) {
-                console.log("personProfile null");
-                document.getElementById("personProfileBut").innerHTML = "Save";
-                personProfileSave(personProfile);
-            } else {
-                console.log("PersonProfile not null " + personProfile);
-                prepPersonProfileForm(personProfile);
-            }
-        });
-    });
+
     $("#quickpage").on("click", function (e) {
         $("#panel").remove();
         $("#section1").load("htmlcomponents/quickpage.html", function () {
@@ -65,23 +55,13 @@ $(document).ready(function () {
         $("#panel").remove();
         $("#section1").load("htmlcomponents/contactInfo.html");
     });
-    $("#jobqualification").on("click", function (e) {
-        $("#panel").remove();
-        $("#section1").load("htmlcomponents/jobqualification.html", function () {
-            if (jobqualification == null) {
 
-            } else {
-
-            }
-
-        });
-    });
     //search button... key up checking for enter key up only
     $("#searchStr").keyup(function (e) {
 
         e.preventDefault();
         if (e.which == 13) {
-            alert("keyup enter");
+            //alert("keyup enter");
             $("#submitSearch").trigger("click");
         }
     });
@@ -109,64 +89,19 @@ $(document).ready(function () {
     $("#submitSearch").click(function (event) {
         //alert("clicked!");
         event.preventDefault();
-        document.getElementById("activePerson").innerHTML = "";
+        document.getElementById("activePerson").innerHTML = "Searching...";
         searchStr = $("#searchStr").val();
+        $("#searchStr").val("");//clear the search field
         cand_name = "";
         working_person_id = "";
         if (isNaN(searchStr)) {
             alert("Rec # should be a number.");
-            //$('#Searchresults').pprog.append('..');
-            //search for name
         } else {
-            alert("number!" + searchStr);
-            $.ajax({
-                type: 'GET',
-                url: 'http://localhost:8080/hris_hiring/webresources/person/' + searchStr,
-                success: function (data) {
-                    console.log("person:" + data);
-                    personProfile = data; //register to global variable
-                    if (data == null) {
-                        alert("No record found for rec#: " + searchStr);
-                    } else {
-                        $(data).find("person").each(function () {
-                            cand_name = $(this).find("name").text(); // 
-                            working_person_id = $(this).find("idPerson").text();
-                            console.log("person: " + cand_name);
-                            document.getElementById("activePerson").innerHTML = "<h4>" + working_person_id + " - " + cand_name + "</h4>";
-                        });
-                    }
-                },
-                error: function (jqXHR, status) {
-                    alert("Status: " + status);
-                    alert("Response Text? " + jqXHR.responseText);
-                }
-            });
-            document.getElementById("activePerson").innerHTML = "<h4>" + working_person_id + " - " + cand_name + "</h4>";
+            personProfileGet(searchStr);
+            prepActivePerson(personProfile);
+            prepPersonProfileForm(personProfile);
+            showPersonalProfileForm();
         }
-
-
-        /*
-         $.ajax({
-         type: 'GET',
-         url: 'http://lowcost-env.f6cahdjuip.ap-southeast-1.elasticbeanstalk.com/webresources/com.nino.app.hrishiring.company/0/1',
-         contentType: "application/json",
-         dataType: 'json',
-         
-         */
-        /*
-         headers: {
-         
-         Access-Control-Allow-Origin: *,
-         "Accept: " : "application/json"
-         "Access-Control-Allow-Methods: ": "GET",
-         "Access-Control-Allow-Origin: " : "*"
-         //"Access-Control-Allow-Headers: ": "Authorization",
-         },
-         */
-        /*
-         
-         */
-
     });
     //handlers
     function initQuickPage(id) {
@@ -178,7 +113,7 @@ $(document).ready(function () {
             $("#quickpage_button").value = 'Add New';
         } else {
             alert("id found");
-            //load the data from service, set buttom to update
+            //load the data from service, set buttom to update  
             $("#quickpage_button").value = 'Update';
         }
     }
@@ -190,60 +125,172 @@ $(document).ready(function () {
 
     }
 //----------------------------------------------------- Person Profile
-    function prepPersonProfileForm(personXMLdata) {
-        $(personXMLdata).find("person").each(function () {
-            document.getElementById("name").value = ifnull($(this).find("name").text());
-            document.getElementById("lastName").value = ifnull($(this).find("lastName").text());
-            document.getElementById("firstName").value = ifnull($(this).find("firstName").text());
-            document.getElementById("dateOfBirth").value = ifnull(TimeStampToDate($(this).find("dateOfBirth").text()));
-            document.getElementById("gender").value = ifnull($(this).find("gender").text());
-            document.getElementById("personProfileBut").innerHTML = "Update";
-        })
+    var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
+    var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
+    var get_personProfile_url = "http://localhost:8080/hris_hiring/webresources/person/";
+
+    //nav bars
+    $("#canprofile").on("click", function (e) {
+        showPersonalProfileForm();
+    });
+
+    function showPersonalProfileForm() {
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/personalprofile.html", function () {
+            if (personProfile == null) {
+                console.log("personProfile null");
+                document.getElementById("personProfileBut").innerHTML = "Save";
+                personProfileSaveUpdateHandler();
+            } else {
+                document.getElementById("personProfileBut").innerHTML = "Update";
+                console.log("PersonProfile not null " + personProfile);
+                prepPersonProfileForm(personProfile);
+                personProfileSaveUpdateHandler();
+            }
+        });
     }
     ;
-    function personProfileSave(profile) {
+
+    function prepPersonProfileForm(personXMLdata) {
+        console.log("prepPersonProfileform--->>>");
+
+        $(personXMLdata).find("person").each(function () {
+            document.getElementById("Name").value = ifnull($(this).find("name").text());
+            document.getElementById("LastName").value = ifnull($(this).find("lastName").text());
+            document.getElementById("FirstName").value = ifnull($(this).find("firstName").text());
+            document.getElementById("DOB").value = ifnull(TimeStampToDate($(this).find("dateOfBirth").text()));
+            document.getElementById("Gender").value = ifnull($(this).find("gender").text());
+            document.getElementById("personProfileBut").innerHTML = "Update";
+        })
+        console.log("<<---prepPersonProfileForm");
+    }
+    ;
+    function prepActivePerson(data) {
+        cand_name = $(data).find("name").text();
+        working_person_id = $(data).find("idPerson").text();
+        personProfile = data;
+        console.log("Active person: " + cand_name);
+        document.getElementById("activePerson").innerHTML = "<h5>Active record: #" + working_person_id + " - " + cand_name + "</h5><a href='home.html'><span class='badge'>Create New Record</span></a>";
+    }
+    ;
+    function personProfileGet(id) {
+        $.ajax({
+            type: 'GET',
+            url: get_personProfile_url + id,
+            success: function (data) {
+                console.log("person:" + data);
+                if (data == null) {
+                    alert("No record found for rec#: " + searchStr);
+                } else {
+                    working_person_id = $(data).find("idPerson").text();
+                    personProfile = data; //register to global variable
+                }
+            },
+            error: function (jqXHR, status) {
+                alert("Status: " + status);
+                alert("Response Text? " + jqXHR.responseText);
+            }
+        });
+    }
+    ;
+    function personProfileSaveUpdateHandler() {
         $("#personform").submit(function (event) {
             event.preventDefault();
             console.log("clicked " + $("#personProfileBut").text());
-            
-            if ($("#personProfileBut").text() == "Save") {
-                
-                var data = {
-                    Name: $('#Name').val(),
-                    FirstName: $('#FirstName').val(),
-                    LastName: $('#LastName').val(),
-                    DateOfBirth: $('#DOB').val(),
-                    Gender: $('#Gender').val()
-                };
-                console.log("dob "+$('#Gender').val());
-               /*
-                                var Person = '<person><name>'+$("#Name").val()+'</name><firstName>'+$('#FirstName').val()+'</firstName><lastName>'+$('#LastName').val()+'</lastName><dateOfBirth>'+$('#DateOfBirth').val()+'</dateOfBirth><gender>'+$('#Gender').val()+'</gender></person>';
-                  $dd = $( Person ),
-                  //$title = $xml.find( "title" );        
-                  */
+            var Person = JSON.stringify({
+                name: $('#Name').val(),
+                firstName: $('#FirstName').val(),
+                lastName: $('#LastName').val(),
+                dateOfBirth: new Date($('#DOB').val()),
+                gender: $('#Gender').val()
+            });
 
-                $.ajax({    
+            console.log("This is the text of the button: " + $("#personProfileBut").text());
+            if ($("#personProfileBut").text() === "Save") {
+                console.log("saving new record person profile.");
+                $.ajax({
                     type: 'POST',
                     url: create_personalprofile_url,
-                    contentType: 'application/x-www-form-urlencoded',
-                    //contentType: 'application/xml',
-                    //dataType: 'jsonp',
-                    data: data,
-                    //crossDomain: true,
-                    //"Access-Control-Allow-Origin: " : "*",
+                    contentType: 'application/json',
+                    data: Person,
                     success: function (data) {
-                        alert("created!!");
+                        personProfile = data;
+                        alert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
+                        prepActivePerson(data)
+                        prepPersonProfileForm(data);
+                    }
+                });
+            }
+            if ($("#personProfileBut").text() === "Update") {
+                console.log("updating person profile # " + working_person_id);
+                $.ajax({
+                    type: 'PUT',
+                    url: update_personalprofile_url + working_person_id,
+                    contentType: 'application/json',
+                    data: Person,
+                    success: function (data) {
+                        alert("UPDATING PERSON PROFILE!!");
+                        personProfile = data;
+                        //prepPersonProfileForm(on);
+                        //return data;
+                    },
+                    error: function () {
+                        alert("Application Error!");
                     }
                 });
             }
         });
     }
     ;
-//----------------------------------------------------- Person Profile END
+//----------------------------------------------------- Job Qualification
+    var get_personProfile_url = "http://localhost:8080/hris_hiring/webresources/person/";
+    //var _url = "http://localhost:8080/hris_hiring/webresources/person/";
+
+    $("#jobqualification").on("click", function (e) {
+        showQualificationForm();
+    });
+
+    function showQualificationForm() {
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/jobqualification.html", function () {
+            if (jobQualification == null) {
+                console.log("personProfile null");
+                document.getElementById("jobQualificationBut").innerHTML = "Save";
+                //personProfileSaveUpdateHandler();
+            } else {
+                document.getElementById("jobQualificationBut").innerHTML = "Update";
+                console.log("PersonProfile not null " + personProfile);
+                //prepPersonProfileForm(personProfile);
+                //personProfileSaveUpdateHandler();
+            }
+        });
+    }
+    ;
+    function jobQualificationGet(id) {
+        $.ajax({
+            type: 'GET',
+            url: get_personProfile_url + id,
+            success: function (data) {
+                console.log("person:" + data);
+                if (data == null) {
+                    alert("No record found for rec#: " + searchStr);
+                } else {
+                    working_person_id = $(data).find("idPerson").text();
+                    personProfile = data; //register to global variable
+                }
+            },
+            error: function (jqXHR, status) {
+                alert("Status: " + status);
+                alert("Response Text? " + jqXHR.responseText);
+            }
+        });
+    }
+    ;
+
 //-------------------------start utils
 
     function ifnull(type) {
-        if (type == null) {
+        if (type === null) {
             return "";
         } else {
             return type;
@@ -254,7 +301,7 @@ $(document).ready(function () {
     function TimeStampToDate(xmlDate)
     {
         var dt = new Date(xmlDate);
-        return dt.getMonth() + "-" + dt.getDay() + "-" + dt.getFullYear();
+        return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear();
     }
 
 
