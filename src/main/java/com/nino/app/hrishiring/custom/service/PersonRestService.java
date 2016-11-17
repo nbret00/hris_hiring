@@ -63,7 +63,7 @@ public class PersonRestService {
             JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByPersonidPerson")
                     .setParameter("personidPerson", id)
                     .getSingleResult();
-            System.out.println("Job qualification #:" + jq.getJobQualificationPK().getIdJobQualification());
+            System.out.println("Job qualification #:" + jq.getIdJobQualification());
             return Response.ok(jq).build();
         } catch (Exception e) {
             e.printStackTrace();

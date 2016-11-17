@@ -1,9 +1,7 @@
 com\nino\app\hrishiring\NsbActivity.class
 com\nino\app\hrishiring\ContactPK_.class
-com\nino\app\hrishiring\JobQualificationPK.class
 com\nino\app\hrishiring\NsbActivity_.class
 com\nino\app\hrishiring\filter\NewJaxRsFilter.class
-com\nino\app\hrishiring\JobQualificationPK_.class
 com\nino\app\hrishiring\Payrate_.class
 com\nino\app\hrishiring\service\ContactFacadeREST.class
 com\nino\app\hrishiring\service\IndustriesFacadeREST.class
@@ -34,6 +32,7 @@ com\nino\app\hrishiring\Endorsement_.class
 com\nino\app\hrishiring\NsbActivitySuccessCriteria_.class
 com\nino\app\hrishiring\Company_.class
 com\nino\app\hrishiring\JobQualification_.class
+com\nino\app\hrishiring\custom\service\JobQualificationRestService.class
 com\nino\app\hrishiring\custom\service\AccountRESTService.class
 com\nino\app\hrishiring\service\ApplicationConfig.class
 com\nino\app\hrishiring\service\EndorsementFacadeREST.class

@@ -3,7 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
+
 $(document).ready(function () {
+
 
     //alert("working_person_id" + working_person_id);
     var working_person_id = "";
@@ -57,15 +61,15 @@ $(document).ready(function () {
 
     //search button... key up checking for enter key up only
     /*
-    $("#searchStr").keyup(function (e) {
-
-        e.preventDefault();
-        if (e.which == 13) {
-            //alert("keyup enter");
-            $("#submitSearch").trigger("click");
-        }
-    });
-    */
+     $("#searchStr").keyup(function (e) {
+     
+     e.preventDefault();
+     if (e.which == 13) {
+     //alert("keyup enter");
+     $("#submitSearch").trigger("click");
+     }
+     });
+     */
     //logout
     $("#logout").submit(function (event) {
 //alert("loging out");
@@ -91,17 +95,19 @@ $(document).ready(function () {
         //alert("clicked!");
         event.preventDefault();
         searchStr = $("#searchStr").val();
-        if (searchStr != null || searchStr != "") {
+        alert("search " + searchStr);
+        //if (searchStr != null || searchStr === underfined) {alert("me");}
+        if (searchStr !== undefined || searchStr.trim() != "") {
             document.getElementById("activePerson").innerHTML = "Searching...";
             $("#searchStr").val("");//clear the search field
-            working_person_id = null;
-            personProfile = null;
+            working_person_id;
+            personProfile;
             if (isNaN(searchStr)) {
                 alert("Rec # should be a number.");
             } else {
                 getPersonalProfile(searchStr, function () {
                     console.log("calledbackeeddd");
-                    setTimeout(alert("Searching record # "+searchStr), 10000);
+                    setTimeout(alert("Searching record # " + searchStr), 10000);
                     showPersonalProfileForm();
                 });
             }
@@ -145,6 +151,8 @@ $(document).ready(function () {
     function showPersonalProfileForm() {
         $("#panel").remove();
         $("#section1").load("htmlcomponents/personalprofile.html", function () {
+            $('.datepicker').datepicker({
+                startDate: "09/05/2004"});
             if (personProfile == null) {
                 console.log("personPrfile is null");
                 document.getElementById("personProfileBut").innerHTML = "Save";
@@ -202,7 +210,8 @@ $(document).ready(function () {
         });
         if (callback && typeof (callback) === "function") {
             callback();
-        };
+        }
+        ;
         console.log("<------");
     }
     ;
@@ -256,42 +265,72 @@ $(document).ready(function () {
     ;
 //----------------------------------------------------- Job Qualification
     var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/personProfile/jobqualification/";
-    //var _url = "http://localhost:8080/hris_hiring/webresources/person/";
+    var save_jobqualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/save/";
 
     $("#jobqualification").on("click", function (e) {
-        showQualificationForm();
+        if (working_person_id == null || working_person_id == "") {
+            alert("Search for a record first or create new profile.");
+        } else {
+            getJobQualificationByPersonID(working_person_id, function () {
+                showQualificationForm();
+            });
+        }
+
     });
 
+
+
     function showQualificationForm() {
-        getJobQualificationByPersonID(working_person_id);//get the value first
+        console.log("after callback experiment");
         $("#panel").remove();
         $("#section1").load("htmlcomponents/jobqualification.html", function () {
             if (jobQualification == null) {
                 console.log("Job Qualification null");
                 document.getElementById("jobQualificationBut").innerHTML = "Save";
-                //personProfileSaveUpdateHandler();
+                jobQualificationSaveUpdateHandler(function () {
+                    prepJobQualificationForm(jobQualification);
+                });
             } else {
-                document.getElementById("jobQualificationBut").innerHTML = "Update";
                 console.log("Lookup for existing job qualification " + working_person_id);
-                //prepPersonProfileForm(personProfile);
+                prepJobQualificationForm(jobQualification);
                 //personProfileSaveUpdateHandler();
             }
         });
+
     }
     ;
-    function getJobQualificationByPersonID(id) {
+
+    function prepJobQualificationForm(jobQualificationXMLdata) {
+        console.log("prepJobQualificationForm--->>>");
+        $(jobQualificationXMLdata).find("jobQualification").each(function () {
+            document.getElementById("jobTitle").value = ifnull($(this).find("jobTitle").text());
+            document.getElementById("joblevelmo").value = ifnull($(this).find("joblevelmo").text());
+            document.getElementById("qualificationSummary").value = ifnull($(this).find("qualificationSummary").text());
+            document.getElementById("skillsCategorymo").value = ifnull($(this).find("skillsCategorymo").text());
+        })
+        document.getElementById("jobQualificationBut").innerHTML = "Update";
+        console.log("<<---prepJobQualificationForm");
+    }
+    ;
+
+    function getJobQualificationByPersonID(id, callback) {
         $.ajax({
             type: 'GET',
             url: get_jobQualification_url + id,
             success: function (data) {
                 console.log("job qualification get result:" + data);
-                if (data == null) {
+                if (data == "noresult") {
                     alert("No record found for rec#: " + searchStr);
+                    jobQualification = null;
                 } else {
-                    jobQualification = data;
-                    //working_person_id = $(data).find("idPerson").text();
-                    //personProfile = data; //register to global variable
+                    jobQualification = data;//global
                 }
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    console.log("Calling the callback inside the function...")
+                    callback();
+                }
+                ;
             },
             error: function (jqXHR, status) {
                 alert("Application Error Found: " + status);
@@ -300,6 +339,83 @@ $(document).ready(function () {
     }
     ;
 
+    function jobQualificationSaveUpdateHandler(callback) {
+        $("#jobqualificationform").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked jobQualificationSaveUpdateHandler :" + $("#jobQualificationBut").text());
+            var JobQualification = JSON.stringify({
+                //jobQualificationPK: $('#jobQualificationPK').val(),
+                jobTitle: $('#jobTitle').val(),
+                skillsCategorymo: $('#skillsCategorymo').val(),
+                joblevelmo: new Date($('#joblevelmo').val()),
+                qualificationSummary: $('#qualificationSummary').val(),
+                yrsOfExperience: $('#yrsOfExperience').val(),
+                currentSalary: $('#currentSalary').val(),
+                targetSalary: $('#targetSalary').val(),
+                targetPosition: $('#targetPosition').val(),
+                priority: $('#priority').val(),
+                skills: $('#skills').val(),
+                searchText: $('#searchText').val(),
+                industriesIdindustries: {
+                    idindustries: '1'
+                }
+                //industryLevelIdindustryLevel: $('#industryLevelIdindustryLevel').val(),
+                //payrateIdpayrate: $('#payrateIdpayrate').val()
+            });
+
+            console.log("This is the text of the button: " + $("#jobQualificationBut").text());
+            if ($("#jobQualificationBut").text() === "Save") {
+                console.log("saving new record person profile.");
+                $.ajax({
+                    type: 'POST',
+                    url: save_jobqualification_url + working_person_id,
+                    contentType: 'application/json',
+                    data: JobQualification,
+                    success: function (data) {
+                        jobQualification = data;
+                        /*
+                         if (callback && typeof (callback) === "function") {
+                         //do something here from your call back function
+                         console.log("Call back SAVE job qualification.");
+                         callback();
+                         }
+                         ;
+                         */
+                        alert("Job Qualification Successfully Created. - " + $(data).find("jobTitle").text());
+                        prepJobQualificationForm(data);
+
+                    }
+                });
+            }
+            if ($("#jobQualificationBut").text() === "Update") {
+                console.log("updating person profile # " + working_person_id);
+                $.ajax({
+                    type: 'PUT',
+                    url: update_personalprofile_url + working_person_id,
+                    contentType: 'application/json',
+                    data: JobQualification,
+                    success: function (data) {
+                        jobQualification = data;
+                        if (callback && typeof (callback) === "function") {
+                            //do something here from your call back function
+                            console.log("call back UPDATE job qualification");
+                            callback();
+                        }
+                        ;
+                        /*
+                         alert("Personal Profile Successfully Updated");
+                         getPersonalProfile(working_person_id);
+                         prepPersonProfileForm(data);
+                         */
+                    },
+                    error: function () {
+                        alert("Application Error!");
+                    }
+                });
+            }
+        });
+    }
+    ;
 //-------------------------start utils
 
     function ifnull(type) {

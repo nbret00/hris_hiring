@@ -24,30 +24,30 @@ import javax.ws.rs.core.Response;
  *
  * @author nbret00
  */
-@Path("personProfile")
+@Path("jobqualification")
 @Stateless
-public class PersonRestService {
+public class JobQualificationRestService {
 
     @PersistenceContext(unitName = "com.nino.app_HRISHiring_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public PersonRestService() {
+    public JobQualificationRestService() {
     }
 
     @POST
-    @Path("save")
+    @Path("save/{personid}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response save(Person person
-    ) {
+    public Response save(JobQualification jobqualification,
+            @PathParam("personid") int personid)
+    {
         try {
-            System.out.println("createNew " + person.getFirstName());
-            person.setLastUpdateDate(new Timestamp(new Date().getTime()));
-            person.setLastUpdatePersonID(1);
-            //person.setDateOfBirth(dt.parse);
-            em.persist(person);
+            System.out.println("createNew " + jobqualification.getJobTitle());
+            Person p = em.find(Person.class, personid);
+            jobqualification.setPersonidPerson(p);
+            em.persist(jobqualification);
             em.flush();
-            System.out.println(person.getIdPerson());
-            return Response.ok(person).build();
+            System.out.println("Create new job qualification with ID: "+jobqualification.getIdJobQualification());
+            return Response.ok(jobqualification).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok(e.getMessage()).build();
@@ -63,7 +63,7 @@ public class PersonRestService {
             JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByPersonidPerson")
                     .setParameter("personidPerson", id)
                     .getSingleResult();
-            System.out.println("Job qualification #:" + jq.getJobQualificationPK().getIdJobQualification());
+            System.out.println("Job qualification #:" + jq.getIdJobQualification());
             return Response.ok(jq).build();
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\AbstractFacad
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobQualification.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\CompanyFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivitySuccessCriteriaFacadeREST.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\JobQualificationRestService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Sourcing.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivity.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\filter\NewJaxRsFilter.java
@@ -20,7 +21,6 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivityFa
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\SourcingFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Company.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\IndustryLevel.java
-C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobQualificationPK.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\data\Credential.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\ContactFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\PayrateFacadeREST.java
