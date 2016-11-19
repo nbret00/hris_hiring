@@ -62,23 +62,23 @@ public class Endorsement implements Serializable {
     @Column(name = "HRInterviewDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date hRInterviewDate;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "HRInterviewResult")
     private String hRInterviewResult;
-    @Size(max = 45)
     @Column(name = "FinalInterviewDate")
-    private String finalInterviewDate;
-    @Size(max = 45)
+    @Temporal(TemporalType.DATE)
+    private Date finalInterviewDate;
+    @Size(max = 250)
     @Column(name = "FinalinterviewResult")
     private String finalinterviewResult;
-    @Size(max = 45)
     @Column(name = "JobOfferDate")
-    private String jobOfferDate;
+    @Temporal(TemporalType.DATE)
+    private Date jobOfferDate;
     @Size(max = 45)
     @Column(name = "JobOfferStatus")
     private String jobOfferStatus;
     @Column(name = "Startdate")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date startdate;
     @JoinColumn(name = "company_idclient", referencedColumnName = "idclient")
     @ManyToOne(optional = false)
@@ -142,11 +142,11 @@ public class Endorsement implements Serializable {
         this.hRInterviewResult = hRInterviewResult;
     }
 
-    public String getFinalInterviewDate() {
+    public Date getFinalInterviewDate() {
         return finalInterviewDate;
     }
 
-    public void setFinalInterviewDate(String finalInterviewDate) {
+    public void setFinalInterviewDate(Date finalInterviewDate) {
         this.finalInterviewDate = finalInterviewDate;
     }
 
@@ -158,11 +158,11 @@ public class Endorsement implements Serializable {
         this.finalinterviewResult = finalinterviewResult;
     }
 
-    public String getJobOfferDate() {
+    public Date getJobOfferDate() {
         return jobOfferDate;
     }
 
-    public void setJobOfferDate(String jobOfferDate) {
+    public void setJobOfferDate(Date jobOfferDate) {
         this.jobOfferDate = jobOfferDate;
     }
 

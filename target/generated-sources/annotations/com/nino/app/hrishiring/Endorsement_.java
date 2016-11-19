@@ -7,15 +7,15 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-17T21:15:22")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-19T12:51:59")
 @StaticMetamodel(Endorsement.class)
 public class Endorsement_ { 
 
     public static volatile SingularAttribute<Endorsement, String> jobOfferStatus;
     public static volatile SingularAttribute<Endorsement, Person> personidPerson;
     public static volatile SingularAttribute<Endorsement, Date> endorsedDate;
-    public static volatile SingularAttribute<Endorsement, String> finalInterviewDate;
-    public static volatile SingularAttribute<Endorsement, String> jobOfferDate;
+    public static volatile SingularAttribute<Endorsement, Date> finalInterviewDate;
+    public static volatile SingularAttribute<Endorsement, Date> jobOfferDate;
     public static volatile SingularAttribute<Endorsement, Integer> priority;
     public static volatile SingularAttribute<Endorsement, Date> startdate;
     public static volatile SingularAttribute<Endorsement, String> finalinterviewResult;

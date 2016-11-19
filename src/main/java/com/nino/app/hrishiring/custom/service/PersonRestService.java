@@ -55,21 +55,4 @@ public class PersonRestService {
 
     }
 
-    @GET
-    @Path("jobqualification/{id}")
-    public Response getJobQualification(@PathParam("id") int id) {
-        try {
-            System.out.println("Job qualification search by person id");
-            JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByPersonidPerson")
-                    .setParameter("personidPerson", id)
-                    .getSingleResult();
-            System.out.println("Job qualification #:" + jq.getIdJobQualification());
-            return Response.ok(jq).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok("noresult").build();
-        }
-    }
-
-    //@Path("")
 }

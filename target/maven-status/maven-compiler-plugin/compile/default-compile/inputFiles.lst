@@ -6,14 +6,13 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\CompanyFacade
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivitySuccessCriteriaFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\JobQualificationRestService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Sourcing.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\ContactRestService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivity.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\filter\NewJaxRsFilter.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Payrate.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\ApplicationConfig.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\PersonFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\HrisAccountFacadeREST.java
-C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\JobFacadeREST.java
-C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\ContactPK.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivitySuccessCriteria.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\ApplicantRestservice.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\AccountRESTService.java
@@ -22,7 +21,6 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\SourcingFacad
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Company.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\IndustryLevel.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\data\Credential.java
-C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\ContactFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\PayrateFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Contact.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\HrisAccount.java
@@ -33,4 +31,3 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Person.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\IndustriesFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Industries.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Job.java
-C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobPK.java

@@ -5,31 +5,31 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="name" class="col-sm-4 control-label input-sm">Job Title</label>
+                        <label for="jobTitle" class="col-sm-4 control-label input-sm">Job Title</label>
                         <div class="col-sm-8">
                             <input required type="text" class="form-control input-sm" id="jobTitle" placeholder="Job Title">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="fname" class="col-sm-4 control-label input-sm" >Years of Exp.</label>
+                        <label for="yrsOfExperience" class="col-sm-4 control-label input-sm" >Years of Exp.</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control input-sm" id="yrsOfExperience" placeholder="Years of Exp.">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lname" class="col-sm-4 control-label input-sm" >Current Salary</label>
+                        <label for="currentSalary" class="col-sm-4 control-label input-sm" >Current Salary</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control input-sm" id="currentSalary" placeholder="Current Salary">
                         </div>
                     </div>     
                     <div class="form-group">
-                        <label for="lname" class="col-sm-4 control-label input-sm" >Target Salary</label>
+                        <label for="targetSalary" class="col-sm-4 control-label input-sm" >Target Salary</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control input-sm" id="targetSalary" placeholder="Current Salary">
                         </div>
                     </div>   
                     <div class="form-group">
-                        <label for="lname" class="col-sm-4 control-label input-sm" >Target Position</label>
+                        <label for="targetPosition" class="col-sm-4 control-label input-sm" >Target Position</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control input-sm" id="targetPosition" placeholder="Current Salary">
                         </div>
@@ -39,7 +39,7 @@
                 <div class="col-md-6">
 
                     <div class="form-group">
-                        <label for="tel" class="col-sm-4 control-label input-sm">Skills Category</label>
+                        <label for="skillsCategorymo" class="col-sm-4 control-label input-sm">Skills Category</label>
                         <div class="col-sm-8">
                             <input type="date" class="form-control input-sm" id="skillsCategorymo">
                         </div>
@@ -59,24 +59,40 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label input-sm">Industry</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control input-sm" id="industriesIdindustries">
+                            <select class="control-label input-sm" id="industriesIdindustries">
+                                <option value=""></option>
+                                <option value="1">IT - Software</option>
+                                <option value="2">IT - Infrastructure</option>
+                                <option value="3">IT - Delivery Services</option>
+                            </select>
+                            <!-- <input type="text" class="form-control input-sm" id="industriesIdindustries"> -->
                         </div>
                     </div>  
                     <div class="form-group">
-                        <label class="col-sm-4 control-label input-sm">Industry Level</label>
+                        <label class="col-sm-4 control-label input-sm">Level</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control input-sm" id="industryLevelIdindustryLevel">
+                        <select class="control-label input-sm" id="industryLevelIdindustryLevel">
+                                <option value=""></option>
+                                <option value="1">Entry Level</option>
+                                <option value="2">Intermediate</option>
+                                <option value="3">Supervisor/Assistant Manager</option>
+                            </select>
                         </div>
                     </div>            
                     <div class="form-group">
                         <label class="col-sm-4 control-label input-sm">Industry Pay Rate</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control input-sm" id="payrateIdpayrate">
+                            <select class="control-label input-sm" id="payrateIdpayrate">
+                                <option value=""></option>
+                                <option value="1">Less 20,000</option>
+                                <option value="2">20,000 to 40,000</option>
+                                <option value="3">40,000 to 80,000</option>
+                            </select>
                         </div>
                     </div>                       
 
                 </div>
-                
+
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="name" class="col-sm-3 control-label input-sm">Job Qualification (text)</label>
@@ -87,13 +103,13 @@
                     <div class="form-group">
                         <label for="fname" class="col-sm-3 control-label input-sm" >Skills</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm" id="firstName" placeholder="Years of Exp.">
+                            <input type="text" class="form-control input-sm" id="skills" placeholder="Years of Exp.">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="lname" class="col-sm-3 control-label input-sm" >Search String</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm" id="lastName" placeholder="Current Salary">
+                            <input type="text" class="form-control input-sm" id="searchText" placeholder="Current Salary">
                         </div>
                     </div>     
                     <div class="form-group">

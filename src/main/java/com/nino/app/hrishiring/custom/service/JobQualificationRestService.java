@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -38,15 +39,14 @@ public class JobQualificationRestService {
     @Path("save/{personid}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response save(JobQualification jobqualification,
-            @PathParam("personid") int personid)
-    {
+            @PathParam("personid") int personid) {
         try {
             System.out.println("createNew " + jobqualification.getJobTitle());
             Person p = em.find(Person.class, personid);
             jobqualification.setPersonidPerson(p);
             em.persist(jobqualification);
             em.flush();
-            System.out.println("Create new job qualification with ID: "+jobqualification.getIdJobQualification());
+            System.out.println("Create new job qualification with ID: " + jobqualification.getIdJobQualification());
             return Response.ok(jobqualification).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,12 +56,16 @@ public class JobQualificationRestService {
     }
 
     @GET
-    @Path("jobqualification/{id}")
+    @Path("{id}")
     public Response getJobQualification(@PathParam("id") int id) {
         try {
             System.out.println("Job qualification search by person id");
-            JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByPersonidPerson")
-                    .setParameter("personidPerson", id)
+
+            Person p = new Person();
+            p.setIdPerson(id);
+
+            JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByIdPerson")
+                    .setParameter("personidPerson", p)
                     .getSingleResult();
             System.out.println("Job qualification #:" + jq.getIdJobQualification());
             return Response.ok(jq).build();
@@ -71,5 +75,17 @@ public class JobQualificationRestService {
         }
     }
 
-    //@Path("")
+    @PUT
+    @Path("{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void edit(@PathParam("id") Integer id, JobQualification entity) {
+        try{
+            Person p = new Person();
+            p.setIdPerson(id);
+            entity.setPersonidPerson(p);
+            System.out.println("Edit for jobqualification :"+entity.getIdJobQualification().toString());
+            em.merge(entity);
+        }catch(Exception e){e.printStackTrace();}
+    }
+
 }

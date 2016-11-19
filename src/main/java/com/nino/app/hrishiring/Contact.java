@@ -8,14 +8,15 @@ package com.nino.app.hrishiring;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,25 +29,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Contact.findAll", query = "SELECT c FROM Contact c"),
-    @NamedQuery(name = "Contact.findByIdcontact", query = "SELECT c FROM Contact c WHERE c.contactPK.idcontact = :idcontact"),
-    @NamedQuery(name = "Contact.findByIdPerson", query = "SELECT c FROM Contact c WHERE c.idPerson = :idPerson"),
+    @NamedQuery(name = "Contact.findByIdcontact", query = "SELECT c FROM Contact c WHERE c.idcontact = :idcontact"),
     @NamedQuery(name = "Contact.findByTelNum1", query = "SELECT c FROM Contact c WHERE c.telNum1 = :telNum1"),
     @NamedQuery(name = "Contact.findByContactNum", query = "SELECT c FROM Contact c WHERE c.contactNum = :contactNum"),
     @NamedQuery(name = "Contact.findByCellphoneNum", query = "SELECT c FROM Contact c WHERE c.cellphoneNum = :cellphoneNum"),
     @NamedQuery(name = "Contact.findByEmail", query = "SELECT c FROM Contact c WHERE c.email = :email"),
     @NamedQuery(name = "Contact.findByAddress", query = "SELECT c FROM Contact c WHERE c.address = :address"),
     @NamedQuery(name = "Contact.findByCity", query = "SELECT c FROM Contact c WHERE c.city = :city"),
-    @NamedQuery(name = "Contact.findByCountry", query = "SELECT c FROM Contact c WHERE c.country = :country"),
-    @NamedQuery(name = "Contact.findByPersonidPerson", query = "SELECT c FROM Contact c WHERE c.contactPK.personidPerson = :personidPerson")})
+    @NamedQuery(name = "Contact.findByCountry", query = "SELECT c FROM Contact c WHERE c.country = :country")})
 public class Contact implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ContactPK contactPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "idPerson")
-    private int idPerson;
+    @Column(name = "idcontact")
+    private Integer idcontact;
     @Size(max = 45)
     @Column(name = "TelNum1")
     private String telNum1;
@@ -69,40 +67,23 @@ public class Contact implements Serializable {
     @Size(max = 45)
     @Column(name = "Country")
     private String country;
-    @JoinColumn(name = "person_idPerson", referencedColumnName = "idPerson", insertable = false, updatable = false)
+    @JoinColumn(name = "person_idPerson", referencedColumnName = "idPerson")
     @ManyToOne(optional = false)
-    private Person person;
+    private Person personidPerson;
 
     public Contact() {
     }
 
-    public Contact(ContactPK contactPK) {
-        this.contactPK = contactPK;
+    public Contact(Integer idcontact) {
+        this.idcontact = idcontact;
     }
 
-    public Contact(ContactPK contactPK, int idPerson) {
-        this.contactPK = contactPK;
-        this.idPerson = idPerson;
+    public Integer getIdcontact() {
+        return idcontact;
     }
 
-    public Contact(int idcontact, int personidPerson) {
-        this.contactPK = new ContactPK(idcontact, personidPerson);
-    }
-
-    public ContactPK getContactPK() {
-        return contactPK;
-    }
-
-    public void setContactPK(ContactPK contactPK) {
-        this.contactPK = contactPK;
-    }
-
-    public int getIdPerson() {
-        return idPerson;
-    }
-
-    public void setIdPerson(int idPerson) {
-        this.idPerson = idPerson;
+    public void setIdcontact(Integer idcontact) {
+        this.idcontact = idcontact;
     }
 
     public String getTelNum1() {
@@ -161,18 +142,18 @@ public class Contact implements Serializable {
         this.country = country;
     }
 
-    public Person getPerson() {
-        return person;
+    public Person getPersonidPerson() {
+        return personidPerson;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPersonidPerson(Person personidPerson) {
+        this.personidPerson = personidPerson;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (contactPK != null ? contactPK.hashCode() : 0);
+        hash += (idcontact != null ? idcontact.hashCode() : 0);
         return hash;
     }
 
@@ -183,7 +164,7 @@ public class Contact implements Serializable {
             return false;
         }
         Contact other = (Contact) object;
-        if ((this.contactPK == null && other.contactPK != null) || (this.contactPK != null && !this.contactPK.equals(other.contactPK))) {
+        if ((this.idcontact == null && other.idcontact != null) || (this.idcontact != null && !this.idcontact.equals(other.idcontact))) {
             return false;
         }
         return true;
@@ -191,7 +172,7 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nino.app.hrishiring.Contact[ contactPK=" + contactPK + " ]";
+        return "com.nino.app.hrishiring.Contact[ idcontact=" + idcontact + " ]";
     }
     
 }

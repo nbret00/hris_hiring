@@ -86,7 +86,7 @@ public class Person implements Serializable {
     @JoinColumn(name = "sourcing_idsourcing_campaigne", referencedColumnName = "idsourcing_campaigne")
     @ManyToOne
     private Sourcing sourcingIdsourcingCampaigne;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
     private Collection<Contact> contactCollection;
 
     public Person() {

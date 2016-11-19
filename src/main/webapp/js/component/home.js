@@ -11,17 +11,14 @@ $(document).ready(function () {
 
     //alert("working_person_id" + working_person_id);
     var working_person_id = "";
+    var working_jobqualification_id = "";
+    var working_contact_id = "";
     var cand_name = "";
     var personProfile = null;
     var jobQualification = null;
+    var contactInfo = null;
 
     $("#searchStr").val("");
-
-    //alert("loaded...")
-    //inits
-    //1. check authentication
-    //2. remove previous search
-    //3. prepare screen
 
     $.ajax({
         type: 'GET',
@@ -54,11 +51,6 @@ $(document).ready(function () {
 
         });
     });
-    $("#contact").on("click", function (e) {
-        $("#panel").remove();
-        $("#section1").load("htmlcomponents/contactInfo.html");
-    });
-
     //search button... key up checking for enter key up only
     /*
      $("#searchStr").keyup(function (e) {
@@ -72,6 +64,7 @@ $(document).ready(function () {
      */
     //logout
     $("#logout").submit(function (event) {
+        event.preventDefault();
 //alert("loging out");
         $.ajax({
             type: 'GET',
@@ -106,7 +99,6 @@ $(document).ready(function () {
                 alert("Rec # should be a number.");
             } else {
                 getPersonalProfile(searchStr, function () {
-                    console.log("calledbackeeddd");
                     setTimeout(alert("Searching record # " + searchStr), 10000);
                     showPersonalProfileForm();
                 });
@@ -132,12 +124,7 @@ $(document).ready(function () {
         }
     }
 
-    function updateQuickPage() {
 
-    }
-    function addQuickPage() {
-
-    }
 //----------------------------------------------------- Person Profile
     var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
     var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
@@ -264,36 +251,34 @@ $(document).ready(function () {
     }
     ;
 //----------------------------------------------------- Job Qualification
-    var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/personProfile/jobqualification/";
+    var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
     var save_jobqualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/save/";
+    var update_jobqualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
 
     $("#jobqualification").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
             alert("Search for a record first or create new profile.");
         } else {
-            getJobQualificationByPersonID(working_person_id, function () {
+            getJobQualificationByPersonID(function () {
                 showQualificationForm();
             });
         }
-
     });
 
 
 
     function showQualificationForm() {
-        console.log("after callback experiment");
+        console.log("showQualificationForm() called.....");
         $("#panel").remove();
         $("#section1").load("htmlcomponents/jobqualification.html", function () {
             if (jobQualification == null) {
                 console.log("Job Qualification null");
                 document.getElementById("jobQualificationBut").innerHTML = "Save";
-                jobQualificationSaveUpdateHandler(function () {
-                    prepJobQualificationForm(jobQualification);
-                });
+                jobQualificationSaveUpdateHandler();
             } else {
                 console.log("Lookup for existing job qualification " + working_person_id);
                 prepJobQualificationForm(jobQualification);
-                //personProfileSaveUpdateHandler();
+                jobQualificationSaveUpdateHandler();
             }
         });
 
@@ -303,27 +288,41 @@ $(document).ready(function () {
     function prepJobQualificationForm(jobQualificationXMLdata) {
         console.log("prepJobQualificationForm--->>>");
         $(jobQualificationXMLdata).find("jobQualification").each(function () {
+            alert($(this).find("industryLevelIdindustryLevel").text());
             document.getElementById("jobTitle").value = ifnull($(this).find("jobTitle").text());
-            document.getElementById("joblevelmo").value = ifnull($(this).find("joblevelmo").text());
-            document.getElementById("qualificationSummary").value = ifnull($(this).find("qualificationSummary").text());
+            document.getElementById("yrsOfExperience").value = ifnull($(this).find("yrsOfExperience").text());
+            document.getElementById("currentSalary").value = ifnull($(this).find("currentSalary").text());
+            document.getElementById("targetSalary").value = ifnull($(this).find("targetSalary").text());
+            document.getElementById("targetPosition").value = ifnull($(this).find("targetPosition").text());
             document.getElementById("skillsCategorymo").value = ifnull($(this).find("skillsCategorymo").text());
-        })
+            document.getElementById("joblevelmo").value = ifnull($(this).find("joblevelmo").text());
+            document.getElementById("priority").value = ifnull($(this).find("priority").text());
+            document.getElementById("industriesIdindustries").value = ifnull($(this).find("industriesIdindustries").find("idindustries").text());
+            document.getElementById("industryLevelIdindustryLevel").value = ifnull($(this).find("industryLevelIdindustryLevel").find("idindustryLevel").text());
+            document.getElementById("payrateIdpayrate").value = ifnull($(this).find("payrateIdpayrate").find("idpayrate").text());
+            document.getElementById("qualificationSummary").value = ifnull($(this).find("qualificationSummary").text());
+            document.getElementById("skills").value = ifnull($(this).find("skills").text());
+            document.getElementById("searchText").value = ifnull($(this).find("searchText").text());
+        });
         document.getElementById("jobQualificationBut").innerHTML = "Update";
         console.log("<<---prepJobQualificationForm");
     }
     ;
 
-    function getJobQualificationByPersonID(id, callback) {
+    function getJobQualificationByPersonID(callback) {
         $.ajax({
             type: 'GET',
-            url: get_jobQualification_url + id,
+            url: get_jobQualification_url + working_person_id,
             success: function (data) {
                 console.log("job qualification get result:" + data);
                 if (data == "noresult") {
-                    alert("No record found for rec#: " + searchStr);
+                    alert("No record found for rec#: " + working_person_id);
                     jobQualification = null;
+                    working_jobqualification_id = "";
                 } else {
                     jobQualification = data;//global
+                    working_jobqualification_id = $(data).find("jobQualification").find("idJobQualification").text();
+                    //alert("job qualification pk: "+working_jobqualification_id);
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
@@ -339,15 +338,15 @@ $(document).ready(function () {
     }
     ;
 
-    function jobQualificationSaveUpdateHandler(callback) {
+    function jobQualificationSaveUpdateHandler() {
         $("#jobqualificationform").submit(function (event) {
             event.preventDefault();
             console.log("clicked jobQualificationSaveUpdateHandler :" + $("#jobQualificationBut").text());
-            var JobQualification = JSON.stringify({
-                //jobQualificationPK: $('#jobQualificationPK').val(),
+            var JobQualificationData = JSON.stringify({
+                idJobQualification: working_jobqualification_id,
                 jobTitle: $('#jobTitle').val(),
                 skillsCategorymo: $('#skillsCategorymo').val(),
-                joblevelmo: new Date($('#joblevelmo').val()),
+                joblevelmo: $('#joblevelmo').val(),
                 qualificationSummary: $('#qualificationSummary').val(),
                 yrsOfExperience: $('#yrsOfExperience').val(),
                 currentSalary: $('#currentSalary').val(),
@@ -356,57 +355,36 @@ $(document).ready(function () {
                 priority: $('#priority').val(),
                 skills: $('#skills').val(),
                 searchText: $('#searchText').val(),
-                industriesIdindustries: {
-                    idindustries: '1'
-                }
-                //industryLevelIdindustryLevel: $('#industryLevelIdindustryLevel').val(),
-                //payrateIdpayrate: $('#payrateIdpayrate').val()
+                industriesIdindustries: {idindustries: document.getElementById("industriesIdindustries").value},
+                industryLevelIdindustryLevel: {idindustryLevel: $('#industryLevelIdindustryLevel').val()},
+                payrateIdpayrate: { idpayrate: $('#payrateIdpayrate').val()}
             });
-
-            console.log("This is the text of the button: " + $("#jobQualificationBut").text());
+            
+            console.log("This is the text of the button: " + JobQualificationData.toString());
             if ($("#jobQualificationBut").text() === "Save") {
                 console.log("saving new record person profile.");
                 $.ajax({
                     type: 'POST',
                     url: save_jobqualification_url + working_person_id,
                     contentType: 'application/json',
-                    data: JobQualification,
+                    data: JobQualificationData,
                     success: function (data) {
                         jobQualification = data;
-                        /*
-                         if (callback && typeof (callback) === "function") {
-                         //do something here from your call back function
-                         console.log("Call back SAVE job qualification.");
-                         callback();
-                         }
-                         ;
-                         */
                         alert("Job Qualification Successfully Created. - " + $(data).find("jobTitle").text());
                         prepJobQualificationForm(data);
-
                     }
                 });
             }
             if ($("#jobQualificationBut").text() === "Update") {
                 console.log("updating person profile # " + working_person_id);
+                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
                 $.ajax({
                     type: 'PUT',
-                    url: update_personalprofile_url + working_person_id,
+                    url: update_jobqualification_url + working_person_id,
                     contentType: 'application/json',
-                    data: JobQualification,
+                    data: JobQualificationData,
                     success: function (data) {
                         jobQualification = data;
-                        if (callback && typeof (callback) === "function") {
-                            //do something here from your call back function
-                            console.log("call back UPDATE job qualification");
-                            callback();
-                        }
-                        ;
-                        /*
-                         alert("Personal Profile Successfully Updated");
-                         getPersonalProfile(working_person_id);
-                         prepPersonProfileForm(data);
-                         */
                     },
                     error: function () {
                         alert("Application Error!");
@@ -415,7 +393,139 @@ $(document).ready(function () {
             }
         });
     }
+    ; 
+    
+//-------------------------contacts
+
+    var get_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
+    var save_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/save/";
+    var update_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
+
+    $("#contact").on("click", function (e) {
+        if (working_person_id == null || working_person_id == "") {
+            alert("Search for a record first or create new profile.");
+        } else {
+            getContactByPersonID(function () {
+                showContactForm();
+            });
+        }
+    });
+    function showContactForm() {
+        console.log("showContactForm() called.....");
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/contactInfo.html", function () {
+            if (contactInfo == null) {
+                console.log("contactInfo null");
+                document.getElementById("contactBut").innerHTML = "Save";
+                contactSaveUpdateHandler();
+            } else {
+                console.log("Lookup for existing job qualification " + working_person_id);
+                prepContactForm(contactInfo);
+                contactSaveUpdateHandler();
+            }
+        });
+
+    }
     ;
+
+    function prepContactForm(contactInfoXMLdata) {
+        console.log("prepContactForm--->>>");
+        $(contactInfoXMLdata).find("contact").each(function () {
+            alert($(this).find("contactNum").text());
+            document.getElementById("contactNum").value = ifnull($(this).find("contactNum").text());
+            document.getElementById("cellphoneNum").value = ifnull($(this).find("cellphoneNum").text());
+            document.getElementById("email").value = ifnull($(this).find("email").text());
+            document.getElementById("address").value = ifnull($(this).find("address").text());
+            document.getElementById("city").value = ifnull($(this).find("city").text());
+            document.getElementById("country").value = ifnull($(this).find("country").text());
+         });
+        document.getElementById("contactBut").innerHTML = "Update";
+        console.log("<<---prepContactForm");
+    }
+    ;
+
+    function getContactByPersonID(callback) {
+        $.ajax({
+            type: 'GET',
+            url: get_contact_url + working_person_id,
+            success: function (data) {
+                console.log("contact get result:" + data);
+                if (data == "noresult") {
+                    alert("No record found for rec#: " + working_person_id);
+                    contactInfo = null;
+                    working_contact_id = "";
+                } else {
+                    contactInfo = data;//global
+                    working_contact_id = $(data).find("contact").find("idcontact").text();
+                    alert("contact pk: "+working_contact_id);
+                }
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    console.log("Calling the callback inside the function...")
+                    callback();
+                }
+                ;
+            },
+            error: function (jqXHR, status) {
+                alert("Application Error Found: " + status);
+            }
+        });
+    }
+    ;
+
+    function contactSaveUpdateHandler() {
+        $("#contactForm").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked contactSaveUpdateHandler :" + $("#contactBut").text());
+            var ContactData = JSON.stringify({
+                idcontact: working_contact_id,
+                telNum1: $('#jobTitle').val(),
+                contactNum: $('#contactNum').val(),
+                cellphoneNum: $('#cellphoneNum').val(),
+                email: $('#email').val(),
+                address: $('#address').val(),
+                city: $('#city').val(),
+                country: $('#country').val(),
+            });
+            
+            console.log("This is the text of the button111: " + ContactData.toString());
+            if ($("#contactBut").text() == "Save") {
+                console.log("saving new contact.");
+                $.ajax({
+                    type: 'POST',
+                    url: save_contact_url + working_person_id,
+                    contentType: 'application/json',
+                    data: ContactData,
+                    success: function (data) {
+                        countryInfo = data;
+                        alert("Contact Successfully Created. - " + $(data).find("email").text());
+                        prepContactForm(data);
+                    }
+                });
+            }
+            if ($("#contactBut").text() == "Update") {
+                console.log("updating person profile # " + working_person_id);
+                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
+                $.ajax({
+                    type: 'PUT',
+                    url: update_contact_url + working_person_id,
+                    contentType: 'application/json',
+                    data: ContactData,
+                    success: function (data) {
+                        
+                        console.log("update successfull");
+                        contactInfo = data;
+                    },
+                    error: function () {
+                        alert("Application Error!");
+                    }
+                });
+            }
+        });
+    }
+    ; 
+    
+    
 //-------------------------start utils
 
     function ifnull(type) {

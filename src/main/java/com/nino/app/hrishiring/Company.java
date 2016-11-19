@@ -11,13 +11,16 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -37,8 +40,8 @@ public class Company implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idclient")
     private Integer idclient;
     @Size(max = 45)
@@ -50,8 +53,9 @@ public class Company implements Serializable {
     private String companyProfileTxt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "companyIdclient")
     private Collection<Endorsement> endorsementCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
-    private Collection<Job> jobCollection;
+    @JoinColumn(name = "job_idjobpk", referencedColumnName = "idjobpk")
+    @ManyToOne(optional = false)
+    private Job jobIdjobpk;
 
     public Company() {
     }
@@ -93,13 +97,12 @@ public class Company implements Serializable {
         this.endorsementCollection = endorsementCollection;
     }
 
-    @XmlTransient
-    public Collection<Job> getJobCollection() {
-        return jobCollection;
+    public Job getJobIdjobpk() {
+        return jobIdjobpk;
     }
 
-    public void setJobCollection(Collection<Job> jobCollection) {
-        this.jobCollection = jobCollection;
+    public void setJobIdjobpk(Job jobIdjobpk) {
+        this.jobIdjobpk = jobIdjobpk;
     }
 
     @Override

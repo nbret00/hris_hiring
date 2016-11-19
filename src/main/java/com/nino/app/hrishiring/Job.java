@@ -9,18 +9,18 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -34,30 +34,34 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Job.findAll", query = "SELECT j FROM Job j"),
-    @NamedQuery(name = "Job.findByIdjob", query = "SELECT j FROM Job j WHERE j.jobPK.idjob = :idjob"),
+    @NamedQuery(name = "Job.findByIdjobpk", query = "SELECT j FROM Job j WHERE j.idjobpk = :idjobpk"),
     @NamedQuery(name = "Job.findByTitle", query = "SELECT j FROM Job j WHERE j.title = :title"),
     @NamedQuery(name = "Job.findByDescription", query = "SELECT j FROM Job j WHERE j.description = :description"),
     @NamedQuery(name = "Job.findByDescriptionLong", query = "SELECT j FROM Job j WHERE j.descriptionLong = :descriptionLong"),
     @NamedQuery(name = "Job.findByLocation", query = "SELECT j FROM Job j WHERE j.location = :location"),
     @NamedQuery(name = "Job.findByStatus", query = "SELECT j FROM Job j WHERE j.status = :status"),
     @NamedQuery(name = "Job.findByRemarks", query = "SELECT j FROM Job j WHERE j.remarks = :remarks"),
-    @NamedQuery(name = "Job.findByClientIdclient", query = "SELECT j FROM Job j WHERE j.jobPK.clientIdclient = :clientIdclient"),
     @NamedQuery(name = "Job.findByQualifications", query = "SELECT j FROM Job j WHERE j.qualifications = :qualifications"),
     @NamedQuery(name = "Job.findByResponsibility", query = "SELECT j FROM Job j WHERE j.responsibility = :responsibility"),
-    @NamedQuery(name = "Job.findByJobPocIdjobPoc", query = "SELECT j FROM Job j WHERE j.jobPocIdjobPoc = :jobPocIdjobPoc"),
-    @NamedQuery(name = "Job.findByDateRecieved", query = "SELECT j FROM Job j WHERE j.dateRecieved = :dateRecieved")})
+    @NamedQuery(name = "Job.findByDateRecieved", query = "SELECT j FROM Job j WHERE j.dateRecieved = :dateRecieved"),
+    @NamedQuery(name = "Job.findByLastUpdatedDt", query = "SELECT j FROM Job j WHERE j.lastUpdatedDt = :lastUpdatedDt"),
+    @NamedQuery(name = "Job.findByLastUpdateUser", query = "SELECT j FROM Job j WHERE j.lastUpdateUser = :lastUpdateUser"),
+    @NamedQuery(name = "Job.findByCompanyId", query = "SELECT j FROM Job j WHERE j.companyId = :companyId")})
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected JobPK jobPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "idjobpk")
+    private Integer idjobpk;
     @Size(max = 45)
     @Column(name = "Title")
     private String title;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "Description")
     private String description;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "DescriptionLong")
     private String descriptionLong;
     @Size(max = 45)
@@ -66,50 +70,43 @@ public class Job implements Serializable {
     @Size(max = 45)
     @Column(name = "Status")
     private String status;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "Remarks")
     private String remarks;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "Qualifications")
     private String qualifications;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "Responsibility")
     private String responsibility;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "job_poc_idjob_poc")
-    private int jobPocIdjobPoc;
     @Column(name = "DateRecieved")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date dateRecieved;
-    @OneToMany(mappedBy = "job")
+    @Column(name = "last_updated_dt")
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdatedDt;
+    @Column(name = "last_update_user")
+    private Integer lastUpdateUser;
+    @Column(name = "company_id")
+    private Integer companyId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobIdjobpk")
     private Collection<Sourcing> sourcingCollection;
-    @JoinColumn(name = "client_idclient", referencedColumnName = "idclient", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Company company;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobIdjobpk")
+    private Collection<Company> companyCollection;
 
     public Job() {
     }
 
-    public Job(JobPK jobPK) {
-        this.jobPK = jobPK;
+    public Job(Integer idjobpk) {
+        this.idjobpk = idjobpk;
     }
 
-    public Job(JobPK jobPK, int jobPocIdjobPoc) {
-        this.jobPK = jobPK;
-        this.jobPocIdjobPoc = jobPocIdjobPoc;
+    public Integer getIdjobpk() {
+        return idjobpk;
     }
 
-    public Job(int idjob, int clientIdclient) {
-        this.jobPK = new JobPK(idjob, clientIdclient);
-    }
-
-    public JobPK getJobPK() {
-        return jobPK;
-    }
-
-    public void setJobPK(JobPK jobPK) {
-        this.jobPK = jobPK;
+    public void setIdjobpk(Integer idjobpk) {
+        this.idjobpk = idjobpk;
     }
 
     public String getTitle() {
@@ -176,20 +173,36 @@ public class Job implements Serializable {
         this.responsibility = responsibility;
     }
 
-    public int getJobPocIdjobPoc() {
-        return jobPocIdjobPoc;
-    }
-
-    public void setJobPocIdjobPoc(int jobPocIdjobPoc) {
-        this.jobPocIdjobPoc = jobPocIdjobPoc;
-    }
-
     public Date getDateRecieved() {
         return dateRecieved;
     }
 
     public void setDateRecieved(Date dateRecieved) {
         this.dateRecieved = dateRecieved;
+    }
+
+    public Date getLastUpdatedDt() {
+        return lastUpdatedDt;
+    }
+
+    public void setLastUpdatedDt(Date lastUpdatedDt) {
+        this.lastUpdatedDt = lastUpdatedDt;
+    }
+
+    public Integer getLastUpdateUser() {
+        return lastUpdateUser;
+    }
+
+    public void setLastUpdateUser(Integer lastUpdateUser) {
+        this.lastUpdateUser = lastUpdateUser;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 
     @XmlTransient
@@ -201,18 +214,19 @@ public class Job implements Serializable {
         this.sourcingCollection = sourcingCollection;
     }
 
-    public Company getCompany() {
-        return company;
+    @XmlTransient
+    public Collection<Company> getCompanyCollection() {
+        return companyCollection;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyCollection(Collection<Company> companyCollection) {
+        this.companyCollection = companyCollection;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (jobPK != null ? jobPK.hashCode() : 0);
+        hash += (idjobpk != null ? idjobpk.hashCode() : 0);
         return hash;
     }
 
@@ -223,7 +237,7 @@ public class Job implements Serializable {
             return false;
         }
         Job other = (Job) object;
-        if ((this.jobPK == null && other.jobPK != null) || (this.jobPK != null && !this.jobPK.equals(other.jobPK))) {
+        if ((this.idjobpk == null && other.idjobpk != null) || (this.idjobpk != null && !this.idjobpk.equals(other.idjobpk))) {
             return false;
         }
         return true;
@@ -231,7 +245,7 @@ public class Job implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nino.app.hrishiring.Job[ jobPK=" + jobPK + " ]";
+        return "com.nino.app.hrishiring.Job[ idjobpk=" + idjobpk + " ]";
     }
     
 }

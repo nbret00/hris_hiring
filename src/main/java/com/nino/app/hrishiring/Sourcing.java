@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -41,13 +40,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sourcing.findByStatus", query = "SELECT s FROM Sourcing s WHERE s.status = :status"),
     @NamedQuery(name = "Sourcing.findByTargetJobTitle", query = "SELECT s FROM Sourcing s WHERE s.targetJobTitle = :targetJobTitle"),
     @NamedQuery(name = "Sourcing.findByTargetJobCategory", query = "SELECT s FROM Sourcing s WHERE s.targetJobCategory = :targetJobCategory"),
-    @NamedQuery(name = "Sourcing.findByDataContacted", query = "SELECT s FROM Sourcing s WHERE s.dataContacted = :dataContacted"),
+    @NamedQuery(name = "Sourcing.findByDateContacted", query = "SELECT s FROM Sourcing s WHERE s.dateContacted = :dateContacted"),
     @NamedQuery(name = "Sourcing.findBySource", query = "SELECT s FROM Sourcing s WHERE s.source = :source"),
     @NamedQuery(name = "Sourcing.findBySourcer", query = "SELECT s FROM Sourcing s WHERE s.sourcer = :sourcer"),
     @NamedQuery(name = "Sourcing.findByContactedBy", query = "SELECT s FROM Sourcing s WHERE s.contactedBy = :contactedBy"),
     @NamedQuery(name = "Sourcing.findByInterviewer", query = "SELECT s FROM Sourcing s WHERE s.interviewer = :interviewer"),
     @NamedQuery(name = "Sourcing.findByDateOfInterview", query = "SELECT s FROM Sourcing s WHERE s.dateOfInterview = :dateOfInterview"),
-    @NamedQuery(name = "Sourcing.findByMoDateAcceptedInLinkedin", query = "SELECT s FROM Sourcing s WHERE s.moDateAcceptedInLinkedin = :moDateAcceptedInLinkedin")})
+    @NamedQuery(name = "Sourcing.findByMoDateAcceptedInLinkedin", query = "SELECT s FROM Sourcing s WHERE s.moDateAcceptedInLinkedin = :moDateAcceptedInLinkedin"),
+    @NamedQuery(name = "Sourcing.findByLastUpdatedDt", query = "SELECT s FROM Sourcing s WHERE s.lastUpdatedDt = :lastUpdatedDt"),
+    @NamedQuery(name = "Sourcing.findByLastUpdatedBy", query = "SELECT s FROM Sourcing s WHERE s.lastUpdatedBy = :lastUpdatedBy")})
 public class Sourcing implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,43 +57,48 @@ public class Sourcing implements Serializable {
     @Basic(optional = false)
     @Column(name = "idsourcing_campaigne")
     private Integer idsourcingCampaigne;
+    @Size(max = 250)
     @Column(name = "Title")
-    private Integer title;
+    private String title;
     @Size(max = 45)
     @Column(name = "Status")
     private String status;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "TargetJobTitle")
     private String targetJobTitle;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "TargetJobCategory")
     private String targetJobCategory;
-    @Size(max = 45)
-    @Column(name = "DataContacted")
-    private String dataContacted;
-    @Size(max = 45)
+    @Column(name = "DateContacted")
+    @Temporal(TemporalType.DATE)
+    private Date dateContacted;
+    @Size(max = 250)
     @Column(name = "Source")
     private String source;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "Sourcer")
     private String sourcer;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "ContactedBy")
     private String contactedBy;
-    @Size(max = 45)
+    @Size(max = 250)
     @Column(name = "Interviewer")
     private String interviewer;
     @Column(name = "DateOfInterview")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfInterview;
     @Column(name = "mo_DateAcceptedInLinkedin")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date moDateAcceptedInLinkedin;
-    @JoinColumns({
-        @JoinColumn(name = "job_idjob", referencedColumnName = "idjob"),
-        @JoinColumn(name = "job_client_idclient", referencedColumnName = "client_idclient")})
-    @ManyToOne
-    private Job job;
+    @Column(name = "last_updated_dt")
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdatedDt;
+    @Size(max = 45)
+    @Column(name = "last_updated_by")
+    private String lastUpdatedBy;
+    @JoinColumn(name = "job_idjobpk", referencedColumnName = "idjobpk")
+    @ManyToOne(optional = false)
+    private Job jobIdjobpk;
     @OneToMany(mappedBy = "sourcingIdsourcingCampaigne")
     private Collection<Person> personCollection;
 
@@ -111,11 +117,11 @@ public class Sourcing implements Serializable {
         this.idsourcingCampaigne = idsourcingCampaigne;
     }
 
-    public Integer getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Integer title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -143,12 +149,12 @@ public class Sourcing implements Serializable {
         this.targetJobCategory = targetJobCategory;
     }
 
-    public String getDataContacted() {
-        return dataContacted;
+    public Date getDateContacted() {
+        return dateContacted;
     }
 
-    public void setDataContacted(String dataContacted) {
-        this.dataContacted = dataContacted;
+    public void setDateContacted(Date dateContacted) {
+        this.dateContacted = dateContacted;
     }
 
     public String getSource() {
@@ -199,12 +205,28 @@ public class Sourcing implements Serializable {
         this.moDateAcceptedInLinkedin = moDateAcceptedInLinkedin;
     }
 
-    public Job getJob() {
-        return job;
+    public Date getLastUpdatedDt() {
+        return lastUpdatedDt;
     }
 
-    public void setJob(Job job) {
-        this.job = job;
+    public void setLastUpdatedDt(Date lastUpdatedDt) {
+        this.lastUpdatedDt = lastUpdatedDt;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public Job getJobIdjobpk() {
+        return jobIdjobpk;
+    }
+
+    public void setJobIdjobpk(Job jobIdjobpk) {
+        this.jobIdjobpk = jobIdjobpk;
     }
 
     @XmlTransient

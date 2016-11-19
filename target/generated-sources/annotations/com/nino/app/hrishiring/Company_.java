@@ -7,14 +7,14 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-17T21:15:22")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-19T12:51:59")
 @StaticMetamodel(Company.class)
 public class Company_ { 
 
     public static volatile CollectionAttribute<Company, Endorsement> endorsementCollection;
-    public static volatile CollectionAttribute<Company, Job> jobCollection;
     public static volatile SingularAttribute<Company, String> companyProfileTxt;
     public static volatile SingularAttribute<Company, String> companyName;
     public static volatile SingularAttribute<Company, Integer> idclient;
+    public static volatile SingularAttribute<Company, Job> jobIdjobpk;
 
 }
