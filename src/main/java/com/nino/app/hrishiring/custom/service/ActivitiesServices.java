@@ -68,6 +68,7 @@ public class ActivitiesServices {
                     .setParameter("ididentityActivities", id)
                     .getSingleResult();
             //System.out.println("Contact #:" + jq.getIdcontact());
+     
             return Response.ok(jq).build();
         } catch (Exception e) {
             e.printStackTrace();

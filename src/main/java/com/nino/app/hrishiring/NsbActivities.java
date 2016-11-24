@@ -6,10 +6,8 @@
 package com.nino.app.hrishiring;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,13 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -78,14 +74,9 @@ public class NsbActivities implements Serializable {
     private Date endDt;
     @Column(name = "act_order")
     private Integer actOrder;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "nsbactivitiesidSourcingActivities")
-    private Collection<NsbActivityStatus> nsbActivityStatusCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "nsbactivitiesidSourcingActivities")
-    private Collection<NsbRemarks> nsbRemarksCollection;
-    @OneToMany(mappedBy = "nsbactivitiesidSourcingActivities")
-    private Collection<NsbActivityDoc> nsbActivityDocCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "nsbactivitiesidSourcingActivities")
-    private Collection<NsbActivityStatusHist> nsbActivityStatusHistCollection;
+    @JoinColumn(name = "nsb_activity_status_tp", referencedColumnName = "idactivity_status")
+    @ManyToOne(optional = false)
+    private NsbActivityStatusTp nsbActivityStatusTp;
     @JoinColumn(name = "nsb_activity_tp", referencedColumnName = "id_activity_tp")
     @ManyToOne(optional = false)
     private NsbActivityTp nsbActivityTp;
@@ -180,40 +171,12 @@ public class NsbActivities implements Serializable {
         this.actOrder = actOrder;
     }
 
-    @XmlTransient
-    public Collection<NsbActivityStatus> getNsbActivityStatusCollection() {
-        return nsbActivityStatusCollection;
+    public NsbActivityStatusTp getNsbActivityStatusTp() {
+        return nsbActivityStatusTp;
     }
 
-    public void setNsbActivityStatusCollection(Collection<NsbActivityStatus> nsbActivityStatusCollection) {
-        this.nsbActivityStatusCollection = nsbActivityStatusCollection;
-    }
-
-    @XmlTransient
-    public Collection<NsbRemarks> getNsbRemarksCollection() {
-        return nsbRemarksCollection;
-    }
-
-    public void setNsbRemarksCollection(Collection<NsbRemarks> nsbRemarksCollection) {
-        this.nsbRemarksCollection = nsbRemarksCollection;
-    }
-
-    @XmlTransient
-    public Collection<NsbActivityDoc> getNsbActivityDocCollection() {
-        return nsbActivityDocCollection;
-    }
-
-    public void setNsbActivityDocCollection(Collection<NsbActivityDoc> nsbActivityDocCollection) {
-        this.nsbActivityDocCollection = nsbActivityDocCollection;
-    }
-
-    @XmlTransient
-    public Collection<NsbActivityStatusHist> getNsbActivityStatusHistCollection() {
-        return nsbActivityStatusHistCollection;
-    }
-
-    public void setNsbActivityStatusHistCollection(Collection<NsbActivityStatusHist> nsbActivityStatusHistCollection) {
-        this.nsbActivityStatusHistCollection = nsbActivityStatusHistCollection;
+    public void setNsbActivityStatusTp(NsbActivityStatusTp nsbActivityStatusTp) {
+        this.nsbActivityStatusTp = nsbActivityStatusTp;
     }
 
     public NsbActivityTp getNsbActivityTp() {

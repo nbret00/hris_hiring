@@ -3,6 +3,15 @@
 $(document).ready(function () {
 
 
+console.log("document.URL : "+document.URL);
+console.log("document.location.href : "+document.location.href);
+console.log("document.location.origin : "+document.location.origin);
+console.log("document.location.hostname : "+document.location.hostname);
+console.log("document.location.host : "+document.location.host);
+console.log("document.location.pathname : "+document.location.pathname);
+console.log("location.hostname: "+location.hostname);
+console.log("document.domain: "+document.domain);
+console.log("window.location.hostname: "+window.location.hostname)
     //alert("working_person_id" + working_person_id);
 
     var working_person_id = "";
@@ -13,6 +22,7 @@ $(document).ready(function () {
     var personProfile = null;
     var jobQualification = null;
     var contactInfo = null;
+    var activities = null;
     var sourcing = null;
 
     var searchStr = null;
@@ -71,7 +81,7 @@ $(document).ready(function () {
         searchStr = null;
         searchStr = document.getElementById("searchStr").value;//$("#searchStr").val();
         console.log("serching for: " + searchStr);
-        
+
         if (searchStr !== null) {
             //refreshing all global variable
 
@@ -84,6 +94,7 @@ $(document).ready(function () {
             personProfile = null;
             jobQualification = null;
             contactInfo = null;
+            activities = null;
             sourcing = null;
 
             if (isNaN(searchStr)) {
@@ -164,12 +175,20 @@ $(document).ready(function () {
         console.log("<<---prepPersonProfileForm");
     }
     ;
-    function prepActivePerson(data) {
+    function prepActivePerson(data, callback) {
         cand_name = $(data).find("name").text();
         working_person_id = $(data).find("idPerson").text();
         console.log("Active person: " + cand_name);
-        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" + working_person_id + ") " + cand_name + "</h3><a href='home.html'><span class='badge'>Create New Record</span></a> <a href='#'><span class='badge' id='activities'>Activities</span></a>";
-        return true;
+        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" + working_person_id + ") " + cand_name +
+                "</h3><a href='home.html'><span class='badge'>Enter new Candidate</span></a> <a href='#'>" +
+                "<span class='badge' id='activities-but' onclick='activitiesBadgeOnclick()'>Hiring Activities</span></a>";
+
+        if (callback && typeof (callback) === "function") {
+            //do something here from your call back function
+            console.log("Calling the callback inside the function...")
+            callback();
+        }
+        ;
     }
     ;
     function getPersonalProfile(id, callback) {
@@ -185,7 +204,9 @@ $(document).ready(function () {
                     working_person_id = $(data).find("idPerson").text();
                     console.log("Found in get Person: " + working_person_id);
                     personProfile = data; //register to global variable
-                    prep = prepActivePerson(data);
+                    prepActivePerson(data, function () {
+                        activityButEvent();//register button event
+                    });
                 }
                 if (callback && typeof (callback) === "function") {
                     console.log("calling callback function from getPerson");
@@ -404,7 +425,7 @@ $(document).ready(function () {
 
     $("#contact").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
-            showAlert("Search for a record first or create new profile.");
+            showAlert("Search for a record first to associate this contact or create new profile.");
         } else {
             getContactByPersonID(function () {
                 showContactForm();
@@ -432,7 +453,7 @@ $(document).ready(function () {
     function prepContactForm(contactInfoXMLdata) {
         console.log("prepContactForm--->>>");
         $(contactInfoXMLdata).find("contact").each(function () {
-            showAlert($(this).find("contactNum").text());
+            //showAlert($(this).find("contactNum").text());
             document.getElementById("contactNum").value = ifnull($(this).find("contactNum").text());
             document.getElementById("cellphoneNum").value = ifnull($(this).find("cellphoneNum").text());
             document.getElementById("email").value = ifnull($(this).find("email").text());
@@ -458,7 +479,7 @@ $(document).ready(function () {
                 } else {
                     contactInfo = data;//global
                     working_contact_id = $(data).find("contact").find("idcontact").text();
-                    showAlert("contact pk: " + working_contact_id);
+                    //showAlert("contact pk: " + working_contact_id);
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
@@ -506,7 +527,7 @@ $(document).ready(function () {
             }
             if ($("#contactBut").text() == "Update") {
                 console.log("updating person profile # " + working_person_id);
-                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
+                //JobQualificationData["jobQualificationPK"] = rea$(jobQualification).find("jobQualification").find("idJobQualification").text();
                 $.ajax({
                     type: 'PUT',
                     url: update_contact_url + working_person_id,
@@ -517,7 +538,7 @@ $(document).ready(function () {
                         console.log("update successfull");
                         contactInfo = data;
                         showAlert("You have just successfully updated the contact.");
-                        
+
                     },
                     error: function () {
                         showAlert("Application Error!");
@@ -527,46 +548,88 @@ $(document).ready(function () {
         });
     }
     ;
-//------------------------- Sourcing
+//------------------------- activities
 
 
-    var get_sourcing_url = "http://localhost:8080/hris_hiring/webresources/contact/";
-    var save_sourcing_url = "http://localhost:8080/hris_hiring/webresources/sourcing/save";
-    var update_sourcing_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
+    var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
+    var save_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/save";
+    var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
 
-    $("#sourcing").on("click", function (e) {
-        if (working_person_id == null || working_person_id == "") {
-            alert("Search for a record first or create new profile.");
-        } else {
-            getPersonalProfile(searchStr, function () {
-                //setTimeout(alert("Searching record # " + searchStr), 100005
-                console.log("sourcing getPerson callback");
-                sourcing = $(personProfile).find("sourcingIdsourcingCampaigne");
-                working_sourcing_id = sourcing.find("idsourcingCampaigne").text();
-                console.log("sourcing native: " + sourcing + "-sourcing ID: " + working_sourcing_id);
-                showSourcingForm();
-            });
-        }
-    });
-
-    function showSourcingForm() {
-        console.log(working_sourcing_id + "showSourcingForm() called....." + $(sourcing).html());
-        $("#panel").remove();
-        $("#section1").load("htmlcomponents/sourcing.html", function () {
-            if (working_sourcing_id === null || working_sourcing_id == "") {
-                console.log("sourcing null");
-                document.getElementById("sourcingBut").innerHTML = "Save";
-                sourcingSaveUpdateHandler();
+    function activityButEvent() {
+        $("#activities-but").on("click", function (e) {
+            //function activitiesBadgeOnclick(){
+            console.log("activities-badge clicked");
+            if (working_person_id == null || working_person_id == "") {
+                showAlert("Search for a record first to view activities.");
             } else {
-                console.log("Lookup for existing job qualification " + working_person_id);
-                prepSourcingForm();
-//                contactSaveUpdateHandler();
+                getActivities(function () {
+                    //setTimeout(alert("Searching record # " + searchStr), 100005
+                    console.log("activities callback");
+
+                    //console.log("sourcing native: " + sourcing + "-sourcing ID: " + working_sourcing_id);
+                    showActivityForm();
+                });
             }
         });
+    }
+    function showActivityForm(callback) {
+        //console.log(working_sourcing_id + "() called....." + $(sourcing).html());
+        console.log("working activity form");
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/activities.html", function () {
 
+            //console.log("data: "+$(activities).find(nsbActivitiess));
+            var activityContainer = $("<div class='col-md-12' >");
+
+            $(activities).find("nsbActivities").each(function () {
+                console.log("activity description" + $(this).find("description").text());
+                var composedHtml = "<div class='panel panel-default'>" +
+                        "<div class='panel-heading'>Activity Type - " + $(this).find("nsbActivityTp").find("name").text() + "</div>" +
+                        "<div class='panel-body'><strong>Activity ID: </strong>" + $(this).find("idSourcingActivities").text() + "<br/>" +
+                        "<strong>Status :</strong> " + $(this).find("nsbActivityStatusTp").find("name").text() + "</br>" +
+                        "<strong>Description: </strong> " + $(this).find("description").text() + "</div>" +
+                        "<div class='panel-footer'><div class='row'><div class='col-xs-9'><small>Date Created: " + TimeStampToDate($(this).find("createdDt").text()) +
+                        " / Created By: " + $(this).find("createdBy").text() + "</small></div>" +
+                        "<div class='col-xs-3 btn-group btn-group-xs' role='group'><button type='button' class='btn btn-default'>Remarks</button><button type='button' class='btn btn-default'>Update</button></div></div></div></div>";
+
+                activityContainer.append(composedHtml);
+            })
+            activityContainer.append("</div>");
+            console.log("html to add:" + activityContainer.html());
+            $("#activityData").append(activityContainer);
+        });
+        if (callback && typeof (callback) === "function") {
+            //do something here from your call back function
+            console.log("Calling the callback inside the function...")
+            callback();
+        }
+        ;
     }
     ;
-
+    function getActivities(callback) {
+        $.ajax({
+            type: 'GET',
+            url: get_activities_url + working_person_id,
+            success: function (data) {
+                console.log("activites get result:" + data);
+                if (data == "noresult") {
+                    showAlert("Warning! No activity found for this candidate: " + working_person_id);
+                } else {
+                    activities = data;
+                }
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    console.log("Calling the callback inside the function getActivities...")
+                    callback();
+                }
+                ;
+            },
+            error: function (jqXHR, status) {
+                showAlert("Application Error Found: " + status);
+            }
+        });
+    }
+    ;
     function prepSourcingForm() {
         console.log("prepSourcingForm--->>>");
         $(personProfile).find("sourcingIdsourcingCampaigne").each(function () {

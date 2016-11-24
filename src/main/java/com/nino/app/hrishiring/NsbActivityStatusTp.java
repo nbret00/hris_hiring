@@ -6,16 +6,20 @@
 package com.nino.app.hrishiring;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -46,6 +50,8 @@ public class NsbActivityStatusTp implements Serializable {
     private String description;
     @Column(name = "priority_level")
     private Integer priorityLevel;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "nsbActivityStatusTp")
+    private Collection<NsbActivities> nsbActivitiesCollection;
 
     public NsbActivityStatusTp() {
     }
@@ -84,6 +90,15 @@ public class NsbActivityStatusTp implements Serializable {
 
     public void setPriorityLevel(Integer priorityLevel) {
         this.priorityLevel = priorityLevel;
+    }
+
+    @XmlTransient
+    public Collection<NsbActivities> getNsbActivitiesCollection() {
+        return nsbActivitiesCollection;
+    }
+
+    public void setNsbActivitiesCollection(Collection<NsbActivities> nsbActivitiesCollection) {
+        this.nsbActivitiesCollection = nsbActivitiesCollection;
     }
 
     @Override
