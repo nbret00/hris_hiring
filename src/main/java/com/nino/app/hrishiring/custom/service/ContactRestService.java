@@ -74,14 +74,17 @@ public class ContactRestService {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Contact entity) {
+    public Response edit(@PathParam("id") Integer id, Contact entity) {
         try{
             Person p = new Person();
             p.setIdPerson(id);
             entity.setPersonidPerson(p);
             System.out.println("Edit for jobqualification :"+entity.getIdcontact().toString());
             em.merge(entity);
-        }catch(Exception e){e.printStackTrace();}
+            return Response.ok(entity).build();
+        }catch(Exception e){e.printStackTrace();
+            return Response.ok("notok").build();
+        }
     }
 
 }

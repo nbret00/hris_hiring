@@ -116,7 +116,7 @@ public class AccountRESTService {
         Credential cred = new Credential();
         if (user == null) {
             System.out.println(" postAccount returned success --------------------" + p + "-" + u);
-            List<HrisAccount> acc = (List<HrisAccount>) em.createNamedQuery("HrisAccount.getAccount")
+            List<HrisAccount> acc = (List<HrisAccount>) em.createQuery("SELECT h FROM HrisAccount h WHERE h.username = :username AND h.password = :password")
                     .setParameter("username", u)
                     .setParameter("password", p)
                     .getResultList();

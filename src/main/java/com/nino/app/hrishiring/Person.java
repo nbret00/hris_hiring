@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -81,11 +79,8 @@ public class Person implements Serializable {
     private Collection<HrisAccount> hrisAccountCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
     private Collection<Endorsement> endorsementCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
     private Collection<JobQualification> jobQualificationCollection;
-    @JoinColumn(name = "sourcing_idsourcing_campaigne", referencedColumnName = "idsourcing_campaigne")
-    @ManyToOne
-    private Sourcing sourcingIdsourcingCampaigne;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
     private Collection<Contact> contactCollection;
 
@@ -191,14 +186,6 @@ public class Person implements Serializable {
 
     public void setJobQualificationCollection(Collection<JobQualification> jobQualificationCollection) {
         this.jobQualificationCollection = jobQualificationCollection;
-    }
-
-    public Sourcing getSourcingIdsourcingCampaigne() {
-        return sourcingIdsourcingCampaigne;
-    }
-
-    public void setSourcingIdsourcingCampaigne(Sourcing sourcingIdsourcingCampaigne) {
-        this.sourcingIdsourcingCampaigne = sourcingIdsourcingCampaigne;
     }
 
     @XmlTransient

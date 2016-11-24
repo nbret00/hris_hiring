@@ -1,24 +1,22 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 
 $(document).ready(function () {
 
 
     //alert("working_person_id" + working_person_id);
+
     var working_person_id = "";
     var working_jobqualification_id = "";
     var working_contact_id = "";
+    var working_sourcing_id = "";
     var cand_name = "";
     var personProfile = null;
     var jobQualification = null;
     var contactInfo = null;
+    var sourcing = null;
 
-    $("#searchStr").val("");
+    var searchStr = null;
+
 
     $.ajax({
         type: 'GET',
@@ -35,14 +33,8 @@ $(document).ready(function () {
     });
 
     //load the default panel and data
-    $("#section1").load("htmlcomponents/quickpage.html", function () {
-        //alert("Load was performed.");
-        //console.log($("#quickpagebutton").inner);
-        document.getElementById("quickpagebutton").innerHTML = "tesstt";
-        console.log(document.getElementById("quickpagebutton").innerHTML);
-        //console.log($('#section1').find("#quickpage_button").html());
-        //initQuickPage("");
-        //$("#quickpage_button").value = 'Add New';
+    $("#section1").load("htmlcomponents/personalprofile.html", function () {
+        document.getElementById("personProfileBut").innerHTML = "Save New";
     });
 
     $("#quickpage").on("click", function (e) {
@@ -51,18 +43,7 @@ $(document).ready(function () {
 
         });
     });
-    //search button... key up checking for enter key up only
-    /*
-     $("#searchStr").keyup(function (e) {
-     
-     e.preventDefault();
-     if (e.which == 13) {
-     //alert("keyup enter");
-     $("#submitSearch").trigger("click");
-     }
-     });
-     */
-    //logout
+
     $("#logout").submit(function (event) {
         event.preventDefault();
 //alert("loging out");
@@ -84,28 +65,40 @@ $(document).ready(function () {
         console.log("global - id " + working_person_id);
     });
     //submit of search
-    $("#submitSearch").click(function (event) {
+    $("#searchForm").submit(function (event) {
         //alert("clicked!");
         event.preventDefault();
-        searchStr = $("#searchStr").val();
-        alert("search " + searchStr);
-        //if (searchStr != null || searchStr === underfined) {alert("me");}
-        if (searchStr !== undefined || searchStr.trim() != "") {
-            document.getElementById("activePerson").innerHTML = "Searching...";
+        searchStr = null;
+        searchStr = document.getElementById("searchStr").value;//$("#searchStr").val();
+        console.log("serching for: " + searchStr);
+        
+        if (searchStr !== null) {
+            //refreshing all global variable
+
             $("#searchStr").val("");//clear the search field
-            working_person_id;
-            personProfile;
+            working_person_id = "";
+            working_jobqualification_id = "";
+            working_contact_id = "";
+            working_sourcing_id = "";
+            cand_name = "";
+            personProfile = null;
+            jobQualification = null;
+            contactInfo = null;
+            sourcing = null;
+
             if (isNaN(searchStr)) {
-                alert("Rec # should be a number.");
+                showAlert("Rec # should be a number.");
             } else {
+                showLoader();
+                //document.getElementById("activePerson").innerHTML = "Searching...";
                 getPersonalProfile(searchStr, function () {
-                    setTimeout(alert("Searching record # " + searchStr), 10000);
+                    //setTimeout(alert("Searching record # " + searchStr), 10000);
                     showPersonalProfileForm();
                 });
             }
             ;
         } else {
-            alert("Provide Record # to search.");
+            showAlert("Provide Record # to search.");
         }
         ;
     });
@@ -132,6 +125,7 @@ $(document).ready(function () {
 
     //nav bars
     $("#canprofile").on("click", function (e) {
+        showLoader();
         showPersonalProfileForm();
     });
 
@@ -144,8 +138,8 @@ $(document).ready(function () {
                 console.log("personPrfile is null");
                 document.getElementById("personProfileBut").innerHTML = "Save";
                 personProfileSaveUpdateHandler();
+                hideLoader();
             } else {
-                document.getElementById("personProfileBut").innerHTML = "Update";
                 console.log("PersonProfile not null " + personProfile);
                 prepPersonProfileForm(personProfile);
                 personProfileSaveUpdateHandler();
@@ -163,7 +157,10 @@ $(document).ready(function () {
             document.getElementById("FirstName").value = ifnull($(this).find("firstName").text());
             document.getElementById("DOB").value = ifnull(TimeStampToDate($(this).find("dateOfBirth").text()));
             document.getElementById("Gender").value = ifnull($(this).find("gender").text());
+            document.getElementById("personProfileBut").innerHTML = "Update";
         })
+        //document.getElementById("loader_comp"). setAttribute("class","loader-sm overlay_center");
+        hideLoader();
         console.log("<<---prepPersonProfileForm");
     }
     ;
@@ -171,7 +168,7 @@ $(document).ready(function () {
         cand_name = $(data).find("name").text();
         working_person_id = $(data).find("idPerson").text();
         console.log("Active person: " + cand_name);
-        document.getElementById("activePerson").innerHTML = "<h5>Active record: #" + working_person_id + " - " + cand_name + "</h5><a href='home.html'><span class='badge'>Create New Record</span></a>";
+        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" + working_person_id + ") " + cand_name + "</h3><a href='home.html'><span class='badge'>Create New Record</span></a> <a href='#'><span class='badge' id='activities'>Activities</span></a>";
         return true;
     }
     ;
@@ -183,22 +180,24 @@ $(document).ready(function () {
             success: function (data) {
                 console.log("person:" + data);
                 if (data == null) {
-                    alert("No record found for rec#: " + searchStr);
+                    showAlert("No record found for rec#: " + searchStr);
                 } else {
                     working_person_id = $(data).find("idPerson").text();
                     console.log("Found in get Person: " + working_person_id);
                     personProfile = data; //register to global variable
                     prep = prepActivePerson(data);
                 }
+                if (callback && typeof (callback) === "function") {
+                    console.log("calling callback function from getPerson");
+                    callback();
+                }
+                ;
             },
             error: function (jqXHR, status) {
-                alert("Status: " + status);
+                showAlert("Error message: " + status);
             }
         });
-        if (callback && typeof (callback) === "function") {
-            callback();
-        }
-        ;
+
         console.log("<------");
     }
     ;
@@ -224,7 +223,7 @@ $(document).ready(function () {
                     data: Person,
                     success: function (data) {
                         personProfile = data;
-                        alert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
+                        showAlert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
                         prepActivePerson(data);
                         prepPersonProfileForm(data);
                     }
@@ -238,16 +237,17 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     data: Person,
                     success: function (data) {
-                        alert("Personal Profile Successfully Updated");
+                        showAlert("Personal Profile Successfully Updated");
                         getPersonalProfile(working_person_id);
                         prepPersonProfileForm(data);
                     },
                     error: function () {
-                        alert("Application Error!");
+                        showAlert("Application Error! Please contact system admin.");
                     }
                 });
             }
         });
+
     }
     ;
 //----------------------------------------------------- Job Qualification
@@ -257,7 +257,7 @@ $(document).ready(function () {
 
     $("#jobqualification").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
-            alert("Search for a record first or create new profile.");
+            showAlert("Search for a record first to associate Job Qualification or create new profile.");
         } else {
             getJobQualificationByPersonID(function () {
                 showQualificationForm();
@@ -288,7 +288,7 @@ $(document).ready(function () {
     function prepJobQualificationForm(jobQualificationXMLdata) {
         console.log("prepJobQualificationForm--->>>");
         $(jobQualificationXMLdata).find("jobQualification").each(function () {
-            alert($(this).find("industryLevelIdindustryLevel").text());
+            //alert($(this).find("industryLevelIdindustryLevel").text());
             document.getElementById("jobTitle").value = ifnull($(this).find("jobTitle").text());
             document.getElementById("yrsOfExperience").value = ifnull($(this).find("yrsOfExperience").text());
             document.getElementById("currentSalary").value = ifnull($(this).find("currentSalary").text());
@@ -316,7 +316,7 @@ $(document).ready(function () {
             success: function (data) {
                 console.log("job qualification get result:" + data);
                 if (data == "noresult") {
-                    alert("No record found for rec#: " + working_person_id);
+                    //showAlert("Creat: " + working_person_id);
                     jobQualification = null;
                     working_jobqualification_id = "";
                 } else {
@@ -332,7 +332,7 @@ $(document).ready(function () {
                 ;
             },
             error: function (jqXHR, status) {
-                alert("Application Error Found: " + status);
+                showAlert("Application Error Found: " + status);
             }
         });
     }
@@ -357,9 +357,9 @@ $(document).ready(function () {
                 searchText: $('#searchText').val(),
                 industriesIdindustries: {idindustries: document.getElementById("industriesIdindustries").value},
                 industryLevelIdindustryLevel: {idindustryLevel: $('#industryLevelIdindustryLevel').val()},
-                payrateIdpayrate: { idpayrate: $('#payrateIdpayrate').val()}
+                payrateIdpayrate: {idpayrate: $('#payrateIdpayrate').val()}
             });
-            
+
             console.log("This is the text of the button: " + JobQualificationData.toString());
             if ($("#jobQualificationBut").text() === "Save") {
                 console.log("saving new record person profile.");
@@ -370,13 +370,13 @@ $(document).ready(function () {
                     data: JobQualificationData,
                     success: function (data) {
                         jobQualification = data;
-                        alert("Job Qualification Successfully Created. - " + $(data).find("jobTitle").text());
+                        showAlert("Job Qualification Successfully Created. - " + $(data).find("jobTitle").text());
                         prepJobQualificationForm(data);
                     }
                 });
             }
             if ($("#jobQualificationBut").text() === "Update") {
-                console.log("updating person profile # " + working_person_id);
+                console.log("updating job qualification with ID # " + working_jobqualification_id);
                 //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
                 $.ajax({
                     type: 'PUT',
@@ -385,16 +385,17 @@ $(document).ready(function () {
                     data: JobQualificationData,
                     success: function (data) {
                         jobQualification = data;
+                        showAlert("Successfully updated Job Qualification.")
                     },
                     error: function () {
-                        alert("Application Error!");
+                        showAlert("Application Error!");
                     }
                 });
             }
         });
     }
-    ; 
-    
+    ;
+
 //-------------------------contacts
 
     var get_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
@@ -403,7 +404,7 @@ $(document).ready(function () {
 
     $("#contact").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
-            alert("Search for a record first or create new profile.");
+            showAlert("Search for a record first or create new profile.");
         } else {
             getContactByPersonID(function () {
                 showContactForm();
@@ -419,7 +420,7 @@ $(document).ready(function () {
                 document.getElementById("contactBut").innerHTML = "Save";
                 contactSaveUpdateHandler();
             } else {
-                console.log("Lookup for existing job qualification " + working_person_id);
+                console.log("Lookup for existing conract " + working_person_id);
                 prepContactForm(contactInfo);
                 contactSaveUpdateHandler();
             }
@@ -431,14 +432,14 @@ $(document).ready(function () {
     function prepContactForm(contactInfoXMLdata) {
         console.log("prepContactForm--->>>");
         $(contactInfoXMLdata).find("contact").each(function () {
-            alert($(this).find("contactNum").text());
+            showAlert($(this).find("contactNum").text());
             document.getElementById("contactNum").value = ifnull($(this).find("contactNum").text());
             document.getElementById("cellphoneNum").value = ifnull($(this).find("cellphoneNum").text());
             document.getElementById("email").value = ifnull($(this).find("email").text());
             document.getElementById("address").value = ifnull($(this).find("address").text());
             document.getElementById("city").value = ifnull($(this).find("city").text());
             document.getElementById("country").value = ifnull($(this).find("country").text());
-         });
+        });
         document.getElementById("contactBut").innerHTML = "Update";
         console.log("<<---prepContactForm");
     }
@@ -451,13 +452,13 @@ $(document).ready(function () {
             success: function (data) {
                 console.log("contact get result:" + data);
                 if (data == "noresult") {
-                    alert("No record found for rec#: " + working_person_id);
+                    //showAlert("No record found for rec#: " + working_person_id);
                     contactInfo = null;
                     working_contact_id = "";
                 } else {
                     contactInfo = data;//global
                     working_contact_id = $(data).find("contact").find("idcontact").text();
-                    alert("contact pk: "+working_contact_id);
+                    showAlert("contact pk: " + working_contact_id);
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
@@ -467,7 +468,7 @@ $(document).ready(function () {
                 ;
             },
             error: function (jqXHR, status) {
-                alert("Application Error Found: " + status);
+                showAlert("Application Error Found: " + status);
             }
         });
     }
@@ -487,7 +488,7 @@ $(document).ready(function () {
                 city: $('#city').val(),
                 country: $('#country').val(),
             });
-            
+
             console.log("This is the text of the button111: " + ContactData.toString());
             if ($("#contactBut").text() == "Save") {
                 console.log("saving new contact.");
@@ -498,7 +499,7 @@ $(document).ready(function () {
                     data: ContactData,
                     success: function (data) {
                         countryInfo = data;
-                        alert("Contact Successfully Created. - " + $(data).find("email").text());
+                        showAlert("Contact Successfully Created. - " + $(data).find("email").text());
                         prepContactForm(data);
                     }
                 });
@@ -512,9 +513,128 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     data: ContactData,
                     success: function (data) {
-                        
+
                         console.log("update successfull");
                         contactInfo = data;
+                        showAlert("You have just successfully updated the contact.");
+                        
+                    },
+                    error: function () {
+                        showAlert("Application Error!");
+                    }
+                });
+            }
+        });
+    }
+    ;
+//------------------------- Sourcing
+
+
+    var get_sourcing_url = "http://localhost:8080/hris_hiring/webresources/contact/";
+    var save_sourcing_url = "http://localhost:8080/hris_hiring/webresources/sourcing/save";
+    var update_sourcing_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
+
+    $("#sourcing").on("click", function (e) {
+        if (working_person_id == null || working_person_id == "") {
+            alert("Search for a record first or create new profile.");
+        } else {
+            getPersonalProfile(searchStr, function () {
+                //setTimeout(alert("Searching record # " + searchStr), 100005
+                console.log("sourcing getPerson callback");
+                sourcing = $(personProfile).find("sourcingIdsourcingCampaigne");
+                working_sourcing_id = sourcing.find("idsourcingCampaigne").text();
+                console.log("sourcing native: " + sourcing + "-sourcing ID: " + working_sourcing_id);
+                showSourcingForm();
+            });
+        }
+    });
+
+    function showSourcingForm() {
+        console.log(working_sourcing_id + "showSourcingForm() called....." + $(sourcing).html());
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/sourcing.html", function () {
+            if (working_sourcing_id === null || working_sourcing_id == "") {
+                console.log("sourcing null");
+                document.getElementById("sourcingBut").innerHTML = "Save";
+                sourcingSaveUpdateHandler();
+            } else {
+                console.log("Lookup for existing job qualification " + working_person_id);
+                prepSourcingForm();
+//                contactSaveUpdateHandler();
+            }
+        });
+
+    }
+    ;
+
+    function prepSourcingForm() {
+        console.log("prepSourcingForm--->>>");
+        $(personProfile).find("sourcingIdsourcingCampaigne").each(function () {
+            //alert($(this).find("contactNum").text());
+            document.getElementById("title").value = ifnull($(this).find("title").text());
+            document.getElementById("status").value = ifnull($(this).find("status").text());
+            document.getElementById("targetJobTitle").value = ifnull($(this).find("targetJobTitle").text());
+            document.getElementById("targetJobCategory").value = ifnull($(this).find("targetJobCategory").text());
+            document.getElementById("dateContacted").value = ifnull($(this).find("dateContacted").text());
+            document.getElementById("source").value = ifnull($(this).find("source").text());
+            document.getElementById("sourcer").value = ifnull($(this).find("sourcer").text());
+            document.getElementById("contactedBy").value = ifnull($(this).find("contactedBy").text());
+            document.getElementById("interviewer").value = ifnull($(this).find("interviewer").text());
+            document.getElementById("dateOfInterview").value = ifnull($(this).find("dateOfInterview").text());
+            document.getElementById("comments").value = ifnull($(this).find("comments").text());
+        });
+        document.getElementById("sourcingBut").innerHTML = "Update";
+        console.log("<<---prepSourcingForm");
+    }
+    ;
+
+    function sourcingSaveUpdateHandler() {
+        $("#sourcingForm").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
+            var SourcingData = JSON.stringify({
+                idsourcingCampaigne: working_sourcing_id,
+                title: $('#title').val(),
+                status: $('#comments').val(),
+                targetJobTitle: $('#targetJobTitle').val(),
+                targetJobCategory: $('#targetJobCategory').val(),
+                dateContacted: $('#dateContacted').val(),
+                source: $('#source').val(),
+                sourcer: $('#sourcer').val(),
+                contactedBy: $('#contactedBy').val(),
+                interviewer: $('#interviewer').val(),
+                dateOfInterview: $('#dateOfInterview').val(),
+                moDateAcceptedInLinkedin: $('#moDateAcceptedInLinkedin').val(),
+                comments: $('#comments').val()
+            });
+
+            console.log("This is the text of the button111: " + sourcing.toString());
+            if ($("#sourcingBut").text() == "Save") {
+                console.log("saving new contact.");
+                $.ajax({
+                    type: 'POST',
+                    url: save_sourcing_url,
+                    contentType: 'application/json',
+                    data: SourcingData,
+                    success: function (data) {
+                        sourcing = data;
+                        working_sourcing_id = $(data).find("idsourcingCampaigne").text();
+                        alert("Sourcing Campaign Successfully Created. - " + $(data).find("title").text());
+                        prepSourcingForm();
+                    }
+                });
+            }
+            if ($("#sourcingBut").text() == "Update") {
+                console.log("updating sourcing record # " + working_sourcing_id);
+                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
+                $.ajax({
+                    type: 'PUT',
+                    url: update_sourcing_url + working_person_id,
+                    contentType: 'application/json',
+                    data: SourcingData,
+                    success: function (data) {
+                        console.log("update successfull");
+                        sourcing = data;
                     },
                     error: function () {
                         alert("Application Error!");
@@ -523,9 +643,8 @@ $(document).ready(function () {
             }
         });
     }
-    ; 
-    
-    
+    ;
+
 //-------------------------start utils
 
     function ifnull(type) {
@@ -543,6 +662,22 @@ $(document).ready(function () {
         return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear();
     }
 
+    function showLoader() {
+        $("#loader_comp").addClass("loader-sm");
+        $("#loader_comp").addClass("overlay_center");
+        $("#section1").addClass("disableddiv");
+    }
+
+    function hideLoader() {
+        $("#loader_comp").removeClass("loader-sm");
+        $("#loader_comp").removeClass("overlay_center");
+        $("#section1").removeClass("disableddiv");
+    }
+
+    function showAlert(msg) {
+        $("#alert-msg").html("<p>" + msg + "</p>");
+        $("#myModalalert").modal();
+    }
 
 
 

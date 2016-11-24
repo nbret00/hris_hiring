@@ -30,6 +30,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.nino.app.hrishiring.custom.service.AccountRESTService.class);
+        resources.add(com.nino.app.hrishiring.custom.service.ActivitiesServices.class);
         resources.add(com.nino.app.hrishiring.custom.service.ApplicantRestservice.class);
         resources.add(com.nino.app.hrishiring.custom.service.ContactRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.JobQualificationRestService.class);

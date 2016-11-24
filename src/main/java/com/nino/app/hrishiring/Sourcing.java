@@ -6,7 +6,6 @@
 package com.nino.app.hrishiring;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -14,17 +13,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,7 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sourcing.findByDateOfInterview", query = "SELECT s FROM Sourcing s WHERE s.dateOfInterview = :dateOfInterview"),
     @NamedQuery(name = "Sourcing.findByMoDateAcceptedInLinkedin", query = "SELECT s FROM Sourcing s WHERE s.moDateAcceptedInLinkedin = :moDateAcceptedInLinkedin"),
     @NamedQuery(name = "Sourcing.findByLastUpdatedDt", query = "SELECT s FROM Sourcing s WHERE s.lastUpdatedDt = :lastUpdatedDt"),
-    @NamedQuery(name = "Sourcing.findByLastUpdatedBy", query = "SELECT s FROM Sourcing s WHERE s.lastUpdatedBy = :lastUpdatedBy")})
+    @NamedQuery(name = "Sourcing.findByLastUpdatedBy", query = "SELECT s FROM Sourcing s WHERE s.lastUpdatedBy = :lastUpdatedBy"),
+    @NamedQuery(name = "Sourcing.findByComments", query = "SELECT s FROM Sourcing s WHERE s.comments = :comments")})
 public class Sourcing implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -96,11 +92,9 @@ public class Sourcing implements Serializable {
     @Size(max = 45)
     @Column(name = "last_updated_by")
     private String lastUpdatedBy;
-    @JoinColumn(name = "job_idjobpk", referencedColumnName = "idjobpk")
-    @ManyToOne(optional = false)
-    private Job jobIdjobpk;
-    @OneToMany(mappedBy = "sourcingIdsourcingCampaigne")
-    private Collection<Person> personCollection;
+    @Size(max = 255)
+    @Column(name = "comments")
+    private String comments;
 
     public Sourcing() {
     }
@@ -221,21 +215,12 @@ public class Sourcing implements Serializable {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Job getJobIdjobpk() {
-        return jobIdjobpk;
+    public String getComments() {
+        return comments;
     }
 
-    public void setJobIdjobpk(Job jobIdjobpk) {
-        this.jobIdjobpk = jobIdjobpk;
-    }
-
-    @XmlTransient
-    public Collection<Person> getPersonCollection() {
-        return personCollection;
-    }
-
-    public void setPersonCollection(Collection<Person> personCollection) {
-        this.personCollection = personCollection;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     @Override

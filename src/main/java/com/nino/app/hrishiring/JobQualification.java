@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,7 +30,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "JobQualification.findAll", query = "SELECT j FROM JobQualification j"),
-    @NamedQuery(name = "JobQualification.findByIdPerson", query = "SELECT j FROM JobQualification j WHERE j.personidPerson = :personidPerson"),    
     @NamedQuery(name = "JobQualification.findByIdJobQualification", query = "SELECT j FROM JobQualification j WHERE j.idJobQualification = :idJobQualification"),
     @NamedQuery(name = "JobQualification.findByJobTitle", query = "SELECT j FROM JobQualification j WHERE j.jobTitle = :jobTitle"),
     @NamedQuery(name = "JobQualification.findBySkillsCategorymo", query = "SELECT j FROM JobQualification j WHERE j.skillsCategorymo = :skillsCategorymo"),
@@ -41,7 +41,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "JobQualification.findByTargetPosition", query = "SELECT j FROM JobQualification j WHERE j.targetPosition = :targetPosition"),
     @NamedQuery(name = "JobQualification.findByPriority", query = "SELECT j FROM JobQualification j WHERE j.priority = :priority"),
     @NamedQuery(name = "JobQualification.findBySkills", query = "SELECT j FROM JobQualification j WHERE j.skills = :skills"),
-    @NamedQuery(name = "JobQualification.findBySearchText", query = "SELECT j FROM JobQualification j WHERE j.searchText = :searchText")})
+    @NamedQuery(name = "JobQualification.findBySearchText", query = "SELECT j FROM JobQualification j WHERE j.searchText = :searchText"),
+    @NamedQuery(name = "JobQualification.findByIndustryId", query = "SELECT j FROM JobQualification j WHERE j.industryId = :industryId"),
+    @NamedQuery(name = "JobQualification.findByIndustryLevelId", query = "SELECT j FROM JobQualification j WHERE j.industryLevelId = :industryLevelId"),
+    @NamedQuery(name = "JobQualification.findByPayrateId", query = "SELECT j FROM JobQualification j WHERE j.payrateId = :payrateId")})
 public class JobQualification implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -83,18 +86,19 @@ public class JobQualification implements Serializable {
     @Size(max = 100)
     @Column(name = "SearchText")
     private String searchText;
-    @JoinColumn(name = "industries_idindustries", referencedColumnName = "idindustries")
-    @ManyToOne
-    private Industries industriesIdindustries;
-    @JoinColumn(name = "industry_level_idindustry_level", referencedColumnName = "idindustry_level")
-    @ManyToOne
-    private IndustryLevel industryLevelIdindustryLevel;
-    @JoinColumn(name = "payrate_idpayrate", referencedColumnName = "idpayrate")
-    @ManyToOne
-    private Payrate payrateIdpayrate;
-    @JoinColumn(name = "person_idPerson", referencedColumnName = "idPerson")
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "text_resume")
+    private String textResume;
+    @Column(name = "industry_id")
+    private Integer industryId;
+    @Column(name = "industry_level_id")
+    private Integer industryLevelId;
+    @Column(name = "payrate_id")
+    private Integer payrateId;
+    @JoinColumn(name = "person_id", referencedColumnName = "idPerson")
     @ManyToOne(optional = false)
-    private Person personidPerson;
+    private Person personId;
 
     public JobQualification() {
     }
@@ -199,36 +203,44 @@ public class JobQualification implements Serializable {
         this.searchText = searchText;
     }
 
-    public Industries getIndustriesIdindustries() {
-        return industriesIdindustries;
+    public String getTextResume() {
+        return textResume;
     }
 
-    public void setIndustriesIdindustries(Industries industriesIdindustries) {
-        this.industriesIdindustries = industriesIdindustries;
+    public void setTextResume(String textResume) {
+        this.textResume = textResume;
     }
 
-    public IndustryLevel getIndustryLevelIdindustryLevel() {
-        return industryLevelIdindustryLevel;
+    public Integer getIndustryId() {
+        return industryId;
     }
 
-    public void setIndustryLevelIdindustryLevel(IndustryLevel industryLevelIdindustryLevel) {
-        this.industryLevelIdindustryLevel = industryLevelIdindustryLevel;
+    public void setIndustryId(Integer industryId) {
+        this.industryId = industryId;
     }
 
-    public Payrate getPayrateIdpayrate() {
-        return payrateIdpayrate;
+    public Integer getIndustryLevelId() {
+        return industryLevelId;
     }
 
-    public void setPayrateIdpayrate(Payrate payrateIdpayrate) {
-        this.payrateIdpayrate = payrateIdpayrate;
+    public void setIndustryLevelId(Integer industryLevelId) {
+        this.industryLevelId = industryLevelId;
     }
 
-    public Person getPersonidPerson() {
-        return personidPerson;
+    public Integer getPayrateId() {
+        return payrateId;
     }
 
-    public void setPersonidPerson(Person personidPerson) {
-        this.personidPerson = personidPerson;
+    public void setPayrateId(Integer payrateId) {
+        this.payrateId = payrateId;
+    }
+
+    public Person getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Person personId) {
+        this.personId = personId;
     }
 
     @Override

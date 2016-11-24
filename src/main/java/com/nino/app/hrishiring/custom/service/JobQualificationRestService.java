@@ -43,7 +43,7 @@ public class JobQualificationRestService {
         try {
             System.out.println("createNew " + jobqualification.getJobTitle());
             Person p = em.find(Person.class, personid);
-            jobqualification.setPersonidPerson(p);
+            jobqualification.setPersonId(p);
             em.persist(jobqualification);
             em.flush();
             System.out.println("Create new job qualification with ID: " + jobqualification.getIdJobQualification());
@@ -64,8 +64,8 @@ public class JobQualificationRestService {
             Person p = new Person();
             p.setIdPerson(id);
 
-            JobQualification jq = (JobQualification) em.createNamedQuery("JobQualification.findByIdPerson")
-                    .setParameter("personidPerson", p)
+            JobQualification jq = (JobQualification) em.createQuery("SELECT j FROM JobQualification j WHERE j.personId = :personId")
+                    .setParameter("personId", p)
                     .getSingleResult();
             System.out.println("Job qualification #:" + jq.getIdJobQualification());
             return Response.ok(jq).build();
@@ -78,14 +78,18 @@ public class JobQualificationRestService {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, JobQualification entity) {
+    public Response edit(@PathParam("id") Integer id, JobQualification entity) {
         try{
             Person p = new Person();
             p.setIdPerson(id);
-            entity.setPersonidPerson(p);
+            entity.setPersonId(p);
             System.out.println("Edit for jobqualification :"+entity.getIdJobQualification().toString());
             em.merge(entity);
-        }catch(Exception e){e.printStackTrace();}
+            return Response.ok(entity).build();
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.ok("notok").build();
+        }
     }
 
 }

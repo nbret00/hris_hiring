@@ -90,8 +90,6 @@ public class Job implements Serializable {
     @Column(name = "company_id")
     private Integer companyId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobIdjobpk")
-    private Collection<Sourcing> sourcingCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobIdjobpk")
     private Collection<Company> companyCollection;
 
     public Job() {
@@ -203,15 +201,6 @@ public class Job implements Serializable {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
-    }
-
-    @XmlTransient
-    public Collection<Sourcing> getSourcingCollection() {
-        return sourcingCollection;
-    }
-
-    public void setSourcingCollection(Collection<Sourcing> sourcingCollection) {
-        this.sourcingCollection = sourcingCollection;
     }
 
     @XmlTransient

@@ -1,12 +1,10 @@
 package com.nino.app.hrishiring;
 
-import com.nino.app.hrishiring.JobQualification;
 import javax.annotation.Generated;
-import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-19T12:51:59")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2016-11-23T20:59:20")
 @StaticMetamodel(Payrate.class)
 public class Payrate_ { 
 
@@ -14,6 +12,5 @@ public class Payrate_ {
     public static volatile SingularAttribute<Payrate, String> payrateTxt;
     public static volatile SingularAttribute<Payrate, String> max;
     public static volatile SingularAttribute<Payrate, Integer> idpayrate;
-    public static volatile CollectionAttribute<Payrate, JobQualification> jobQualificationCollection;
 
 }
