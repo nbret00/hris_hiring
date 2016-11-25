@@ -2,17 +2,18 @@
 
 $(document).ready(function () {
 
-
-console.log("document.URL : "+document.URL);
-console.log("document.location.href : "+document.location.href);
-console.log("document.location.origin : "+document.location.origin);
-console.log("document.location.hostname : "+document.location.hostname);
-console.log("document.location.host : "+document.location.host);
-console.log("document.location.pathname : "+document.location.pathname);
-console.log("location.hostname: "+location.hostname);
-console.log("document.domain: "+document.domain);
-console.log("window.location.hostname: "+window.location.hostname)
-    //alert("working_person_id" + working_person_id);
+    /*
+     console.log("document.URL : "+document.URL);
+     console.log("document.location.href : "+document.location.href);
+     console.log("document.location.origin : "+document.location.origin);
+     console.log("document.location.hostname : "+document.location.hostname);
+     console.log("document.location.host : "+document.location.host);
+     console.log("document.location.pathname : "+document.location.pathname);
+     console.log("location.hostname: "+location.hostname);
+     console.log("document.domain: "+document.domain);
+     console.log("window.location.hostname: "+window.location.hostname);
+     //alert("working_person_id" + working_person_id);
+     */
 
     var working_person_id = "";
     var working_jobqualification_id = "";
@@ -44,7 +45,8 @@ console.log("window.location.hostname: "+window.location.hostname)
 
     //load the default panel and data
     $("#section1").load("htmlcomponents/personalprofile.html", function () {
-        document.getElementById("personProfileBut").innerHTML = "Save New";
+        document.getElementById("personProfileBut").innerHTML = "Save";
+        personProfileSaveUpdateHandler();
     });
 
     $("#quickpage").on("click", function (e) {
@@ -179,9 +181,10 @@ console.log("window.location.hostname: "+window.location.hostname)
         cand_name = $(data).find("name").text();
         working_person_id = $(data).find("idPerson").text();
         console.log("Active person: " + cand_name);
-        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" + working_person_id + ") " + cand_name +
-                "</h3><a href='home.html'><span class='badge'>Enter new Candidate</span></a> <a href='#'>" +
-                "<span class='badge' id='activities-but' onclick='activitiesBadgeOnclick()'>Hiring Activities</span></a>";
+        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" +
+                working_person_id + ") " + cand_name +
+                "</h3><a href='home.html' class='btn btn-default btn-sm'>Enter new Candidate</a> " +
+                " <a class='btn btn-default btn-sm' href='#' id='activities-but'>Hiring Activities</a>";
 
         if (callback && typeof (callback) === "function") {
             //do something here from your call back function
@@ -630,32 +633,30 @@ console.log("window.location.hostname: "+window.location.hostname)
         });
     }
     ;
-    function prepSourcingForm() {
-        console.log("prepSourcingForm--->>>");
-        $(personProfile).find("sourcingIdsourcingCampaigne").each(function () {
-            //alert($(this).find("contactNum").text());
-            document.getElementById("title").value = ifnull($(this).find("title").text());
-            document.getElementById("status").value = ifnull($(this).find("status").text());
-            document.getElementById("targetJobTitle").value = ifnull($(this).find("targetJobTitle").text());
-            document.getElementById("targetJobCategory").value = ifnull($(this).find("targetJobCategory").text());
-            document.getElementById("dateContacted").value = ifnull($(this).find("dateContacted").text());
-            document.getElementById("source").value = ifnull($(this).find("source").text());
-            document.getElementById("sourcer").value = ifnull($(this).find("sourcer").text());
-            document.getElementById("contactedBy").value = ifnull($(this).find("contactedBy").text());
-            document.getElementById("interviewer").value = ifnull($(this).find("interviewer").text());
-            document.getElementById("dateOfInterview").value = ifnull($(this).find("dateOfInterview").text());
-            document.getElementById("comments").value = ifnull($(this).find("comments").text());
-        });
-        document.getElementById("sourcingBut").innerHTML = "Update";
-        console.log("<<---prepSourcingForm");
-    }
-    ;
-
-    function sourcingSaveUpdateHandler() {
-        $("#sourcingForm").submit(function (event) {
-            event.preventDefault();
-            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
-            var SourcingData = JSON.stringify({
+    /*could be use for update later
+     function prepSourcingForm() {
+     console.log("prepSourcingForm--->>>");
+     $(personProfile).find("sourcingIdsourcingCampaigne").each(function () {
+     //alert($(this).find("contactNum").text());
+     document.getElementById("title").value = ifnull($(this).find("title").text());
+     document.getElementById("status").value = ifnull($(this).find("status").text());
+     document.getElementById("targetJobTitle").value = ifnull($(this).find("targetJobTitle").text());
+     document.getElementById("targetJobCategory").value = ifnull($(this).find("targetJobCategory").text());
+     document.getElementById("dateContacted").value = ifnull($(this).find("dateContacted").text());
+     document.getElementById("source").value = ifnull($(this).find("source").text());
+     document.getElementById("sourcer").value = ifnull($(this).find("sourcer").text());
+     document.getElementById("contactedBy").value = ifnull($(this).find("contactedBy").text());
+     document.getElementById("interviewer").value = ifnull($(this).find("interviewer").text());
+     document.getElementById("dateOfInterview").value = ifnull($(this).find("dateOfInterview").text());
+     document.getElementById("comments").value = ifnull($(this).find("comments").text());
+     });
+     document.getElementById("sourcingBut").innerHTML = "Update";
+     console.log("<<---prepSourcingForm");
+     }
+     ;
+     */
+    function getActivityFormData(){
+            var activityData = JSON.stringify({
                 idsourcingCampaigne: working_sourcing_id,
                 title: $('#title').val(),
                 status: $('#comments').val(),
@@ -670,23 +671,31 @@ console.log("window.location.hostname: "+window.location.hostname)
                 moDateAcceptedInLinkedin: $('#moDateAcceptedInLinkedin').val(),
                 comments: $('#comments').val()
             });
+            return activityData;
+    }
 
-            console.log("This is the text of the button111: " + sourcing.toString());
-            if ($("#sourcingBut").text() == "Save") {
-                console.log("saving new contact.");
-                $.ajax({
-                    type: 'POST',
-                    url: save_sourcing_url,
-                    contentType: 'application/json',
-                    data: SourcingData,
-                    success: function (data) {
-                        sourcing = data;
-                        working_sourcing_id = $(data).find("idsourcingCampaigne").text();
-                        alert("Sourcing Campaign Successfully Created. - " + $(data).find("title").text());
-                        prepSourcingForm();
-                    }
-                });
-            }
+    function activitySaveHandler() {
+        $("#sourcingForm").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
+            //activityData = getActivityFormData();
+            console.log("saving new contact.");
+            $.ajax({
+                type: 'POST',
+                url: save_sourcing_url,
+                contentType: 'application/json',
+                data: getActivityFormData(),
+                success: function (data) {
+                    sourcing = data;
+                    working_sourcing_id = $(data).find("idsourcingCampaigne").text();
+                    alert("Sourcing Campaign Successfully Created. - " + $(data).find("title").text());
+                    prepSourcingForm();
+                }
+            });
+        })
+    }
+    function updateActivityHandler(){
+        $("#sourcingForm").submit(function (event) {
             if ($("#sourcingBut").text() == "Update") {
                 console.log("updating sourcing record # " + working_sourcing_id);
                 //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
