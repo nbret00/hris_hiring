@@ -57,25 +57,31 @@ public class AccountRESTService {
     //@Consumes({MediaType.APPLICATION_XML})
     @Path("checkCredential")
     public Response checkCredential(@CookieParam("credentialid") String user) {
-        System.out.println("check credential..."+user);
+        System.out.println("check credential..." + user);
         if (user == null) {
             //not autheticated
             return Response.ok("not_authenticated").build();
         }
+        //create a renewed cookie
+        NewCookie nc1 = new NewCookie(
+                new Cookie("credentialid", user), "authenticate", 1200, false);
+
+        HrisAccount ha = em.find(HrisAccount.class, Integer.valueOf(user));
+        Credential cred = new Credential(ha.getIdhrisAccount().intValue(), ha.getUsername(),ha.getRole());
+        
+
         System.out.println("this the user from cookie " + user);
-        return Response.ok("success").build();
+        return Response.ok("success").entity(cred).cookie(nc1).build();
     }
-    
-    
+
     @GET
     //@Consumes({MediaType.APPLICATION_XML})
     @Path("logout")
     public Response logout(@CookieParam("credentialid") Cookie user) {
         return Response.ok("success")
-                .cookie(new NewCookie(user,"no comment",0,false))
+                .cookie(new NewCookie(user, "no comment", 0, false))
                 .build();
-    }    
-    
+    }
 
     @GET
     //@Consumes({MediaType.APPLICATION_XML})
@@ -100,8 +106,6 @@ public class AccountRESTService {
 
         return Response.ok("ok").build();
     }
-    
-    
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
@@ -123,18 +127,16 @@ public class AccountRESTService {
             System.out.println("size : " + acc.size());
 
             if (acc.size() > 0) {
-                
+
                 System.out.println("data" + acc.get(0).getUsername());
                 cred.setRole(acc.get(0).getRole());
                 cred.setUsername(acc.get(0).getUsername());
-                
+                cred.setAccountID(acc.get(0).getIdhrisAccount().intValue());
+
                 String uid = acc.get(0).getIdhrisAccount().toString();
-                
+
                 NewCookie nc1 = new NewCookie(
-                        new Cookie("credentialid", uid )
-                        ,"authenticate"
-                        ,1200
-                        ,false);
+                        new Cookie("credentialid", uid), "authenticate", 1200, false);
 
                 return Response.ok("success")
                         .cookie(nc1)
@@ -145,16 +147,11 @@ public class AccountRESTService {
             }
         }
 
-
         NewCookie nc1 = new NewCookie(
-                new Cookie("credentialid", user.getValue())
-                ,"authenticate"
-                ,1200
-                ,false);
-        
+                new Cookie("credentialid", user.getValue()), "authenticate", 1200, false);
 
         System.out.println("authenticated");
-       
+
         return Response.ok("success")
                 .cookie(nc1)
                 .build();

@@ -12,12 +12,30 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author nbret00
  */
-//@XmlRootElement
+@XmlRootElement
 public class Credential {
     
+    private int accountID;
     private String Username;
-    private String Password;
     private String Role;
+    
+    public Credential(){}
+    
+    public Credential(int accountID,String Username, String Role){
+        this.Role = Role;
+        this.Username = Username;
+        this.accountID = accountID;
+    }
+    
+    public int getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
+    }
+    
+
     
     public String getUsername() {
         return Username;
@@ -28,14 +46,6 @@ public class Credential {
         this.Username = Username;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    //@XmlElement
-    public void setPassword(String Password) {
-        this.Password = Password;
-    }
 
     public String getRole() {
         return Role;

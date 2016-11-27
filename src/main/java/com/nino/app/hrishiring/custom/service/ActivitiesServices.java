@@ -39,17 +39,15 @@ public class ActivitiesServices {
     }
 
     @POST
-    @Path("save/{personid}")
+    @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response save(Contact entity,
-            @PathParam("personid") int personid) {
+    public Response save(NsbActivities entity) {
         try {
-            System.out.println("createNew " + entity.getEmail());
-            Person p = em.find(Person.class, personid);
-            entity.setPersonidPerson(p);
+            System.out.println("createNew " + entity.getIdSourcingActivities());
+            //entity.setPersonidPerson(p);
             em.persist(entity);
             em.flush();
-            System.out.println("Create new job qualification with ID: " + entity.getIdcontact());
+            //System.out.println("Create new job qualification with ID: " + entity.getIdcontact());
             return Response.ok(entity).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,11 +62,11 @@ public class ActivitiesServices {
         try {
             System.out.println("Activity search by id");
             //Person p = new Person(id);
-            NsbEntityActivities jq = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.ididentityActivities = :ididentityActivities")
+            NsbEntityActivities jq = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.ididentityActivities = :ididentityActivities ORDER BY n.ididentityActivities DESC")
                     .setParameter("ididentityActivities", id)
                     .getSingleResult();
             //System.out.println("Contact #:" + jq.getIdcontact());
-     
+
             return Response.ok(jq).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,11 +88,11 @@ public class ActivitiesServices {
                     .setParameter("entityId", id)
                     .getSingleResult();
 
-            jq = em.createQuery("SELECT n FROM NsbActivities n WHERE n.nsbEntityActivities = :nsbEntityActivities")
+            jq = em.createQuery("SELECT n FROM NsbActivities n WHERE n.nsbEntityActivities = :nsbEntityActivities ORDER BY n.idSourcingActivities DESC")
                     .setParameter("nsbEntityActivities", entity_act)
                     .getResultList();
             //System.out.println("Contact #:" + jq.getIdcontact());
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             //return Response.ok("noresult").build();

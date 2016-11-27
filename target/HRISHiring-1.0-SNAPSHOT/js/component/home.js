@@ -15,10 +15,14 @@ $(document).ready(function () {
      //alert("working_person_id" + working_person_id);
      */
 
+    var credentialID = "";
+    var credential = null;
+
     var working_person_id = "";
     var working_jobqualification_id = "";
     var working_contact_id = "";
     var working_sourcing_id = "";
+    var working_activity_id = "";
     var cand_name = "";
     var personProfile = null;
     var jobQualification = null;
@@ -35,11 +39,18 @@ $(document).ready(function () {
         "Access-Control-Allow-Origin: ": "*",
         success: function (data) {
             //alert("done get" + data)
-            if (data == "success") {
+            if (data != null) {
                 //alert("success");
+                credential = data;
+                credentialID = $(data).find("credential").find("accountID").text();
+                console.log("credential data -" + credentialID);
             } else {
-                window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
+                //window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
             }
+        },
+        error: function () {
+            setTimeout(showAlert("The application found problem on your credential, please contact administrator."), 3000);
+            //window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
         }
     });
 
@@ -82,10 +93,12 @@ $(document).ready(function () {
         event.preventDefault();
         searchStr = null;
         searchStr = document.getElementById("searchStr").value;//$("#searchStr").val();
-        console.log("serching for: " + searchStr);
+        console.log("serching for: |" + searchStr + "|");
 
-        if (searchStr !== null) {
+        if (searchStr === null || searchStr == '') {
+            showAlert("Provide Record # to search.");
             //refreshing all global variable
+        } else {
 
             $("#searchStr").val("");//clear the search field
             working_person_id = "";
@@ -110,8 +123,7 @@ $(document).ready(function () {
                 });
             }
             ;
-        } else {
-            showAlert("Provide Record # to search.");
+
         }
         ;
     });
@@ -555,7 +567,7 @@ $(document).ready(function () {
 
 
     var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
-    var save_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/save";
+    var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
     var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
 
     function activityButEvent() {
@@ -566,10 +578,6 @@ $(document).ready(function () {
                 showAlert("Search for a record first to view activities.");
             } else {
                 getActivities(function () {
-                    //setTimeout(alert("Searching record # " + searchStr), 100005
-                    console.log("activities callback");
-
-                    //console.log("sourcing native: " + sourcing + "-sourcing ID: " + working_sourcing_id);
                     showActivityForm();
                 });
             }
@@ -580,7 +588,7 @@ $(document).ready(function () {
         console.log("working activity form");
         $("#panel").remove();
         $("#section1").load("htmlcomponents/activities.html", function () {
-
+            saveActivityHandler();//register the save handler for activities.html
             //console.log("data: "+$(activities).find(nsbActivitiess));
             var activityContainer = $("<div class='col-md-12' >");
 
@@ -655,46 +663,52 @@ $(document).ready(function () {
      }
      ;
      */
-    function getActivityFormData(){
-            var activityData = JSON.stringify({
-                idsourcingCampaigne: working_sourcing_id,
-                title: $('#title').val(),
-                status: $('#comments').val(),
-                targetJobTitle: $('#targetJobTitle').val(),
-                targetJobCategory: $('#targetJobCategory').val(),
-                dateContacted: $('#dateContacted').val(),
-                source: $('#source').val(),
-                sourcer: $('#sourcer').val(),
-                contactedBy: $('#contactedBy').val(),
-                interviewer: $('#interviewer').val(),
-                dateOfInterview: $('#dateOfInterview').val(),
-                moDateAcceptedInLinkedin: $('#moDateAcceptedInLinkedin').val(),
-                comments: $('#comments').val()
-            });
-            return activityData;
+    function getActivityFormData() {
+        var activityData = JSON.stringify({
+            idSourcingActivities: working_activity_id,
+            createdBy: credentialID,
+            updatedBy: credentialID,
+            description: $('#description').val(),
+            nsbActivityStatusTp: {idactivityStatus: '1'},
+            nsbActivityTp: {idActivityTp: '1'},
+            nsbEntityActivities: {ididentityActivities: '1'}
+        });
+        return activityData;
+    }
+    function getActivityNewPersonData() {
+        var activityData = JSON.stringify({
+            //idSourcingActivities: working_activity_id,
+            createdBy: credentialID,
+            updatedBy: credentialID,
+            description: $('#description').val(),
+            nsbActivityStatusTp: {idactivityStatus: '1'},
+            nsbActivityTp: {idActivityTp: '1'},
+            nsbEntityActivities: {ididentityActivities: '1'}
+        });
+        return activityData;
     }
 
-    function activitySaveHandler() {
-        $("#sourcingForm").submit(function (event) {
+    function saveActivityHandler() {
+        console.log("clicked activities save handler");
+        $("#activityform").submit(function (event) {
             event.preventDefault();
             console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
             //activityData = getActivityFormData();
             console.log("saving new contact.");
             $.ajax({
                 type: 'POST',
-                url: save_sourcing_url,
+                url: save_activities_url,
                 contentType: 'application/json',
                 data: getActivityFormData(),
                 success: function (data) {
-                    sourcing = data;
-                    working_sourcing_id = $(data).find("idsourcingCampaigne").text();
-                    alert("Sourcing Campaign Successfully Created. - " + $(data).find("title").text());
-                    prepSourcingForm();
+                    getActivities(function () {
+                        showActivityForm();
+                    });
                 }
             });
         })
     }
-    function updateActivityHandler(){
+    function updateActivityHandler() {
         $("#sourcingForm").submit(function (event) {
             if ($("#sourcingBut").text() == "Update") {
                 console.log("updating sourcing record # " + working_sourcing_id);
