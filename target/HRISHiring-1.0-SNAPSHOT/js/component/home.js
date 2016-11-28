@@ -45,12 +45,12 @@ $(document).ready(function () {
                 credentialID = $(data).find("credential").find("accountID").text();
                 console.log("credential data -" + credentialID);
             } else {
-                //window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
+                window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
             }
         },
         error: function () {
             setTimeout(showAlert("The application found problem on your credential, please contact administrator."), 3000);
-            //window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
+            window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
         }
     });
 
@@ -567,6 +567,7 @@ $(document).ready(function () {
 
 
     var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
+    var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
     var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
     var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
 
@@ -578,7 +579,9 @@ $(document).ready(function () {
                 showAlert("Search for a record first to view activities.");
             } else {
                 getActivities(function () {
-                    showActivityForm();
+                    showActivityForm(function(){
+                        //show remarks
+                    });
                     updateActivityHandler();
                 });
             }
@@ -599,7 +602,7 @@ $(document).ready(function () {
                         "<div class='panel-heading'>Activity Type - " + $(this).find("nsbActivityTp").find("name").text() + "</div>" +
                         "<div class='panel-body'>Activity ID: " + $(this).find("idSourcingActivities").text() + "<br/>" +
                         "<strong>Status :</strong> " + $(this).find("nsbActivityStatusTp").find("name").text() + "</br>" +
-                        "<strong>Description: </strong> " + $(this).find("description").text() + "<br><Strong>Remarks: </Strong><br><div class='row'><div class='col-xs-8'><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote></div></div></div>" +
+                        "<strong>Description: </strong> " + $(this).find("description").text() + "<br><Strong>Remarks: </Strong><br><div class='row'><div class='col-xs-8' id='remarks_"+$(this).find("idSourcingActivities").text()+"'><blockquote class='small-font'>This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote></div></div></div>" +
                         "<div class='panel-footer'><div class='row'><div class='col-xs-9'><small>Date Created: " + TimeStampToDate($(this).find("createdDt").text()) +
                         " / Created By: " + $(this).find("createdBy").text() + "</small></div>" +
                         "<div class='col-xs-3 btn-group btn-group-xs' role='group'><button type='button' class='btn btn-default'>Remarks</button><button type='button' class='btn btn-default'>Update</button></div></div></div></div>";
@@ -618,6 +621,30 @@ $(document).ready(function () {
         ;
     }
     ;
+    
+    function getActivityRemarks(callback){
+        $.ajax({
+            type: 'GET',
+            url: get_activities_url + working_person_id,
+            success: function (data) {
+                console.log("activites get result:" + data);
+                if (data == "noresult") {
+                    showAlert("Warning! No activity found for this candidate: " + working_person_id);
+                } else {
+                    activities = data;
+                }
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    console.log("Calling the callback inside the function getActivities...")
+                    callback();
+                }
+                ;
+            },
+            error: function (jqXHR, status) {
+                showAlert("Application Error Found: " + status);
+            }
+        });        
+    }
     function getActivities(callback) {
         $.ajax({
             type: 'GET',
@@ -681,7 +708,7 @@ $(document).ready(function () {
             //idSourcingActivities: working_activity_id,
             createdBy: credentialID,
             updatedBy: credentialID,
-            description: $('#description').val(),
+            description: 'This activity pertains to the initial creation of the record.',
             nsbActivityStatusTp: {idactivityStatus: '1'},
             nsbActivityTp: {idActivityTp: '1'},
             nsbEntityActivities: {ididentityActivities: credentialID}

@@ -8,8 +8,8 @@ package com.nino.app.hrishiring.custom.service;
 import com.nino.app.hrishiring.Contact;
 import com.nino.app.hrishiring.NsbActivities;
 import com.nino.app.hrishiring.NsbEntityActivities;
+import com.nino.app.hrishiring.NsbRemarks;
 import com.nino.app.hrishiring.Person;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -100,6 +100,28 @@ public class ActivitiesServices {
         return jq;
     }
 
+    @GET
+    @Path("remarks/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<NsbRemarks> getRemarks(@PathParam("id") int id) {
+        try {
+            System.out.println("Remarks search by activity id");
+            //Person p = new Person(id);
+            NsbActivities na = new NsbActivities();
+            na.setIdSourcingActivities(Integer.valueOf(id));
+            
+            List jq = (List) em.createQuery("SELECT n FROM NsbRemarks n WHERE n.nsbactivitiesidSourcingActivities = :nsbactivitiesidSourcingActivities ORDER BY n.idremarks DESC")
+                    .setParameter("nsbactivitiesidSourcingActivities", na)
+                    .getResultList();
+            //System.out.println("Contact #:" + jq.getIdcontact());
+            
+            return jq;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
