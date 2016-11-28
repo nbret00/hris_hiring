@@ -579,6 +579,7 @@ $(document).ready(function () {
             } else {
                 getActivities(function () {
                     showActivityForm();
+                    updateActivityHandler();
                 });
             }
         });
@@ -594,11 +595,11 @@ $(document).ready(function () {
 
             $(activities).find("nsbActivities").each(function () {
                 console.log("activity description" + $(this).find("description").text());
-                var composedHtml = "<div class='panel panel-default'>" +
+                var composedHtml = "<div class='panel panel-info'>" +
                         "<div class='panel-heading'>Activity Type - " + $(this).find("nsbActivityTp").find("name").text() + "</div>" +
-                        "<div class='panel-body'><strong>Activity ID: </strong>" + $(this).find("idSourcingActivities").text() + "<br/>" +
+                        "<div class='panel-body'>Activity ID: " + $(this).find("idSourcingActivities").text() + "<br/>" +
                         "<strong>Status :</strong> " + $(this).find("nsbActivityStatusTp").find("name").text() + "</br>" +
-                        "<strong>Description: </strong> " + $(this).find("description").text() + "</div>" +
+                        "<strong>Description: </strong> " + $(this).find("description").text() + "<br><Strong>Remarks: </Strong><br><div class='row'><div class='col-xs-8'><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote></div></div></div>" +
                         "<div class='panel-footer'><div class='row'><div class='col-xs-9'><small>Date Created: " + TimeStampToDate($(this).find("createdDt").text()) +
                         " / Created By: " + $(this).find("createdBy").text() + "</small></div>" +
                         "<div class='col-xs-3 btn-group btn-group-xs' role='group'><button type='button' class='btn btn-default'>Remarks</button><button type='button' class='btn btn-default'>Update</button></div></div></div></div>";
@@ -683,7 +684,7 @@ $(document).ready(function () {
             description: $('#description').val(),
             nsbActivityStatusTp: {idactivityStatus: '1'},
             nsbActivityTp: {idActivityTp: '1'},
-            nsbEntityActivities: {ididentityActivities: '1'}
+            nsbEntityActivities: {ididentityActivities: credentialID}
         });
         return activityData;
     }

@@ -55,10 +55,7 @@ $(document).ready(function () {
             type: 'POST',
             url: login_url,
             contentType: 'application/x-www-form-urlencoded',
-            //dataType: 'jsonp',
             data: data,
-            //crossDomain: true,
-            //"Access-Control-Allow-Origin: " : "*",
             success: function (data) {
                 if ("success" == data){
                     console.log("success");
@@ -74,10 +71,6 @@ $(document).ready(function () {
             }
         });
         
-        
-
-
-
     });
     
 })
