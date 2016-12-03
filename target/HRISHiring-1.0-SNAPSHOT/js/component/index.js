@@ -34,13 +34,10 @@ $(document).ready(function () {
         console.log("clicked");
         event.preventDefault();
         // Stop form from submitting normally
-
-
         var data = {
             Username: $('#Username').val(),
             Password: $('#Password').val(),
         }
-        
         
         var dt = $("#customlogin");
         console.log(dt.toString());
