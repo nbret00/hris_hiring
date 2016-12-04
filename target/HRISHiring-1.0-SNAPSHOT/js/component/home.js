@@ -583,7 +583,7 @@ $(document).ready(function () {
                         //show remarks
                     });
                     updateActivityHandler();
-                });
+                });              
             }
         });
     }
@@ -592,12 +592,25 @@ $(document).ready(function () {
         console.log("working activity form");
         $("#panel").remove();
         $("#section1").load("htmlcomponents/activities.html", function () {
-            saveActivityHandler();//register the save handler for activities.html
-            //console.log("data: "+$(activities).find(nsbActivitiess));
-            var activityContainer = $("<div class='col-md-12' >");
-
+            
+            var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
+            console.log("html: "+$(tempActivityDisplay).html());
+            $("#activityRow").remove();
+            
+            //console.log("This is the content of acvity panel: "+ activityContainer.html());
+            
             $(activities).find("nsbActivities").each(function () {
-                console.log("activity description" + $(this).find("description").text());
+                console.log("activity type: "+$(this).find("nsbActivityTp").find("name").text());
+                var composeActivities = tempActivityDisplay.cloneNode(true);
+                    $(composeActivities).find("#act_heading").text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());
+                    $(composeActivities).find("#act_id").text("Activity ID: "+$(this).find("idSourcingActivities").text());
+                    $(composeActivities).find("#act_status").text($(this).find("nsbActivityStatusTp").find("name").text());
+                    $(composeActivities).find("#act_description").text($(this).find("description").text());
+                        //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());
+                                              
+                $("#activity_panel").append(composeActivities);
+                
+                /*
                 var composedHtml = "<div class='panel panel-info'>" +
                         "<div class='panel-heading'>Activity Type - " + $(this).find("nsbActivityTp").find("name").text() + "</div>" +
                         "<div class='panel-body'>Activity ID: " + $(this).find("idSourcingActivities").text() + "<br/>" +
@@ -608,10 +621,8 @@ $(document).ready(function () {
                         "<div class='col-xs-3 btn-group btn-group-xs' role='group'><button type='button' class='btn btn-default'>Remarks</button><button type='button' class='btn btn-default'>Update</button></div></div></div></div>";
 
                 activityContainer.append(composedHtml);
+                */
             })
-            activityContainer.append("</div>");
-            console.log("html to add:" + activityContainer.html());
-            $("#activityData").append(activityContainer);
         });
         if (callback && typeof (callback) === "function") {
             //do something here from your call back function
