@@ -2,7 +2,7 @@
 <div class="panel panel-default" id="panel">
     <div class="panel-heading">
         Hiring Activities
-    </div>                            
+    </div>      
     <div class="panel-body" id="activity_panel">
         <div class="row">
             <div class="col-md-12 pad5">
@@ -47,49 +47,62 @@
                                     </div>
                                 </div>
                             </div>    
-                    </div
-
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="row" id="activityRow">
             <div class="col-md-12 pad5">
 
                 <div class="panel panel-info">
                     <div class="panel-heading" id="act_heading">this is a test</div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="activityBody">
                         <font id="act_id">Activity ID: 123 </font><br/>
                         <strong>Status :</strong> <font id="act_status"></font> <br/>
                         <strong>Description: </strong> <font id="act_description"></font> <br/>
                         <Strong>Remarks: </Strong><br/>
-                        <div class="row">
-                            <div class="col-xs-8" id="rem_id">
-                                <blockquote class="small-font">This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks
-                                    <footer>posted date: 2005-04-04 | by: Nino</footer>
+                        <div class="row" id="remarks_row">
+                            <div class="col-xs-10" id="remarks_col_div">
+                                <blockquote class="small-font" id="remarks_body">This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks
+                                    <footer id="remarks_footer">posted date: 2005-04-04 | by: Nino</footer>
                                 </blockquote>
                             </div>
-                        </div>         
+                        </div>      
+                        <div class="row" id="remarks_row">
+                            <div class="col-xs-10" id="remarks_col_div">
+                                <form class="form-horizontal" id="searchForm">
+                                    <div class="input-group">
+                                        <input class="form-control" id="searchStr" placeholder="Search for record ID">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit" id="submitSearch">Go!</button>
+                                        </span>                                
+                                    </div>
+                                </form>                                
+                            </div>
+                        </div> 
+                    </div>
                     <div class="panel-footer">
                         <div class="row">
                             <div class="col-xs-9">
-                                    <small>Date Created: / Created By: </small>
+                                <small>Date Created: <font id="act_createddt"></font>&nbsp;&nbsp;&nbsp; Created By: <font id="act_createdby"></font></small>
                             </div>
                             <div class="col-xs-3 btn-group btn-group-xs" role="group">
-                                    <button type="button" class="btn btn-default">Remarks</button>
-                                    <button type="button" class="btn btn-default">Update</button> 
+                                <button type="button" class="btn btn-default">Update</button> 
                             </div>
                         </div>
                     </div>
+
                 </div>
-            </div>
 
-        </div>        
+            </div>        
 
-    </div>    
-
+        </div>            
+    </div>
 </div>
+
+
+
 
 
 
