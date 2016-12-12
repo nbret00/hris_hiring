@@ -1,5 +1,6 @@
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\EndorsementFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\PersonRestService.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivityStatusTpFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\AbstractFacade.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobQualification.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\CompanyFacadeREST.java
@@ -28,6 +29,7 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\IndustryLevel.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\data\Credential.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\PayrateFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Contact.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\NsbActivityStatusFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivityStatusTp.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\HrisAccount.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Endorsement.java

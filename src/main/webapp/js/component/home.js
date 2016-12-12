@@ -44,6 +44,9 @@ $(document).ready(function () {
                 credential = data;
                 credentialID = $(data).find("credential").find("accountID").text();
                 console.log("credential data -" + credentialID);
+                if (credentialID == "") {
+                    window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
+                }
             } else {
                 window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
             }
@@ -200,7 +203,7 @@ $(document).ready(function () {
 
         if (callback && typeof (callback) === "function") {
             //do something here from your call back function
-            console.log("Calling the callback inside the function...")
+            console.log("Calling the callback inside the function...");
             callback();
         }
         ;
@@ -362,7 +365,7 @@ $(document).ready(function () {
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
-                    console.log("Calling the callback inside the function...")
+                    console.log("Calling the callback inside the function...");
                     callback();
                 }
                 ;
@@ -498,7 +501,7 @@ $(document).ready(function () {
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
-                    console.log("Calling the callback inside the function...")
+                    console.log("Calling the callback inside the function...");
                     callback();
                 }
                 ;
@@ -567,7 +570,7 @@ $(document).ready(function () {
 
 
     var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
-    var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
+    var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/";
     var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
     var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
 
@@ -579,12 +582,24 @@ $(document).ready(function () {
                 showAlert("Search for a record first to view activities.");
             } else {
                 getActivities(function () {
-                    showActivityForm(function(){
-                        //show remarks
+                    showActivityForm(function () {
+                        //show remarks()    
+                        $(activities).find("nsbActivities").each(function () {
+                            showRemarks($(this).find("idSourcingActivities").text());
+                        })
+                        updateActivityHandler();
+                        saveActivityHandler();
+                        //populate dropdown for activity type
+                        var url = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
+                        var selinput = $("#act_status_new");
+                        lookupSelectValue(url,selinput,"nsbActivityStatusTp","idactivityStatus","name","1",function(){
+                            console.log("Called getFramework");
+                        })
                     });
-                    updateActivityHandler();
-                });              
+
+                });
             }
+
         });
     }
     function showActivityForm(callback) {
@@ -592,69 +607,66 @@ $(document).ready(function () {
         console.log("working activity form");
         $("#panel").remove();
         $("#section1").load("htmlcomponents/activities.html", function () {
-            
-            var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
-            console.log("html: "+$(tempActivityDisplay).html());
-            $("#activityRow").remove();
-            
-            //console.log("This is the content of acvity panel: "+ activityContainer.html());
-            
-            $(activities).find("nsbActivities").each(function () {
-                console.log("activity type: "+$(this).find("nsbActivityTp").find("name").text());
-                var composeActivities = tempActivityDisplay.cloneNode(true);
-                    $(composeActivities).find("#act_heading").text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());
-                    $(composeActivities).find("#act_id").text("Activity ID: "+$(this).find("idSourcingActivities").text());
-                    $(composeActivities).find("#act_status").text($(this).find("nsbActivityStatusTp").find("name").text());
-                    $(composeActivities).find("#act_description").text($(this).find("description").text());
-                        //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());
-                                              
-                $("#activity_panel").append(composeActivities);
-                
-                /*
-                var composedHtml = "<div class='panel panel-info'>" +
-                        "<div class='panel-heading'>Activity Type - " + $(this).find("nsbActivityTp").find("name").text() + "</div>" +
-                        "<div class='panel-body'>Activity ID: " + $(this).find("idSourcingActivities").text() + "<br/>" +
-                        "<strong>Status :</strong> " + $(this).find("nsbActivityStatusTp").find("name").text() + "</br>" +
-                        "<strong>Description: </strong> " + $(this).find("description").text() + "<br><Strong>Remarks: </Strong><br><div class='row'><div class='col-xs-8' id='remarks_"+$(this).find("idSourcingActivities").text()+"'><blockquote class='small-font'>This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote><blockquote class='small-font'>This is a sample remarks<footer>posted date: 2005-04-04 | by: Nino</footer></blockquote></div></div></div>" +
-                        "<div class='panel-footer'><div class='row'><div class='col-xs-9'><small>Date Created: " + TimeStampToDate($(this).find("createdDt").text()) +
-                        " / Created By: " + $(this).find("createdBy").text() + "</small></div>" +
-                        "<div class='col-xs-3 btn-group btn-group-xs' role='group'><button type='button' class='btn btn-default'>Remarks</button><button type='button' class='btn btn-default'>Update</button></div></div></div></div>";
 
-                activityContainer.append(composedHtml);
-                */
-            })
+            var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
+            //console.log("html: "+$(tempActivityDisplay).html());
+            $("#activityRow").remove();
+
+            $(activities).find("nsbActivities").each(function () {
+                console.log("activity type: " + $(this).find("nsbActivityTp").find("name").text());
+                var composeActivities = tempActivityDisplay.cloneNode(true);
+                console.log("html: " + $(composeActivities).html());
+                var activity_id = $(this).find("idSourcingActivities").text();
+                $(composeActivities).attr("data-act-id", activity_id);
+                $(composeActivities).find("#act_heading").text("Activity Type: " + $(this).find("nsbActivityTp").find("name").text());
+                $(composeActivities).find("#act_id").text("Activity ID: " + activity_id);
+                $(composeActivities).find("#act_status").text($(this).find("nsbActivityStatusTp").find("name").text());
+                $(composeActivities).find("#act_description").text($(this).find("description").text());
+                //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
+                $("#activity_panel").append(composeActivities);
+            });
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function...showActivityForm");
+                callback();
+            }
+            ;
         });
-        if (callback && typeof (callback) === "function") {
-            //do something here from your call back function
-            console.log("Calling the callback inside the function...")
-            callback();
-        }
-        ;
+
     }
     ;
-    
-    function getActivityRemarks(callback){
+    function showRemarks(activityID) {
+        getActivityRemarks(activityID, function (data) {
+            var dom_select_act = "div[data-act-id=\'" + activityID + "\']";
+            var remarks_dom = $(dom_select_act).find("#remarks_row").clone();
+            $(dom_select_act).find("#remarks_row").remove();
+            $(data).find("nsbRemarks").each(function () {
+                console.log("remarks: " + $(this).find("remarks").text());
+                var i_remarks_dom = remarks_dom.clone();
+                i_remarks_dom.find("#remarks_body").text($(this).find("remarks").text());
+                $(dom_select_act).find("#remarks").append(i_remarks_dom);
+            });
+        })
+    }
+
+    function getActivityRemarks(activity_id, callback) {
+        console.log("URL: " + get_remarks_url + activity_id);
         $.ajax({
             type: 'GET',
-            url: get_activities_url + working_person_id,
+            url: get_remarks_url + activity_id,
             success: function (data) {
-                console.log("activites get result:" + data);
-                if (data == "noresult") {
-                    showAlert("Warning! No activity found for this candidate: " + working_person_id);
-                } else {
-                    activities = data;
-                }
+                console.log("data from getActivityRemarks: " + $(data).html());
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
                     console.log("Calling the callback inside the function getActivities...")
-                    callback();
+                    callback(data);
                 }
                 ;
             },
             error: function (jqXHR, status) {
                 showAlert("Application Error Found: " + status);
             }
-        });        
+        });
     }
     function getActivities(callback) {
         $.ajax({
@@ -663,14 +675,14 @@ $(document).ready(function () {
             success: function (data) {
                 console.log("activites get result:" + data);
                 if (data == "noresult") {
-                    showAlert("Warning! No activity found for this candidate: " + working_person_id);
+                    //showAlert("Warning! No activity found for this candidate: " + working_person_id);
                 } else {
                     activities = data;
                 }
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
                     console.log("Calling the callback inside the function getActivities...")
-                    callback();
+                    callback(data);
                 }
                 ;
             },
@@ -680,28 +692,7 @@ $(document).ready(function () {
         });
     }
     ;
-    /*could be use for update later
-     function prepSourcingForm() {
-     console.log("prepSourcingForm--->>>");
-     $(personProfile).find("sourcingIdsourcingCampaigne").each(function () {
-     //alert($(this).find("contactNum").text());
-     document.getElementById("title").value = ifnull($(this).find("title").text());
-     document.getElementById("status").value = ifnull($(this).find("status").text());
-     document.getElementById("targetJobTitle").value = ifnull($(this).find("targetJobTitle").text());
-     document.getElementById("targetJobCategory").value = ifnull($(this).find("targetJobCategory").text());
-     document.getElementById("dateContacted").value = ifnull($(this).find("dateContacted").text());
-     document.getElementById("source").value = ifnull($(this).find("source").text());
-     document.getElementById("sourcer").value = ifnull($(this).find("sourcer").text());
-     document.getElementById("contactedBy").value = ifnull($(this).find("contactedBy").text());
-     document.getElementById("interviewer").value = ifnull($(this).find("interviewer").text());
-     document.getElementById("dateOfInterview").value = ifnull($(this).find("dateOfInterview").text());
-     document.getElementById("comments").value = ifnull($(this).find("comments").text());
-     });
-     document.getElementById("sourcingBut").innerHTML = "Update";
-     console.log("<<---prepSourcingForm");
-     }
-     ;
-     */
+
     function getActivityFormData() {
         var activityData = JSON.stringify({
             idSourcingActivities: working_activity_id,
@@ -748,7 +739,7 @@ $(document).ready(function () {
         })
     }
     function updateActivityHandler() {
-        $("#sourcingForm").submit(function (event) {
+        $("#activityform").submit(function (event) {
             if ($("#sourcingBut").text() == "Update") {
                 console.log("updating sourcing record # " + working_sourcing_id);
                 //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
@@ -769,8 +760,45 @@ $(document).ready(function () {
         });
     }
     ;
+//------------------------- drop down list
 
+    function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_id, callback) {
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (data) {
+
+                if (selinput != null) {
+
+                    $(data).find(objname).each(function () {
+                        var opt_text = $(this).find(name_dom).text();
+                        console.log("opt_text: " + opt_text);
+                        var opt_id = $(this).find(opt_id_dom).text();
+                        if (active_id == opt_id) {
+                            $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
+                        } else {
+                            $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
+                        }
+                    });
+
+                }
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    console.log("Calling the callback inside the function getActivities...")
+                    callback(data);
+                }
+                ;
+            },
+            error: function (jqXHR, status) {
+                showAlert("Application Error encountered in getFramework: " + status);
+            }
+        });
+
+
+    }
 //-------------------------start utils
+
 
     function ifnull(type) {
         if (type === null) {
