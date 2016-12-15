@@ -18,6 +18,7 @@ com\nino\app\hrishiring\custom\service\ActivitiesServices.class
 com\nino\app\hrishiring\NewClass.class
 com\nino\app\hrishiring\service\NsbActivityFacadeREST.class
 com\nino\app\hrishiring\Job.class
+com\nino\app\hrishiring\service\NsbActivityTpFacadeREST.class
 com\nino\app\hrishiring\JobQualification.class
 com\nino\app\hrishiring\NsbActivityStatusTp.class
 com\nino\app\hrishiring\service\NsbActivitySuccessCriteriaFacadeREST.class

@@ -17,7 +17,9 @@
                                     <div class="form-group">
                                         <label for="Name" class="col-sm-4 control-label input-sm">Activity Type</label>
                                         <div class="col-sm-8">
-                                            <input required type="text" class="form-control input-sm" id="activitytp" placeholder="Complete Name">
+                                            <select class="selectpicker" id="act_type">
+                                                <option></option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -61,14 +63,25 @@
                     <div class="panel-heading" id="act_heading">this is a test</div>
                     <div class="panel-body" id="activityBody">
                         <font id="act_id">Activity ID: 123 </font><br/>
-                        <strong>Status :</strong> 
-                        <select class="selectpicker" id="act_status">
-                            <option></option>
-                            <option>Male</option>
-                            <option>Female</option>
-                        </select>
-                        <br/>
                         <strong>Description: </strong> <font id="act_description"></font> <br/>
+                        <div class="col-md-6">
+                        <form class="form-horizontal" id="searchForm">
+                            <div class="input-group">
+
+                                <label for="act_status" class="col-sm-4 control-label input-sm">Status: </label>
+                                <select class="selectpicker" id="act_status">
+                                    <option></option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-xs" type="submit" id="submitSearch">
+                                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Change
+                                    </button>
+                                </span>                                
+                            </div>
+                        </form>                          
+                        </div>
+                        <br/>
+                        
                         <Strong>Remarks: </Strong><br/>
                         <div class="row">
                             <div class="col-md-12" id="remarks">

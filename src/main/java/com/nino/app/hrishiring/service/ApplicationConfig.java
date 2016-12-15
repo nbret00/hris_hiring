@@ -46,6 +46,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.nino.app.hrishiring.service.NsbActivityStatusFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.NsbActivityStatusTpFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.NsbActivitySuccessCriteriaFacadeREST.class);
+        resources.add(com.nino.app.hrishiring.service.NsbActivityTpFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.PayrateFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.PersonFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.SourcingFacadeREST.class);

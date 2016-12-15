@@ -6,6 +6,7 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobQualification.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\CompanyFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivitySuccessCriteriaFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\JobQualificationRestService.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\NsbActivityTpFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Sourcing.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\ContactRestService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivity.java
