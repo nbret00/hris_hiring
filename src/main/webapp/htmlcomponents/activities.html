@@ -62,27 +62,43 @@
                 <div class="panel panel-info">
                     <div class="panel-heading" id="act_heading">this is a test</div>
                     <div class="panel-body" id="activityBody">
-                        <font id="act_id">Activity ID: 123 </font><br/>
-                        <strong>Description: </strong> <font id="act_description"></font> <br/>
-                        <div class="col-md-6">
-                        <form class="form-horizontal" id="searchForm">
-                            <div class="input-group">
-
-                                <label for="act_status" class="col-sm-4 control-label input-sm">Status: </label>
-                                <select class="selectpicker" id="act_status">
-                                    <option></option>
-                                </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-xs" type="submit" id="submitSearch">
-                                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Change
-                                    </button>
-                                </span>                                
+                        <div class="row">
+                            <div class="col-md-6">
+                                <font id="act_id">Activity ID: 123 </font>
                             </div>
-                        </form>                          
                         </div>
-                        <br/>
-                        
-                        <Strong>Remarks: </Strong><br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Description: </strong> <font id="act_description"></font>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <form class="form-horizontal" id="searchForm">
+                                <div class="col-md-6">
+                                    <form class="form-horizontal" id="searchForm">
+                                        <div class="input-group">
+                                            <strong>Status:</strong>
+
+                                            <select class="selectpicker" id="act_status">
+                                                <option></option>
+                                            </select>
+
+                                            <button class="btn btn-default btn-xs" type="submit" id="submitSearch">
+                                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Change Status
+                                            </button>
+
+
+                                        </div>                        
+                                </div>
+                            </form>
+                        </div>
+                        <!--
+                        <div class="row">
+                            <div class="col-md-6">
+                                <Strong>Remarks: </Strong>
+                            </div>
+                        </div>    
+
                         <div class="row">
                             <div class="col-md-12" id="remarks">
                                 <div class="row" id="remarks_row">
@@ -108,21 +124,23 @@
                                 </form>                                
                             </div>
                         </div> 
+                        -->
                     </div>
+
                     <div class="panel-footer">
                         <div class="row">
                             <div class="col-xs-9">
                                 <small>Date Created: <font id="act_createddt"></font>&nbsp;&nbsp;&nbsp; Created By: <font id="act_createdby"></font></small>
                             </div>
                         </div>
-                    </div>
-
+                    </div>                    
                 </div>
+            </div>
 
-            </div>        
+        </div>        
 
-        </div>            
-    </div>
+    </div>            
+</div>
 </div>
 
 <!--modal for updating the status of activities-->

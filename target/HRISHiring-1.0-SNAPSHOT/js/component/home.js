@@ -63,9 +63,9 @@ $(document).ready(function () {
         personProfileSaveUpdateHandler();
     });
 
-    $("#quickpage").on("click", function (e) {
+    $("#generalinfopage").on("click", function (e) {
         $("#panel").remove();
-        $("#section1").load("htmlcomponents/quickpage.html", function () {
+        $("#section1").load("htmlcomponents/generalInformation.html", function () {
 
         });
     });
@@ -573,6 +573,7 @@ $(document).ready(function () {
     var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/";
     var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
     var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
+    var add_remark_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
     var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
     var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
 
@@ -587,30 +588,33 @@ $(document).ready(function () {
                     showActivityForm(function () {
                         //show remarks()    
                         $(activities).find("nsbActivities").each(function () {
+                            /* Removing the remarks on the activities
                             showRemarks($(this).find("idSourcingActivities").text(), function () {
                             });
-                            var sel_act_status_tp = $("#act_status_"+$(this).find("idSourcingActivities").text());
-                            lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text() , function () {
+                            */
+                            var sel_act_status_tp = $("#act_status_" + $(this).find("idSourcingActivities").text());
+                            lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text(), function () {
                                 console.log("Called getFramework act status");
-                                
+
                             })
                         })
                         updateActivityHandler();
                         saveActivityHandler();
-                        
+
                         //populate dropdown for activity type
                         var sel_act_status_tp = $("#act_status_new");
                         lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "1", function () {
                         })
                         var sel_act_tp = $("#act_type");
                         lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "2", function () {
-                            
+
                         })
                     });
                 });
             }
         });
     }
+
     function showActivityForm(callback) {
         //console.log(working_sourcing_id + "() called....." + $(sourcing).html());
         console.log("working activity form");
@@ -629,7 +633,7 @@ $(document).ready(function () {
                 $(composeActivities).attr("data-act-id", activity_id);
                 $(composeActivities).find("#act_heading").text("Activity Type: " + $(this).find("nsbActivityTp").find("name").text());
                 $(composeActivities).find("#act_id").text("Activity ID: " + activity_id);
-                $(composeActivities).find("#act_status").attr("id","act_status_"+activity_id);
+                $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
                 $(composeActivities).find("#act_description").text($(this).find("description").text());
                 //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
                 $("#activity_panel").append(composeActivities);
@@ -644,6 +648,7 @@ $(document).ready(function () {
 
     }
     ;
+    /* No remarks on activities. This snippet could still be useful.
     function showRemarks(activityID, callback) {
         getActivityRemarks(activityID, function (data) {
             var dom_select_act = "div[data-act-id=\'" + activityID + "\']";
@@ -682,6 +687,44 @@ $(document).ready(function () {
             }
         });
     }
+
+
+    function getRemarksFormData() {
+        var remarksData = JSON.stringify({
+            remarks: credentialID,
+            nsbactivitiesidSourcingActivities: {idSourcingActivities: '1'},
+        });
+        return remarksData;
+    }
+
+    function addRemarks(callback) {
+        console.log("clicked activities save handler");
+        $("#activityform").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
+            //activityData = getActivityFormData();
+            console.log("saving new contact.");
+            $.ajax({
+                type: 'POST',
+                url: add_remark_url,
+                contentType: 'application/json',
+                data: getRemarksFormData(),
+                success: function (data) {
+                    getActivities(function () {
+                        showActivityForm();
+                    });
+
+                    if (callback && typeof (callback) === "function") {
+                        //do something here from your call back function
+                        console.log("Calling the callback inside the function getActivities...")
+                        callback(data);
+                    }
+                    ;
+                }
+            });
+        })
+    }
+        */
     function getActivities(callback) {
         $.ajax({
             type: 'GET',
@@ -774,10 +817,11 @@ $(document).ready(function () {
         });
     }
     ;
-    
-    function changeActivityStatusHandler(){
-        $("[id^=act_status]").on("change","select",function(){
-            showAlert("clicked!!!!!!"+$(this).attr("id").val());
+
+//this is not working yet TODO
+    function changeActivityStatusHandler() {
+        $("[id^=act_status]").on("change", "select", function () {
+            showAlert("clicked!!!!!!" + $(this).attr("id").val());
         })
     }
 //------------------------- drop down list

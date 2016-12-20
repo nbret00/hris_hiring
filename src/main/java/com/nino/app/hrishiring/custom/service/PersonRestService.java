@@ -5,13 +5,14 @@
  */
 package com.nino.app.hrishiring.custom.service;
 
-import com.nino.app.hrishiring.JobQualification;
 import com.nino.app.hrishiring.Person;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,5 +55,75 @@ public class PersonRestService {
         }
 
     }
-
+    
+    @GET
+    @Path("searchByFirstname/{fname}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public List<Person> searchByFirstNames(@PathParam("fname") String fname
+    ) {
+        List personres = null;
+        try {
+            String sq = "SELECT p FROM Person p WHERE ";
+            //if(null != person.getFirstName()){
+                sq = sq + "p.firstName LIKE :firstName";
+            //}
+            Query q = em.createQuery(sq);
+            q.setParameter("firstName", "%"+fname+"%");
+            
+            personres = q.getResultList();
+            System.out.println("Num of results: "+personres.size());
+            return personres;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return personres;
+        }
+        
+    }    
+    
+        @GET
+    @Path("searchByLastname/{lname}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public List<Person> searchByLastname(@PathParam("lname") String lname
+    ) {
+        List personres = null;
+        try {
+            String sq = "SELECT p FROM Person p WHERE ";
+            //if(null != person.getFirstName()){
+                sq = sq + "p.lastName LIKE :lastName";
+            //}
+            Query q = em.createQuery(sq);
+            q.setParameter("lastName", "%"+lname+"%");
+            
+            personres = q.getResultList();
+            System.out.println("Num of results: "+personres.size());
+            return personres;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return personres;
+        }
+    }    
+ 
+    @GET
+    @Path("searchByName/{name}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public List<Person> searchByName(@PathParam("name") String name
+    ) {
+        List personres = null;
+        try {
+            String sq = "SELECT p FROM Person p WHERE ";
+            //if(null != person.getFirstName()){
+                sq = sq + "p.name LIKE :name";
+            //}
+            Query q = em.createQuery(sq);
+            q.setParameter("name", "%"+name+"%");
+            
+            personres = q.getResultList();
+            System.out.println("Num of results: "+personres.size());
+            return personres;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return personres;
+        }
+    }    
+    
 }

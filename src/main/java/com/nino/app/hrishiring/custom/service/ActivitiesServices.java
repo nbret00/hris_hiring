@@ -109,19 +109,34 @@ public class ActivitiesServices {
             //Person p = new Person(id);
             NsbActivities na = new NsbActivities();
             na.setIdSourcingActivities(Integer.valueOf(id));
-            
+
             List jq = (List) em.createQuery("SELECT n FROM NsbRemarks n WHERE n.nsbactivitiesidSourcingActivities = :nsbactivitiesidSourcingActivities ORDER BY n.idremarks DESC")
                     .setParameter("nsbactivitiesidSourcingActivities", na)
                     .getResultList();
             //System.out.println("Contact #:" + jq.getIdcontact());
-            
+
             return jq;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    
+
+    @PUT
+    @Path("remarks/add")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response addRemarks(NsbRemarks remarks) {
+        try {
+            em.persist(remarks);
+            em.flush();
+            //System.out.println("Create new job qualification with ID: " + entity.getIdcontact());
+            return Response.ok(remarks).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok(e.getMessage()).build();
+        }
+    }
+
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
