@@ -1,0 +1,178 @@
+
+<div class="panel panel-default" id="panel">
+    <div class="panel-heading">
+        Hiring Activities
+    </div>      
+    <div class="panel-body" id="activity_panel">
+        <div class="row">
+            <div class="col-md-12 pad5">
+                <a class="btn btn-default btn-sm" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    New Activity
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <div class="panel panel-default pad5">
+                        <form class="form-horizontal" id="activityform">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Name" class="col-sm-4 control-label input-sm">Activity Type</label>
+                                        <div class="col-sm-8">
+                                            <select class="selectpicker" id="act_type">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">    
+                                    <div class="form-group">
+                                        <label for="Name" class="col-sm-2 control-label input-sm">Status</label>
+                                        <div class="col-sm-8">
+                                            <select class="selectpicker" id="act_status_new">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">    
+                                        <label for="FirstName" class="col-sm-2 control-label input-sm" >Note</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control input-sm" id="description" placeholder="up to 500 char note">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">    
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-default" id="activitesBut">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="activityRow">
+            <div class="col-md-12 pad5" id="activityDOM">
+
+                <div class="panel panel-info">
+                    <div class="panel-heading" id="act_heading">this is a test</div>
+                    <div class="panel-body" id="activityBody">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <font id="act_id">Activity ID: 123 </font>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Description: </strong> <font id="act_description"></font>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <form class="form-horizontal" id="searchForm">
+                                <div class="col-md-6">
+                                    <form class="form-horizontal" id="searchForm">
+                                        <div class="input-group">
+                                            <strong>Status:</strong>
+
+                                            <select class="selectpicker" id="act_status">
+                                                <option></option>
+                                            </select>
+
+                                            <button class="btn btn-default btn-xs" type="submit" id="submitSearch">
+                                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Change Status
+                                            </button>
+
+
+                                        </div>                        
+                                </div>
+                            </form>
+                        </div>
+                        <!--
+                        <div class="row">
+                            <div class="col-md-6">
+                                <Strong>Remarks: </Strong>
+                            </div>
+                        </div>    
+
+                        <div class="row">
+                            <div class="col-md-12" id="remarks">
+                                <div class="row" id="remarks_row">
+                                    <div class="col-xs-10" id="remarks_col_div">
+                                        <blockquote class="small-font" id="remarks_body">This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks
+                                            <footer id="remarks_footer">posted date: 2005-04-04 | by: Nino</footer>
+                                        </blockquote>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>  
+                        <div class="row" id="remarks_new">
+                            <div class="col-xs-10" id="remarks_col_div">
+                                <form class="form-horizontal" id="searchForm">
+                                    <div class="input-group">
+                                        <input class="form-control" id="searchStr" placeholder="Add Remarks">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit" id="submitSearch">
+                                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                                            </button>
+                                        </span>                                
+                                    </div>
+                                </form>                                
+                            </div>
+                        </div> 
+                        -->
+                    </div>
+
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <small>Date Created: <font id="act_createddt"></font>&nbsp;&nbsp;&nbsp; Created By: <font id="act_createdby"></font></small>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+
+        </div>        
+
+    </div>            
+</div>
+</div>
+
+<!--modal for updating the status of activities-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
