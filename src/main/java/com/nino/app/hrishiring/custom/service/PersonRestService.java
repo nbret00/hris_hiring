@@ -57,19 +57,31 @@ public class PersonRestService {
     }
     
     @GET
-    @Path("searchByFirstname/{fname}")
+    @Path("searchByNames")
     @Consumes({MediaType.APPLICATION_JSON})
-    public List<Person> searchByFirstNames(@PathParam("fname") String fname
+    public List<Person> searchByNames(
+            Person p
     ) {
         List personres = null;
         try {
             String sq = "SELECT p FROM Person p WHERE ";
-            //if(null != person.getFirstName()){
-                sq = sq + "p.firstName LIKE :firstName";
-            //}
+            System.out.println("searchByNames sql: "+p.getFirstName());
+            if(p.getFirstName()!=""){
+                sq = sq + "p.firstName LIKE :firstName ";
+            }
+            System.out.println("searchByNames sql--: "+p.getLastName());
+            if(p.getLastName()!=""){
+                sq = sq + "OR p.lastName LIKE :lastName ";
+            }
+            System.out.println("searchByNames sql: "+sq);
             Query q = em.createQuery(sq);
-            q.setParameter("firstName", "%"+fname+"%");
-            
+
+            if(p.getFirstName()!=""){
+                q.setParameter("firstName", "%"+p.getFirstName()+"%");
+            }
+            if(p.getLastName()!=""){
+                q.setParameter("lastName", "%"+p.getLastName()+"%");
+            }
             personres = q.getResultList();
             System.out.println("Num of results: "+personres.size());
             return personres;

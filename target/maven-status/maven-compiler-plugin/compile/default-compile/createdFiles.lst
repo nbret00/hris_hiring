@@ -15,6 +15,7 @@ com\nino\app\hrishiring\NsbActivities.class
 com\nino\app\hrishiring\NsbRemarks_.class
 com\nino\app\hrishiring\service\HrisAccountFacadeREST.class
 com\nino\app\hrishiring\custom\service\ActivitiesServices.class
+com\nino\app\hrishiring\data\SearchResult.class
 com\nino\app\hrishiring\NewClass.class
 com\nino\app\hrishiring\service\NsbActivityFacadeREST.class
 com\nino\app\hrishiring\Job.class

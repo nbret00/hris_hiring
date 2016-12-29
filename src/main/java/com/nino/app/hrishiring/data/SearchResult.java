@@ -13,48 +13,64 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author nbret00
  */
 @XmlRootElement
-public class Credential {
+public class SearchResult {
     
-    private int accountID;
-    private String Username;
-    private String Role;
+    private int personID;
+    private String firstname;
+    private String lastname;
+    private String company;
+    private String title;
     
-    public Credential(){}
-    
-    public Credential(int accountID,String Username, String Role){
-        this.Role = Role;
-        this.Username = Username;
-        this.accountID = accountID;
+    public SearchResult(){}
+
+    public SearchResult(int personID, String firstname, String lastname, String company, String title) {
+        this.personID = personID;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.company = company;
+        this.title = title;
+    }
+
+    public int getPersonID() {
+        return personID;
+    }
+
+    public void setPersonID(int personID) {
+        this.personID = personID;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
     
-    public int getAccountID() {
-        return accountID;
-    }
-
-    public void setAccountID(int accountID) {
-        this.accountID = accountID;
-    }
     
-
-    
-    public String getUsername() {
-        return Username;
-    }
-
-    //@XmlElement
-    public void setUsername(String Username) {
-        this.Username = Username;
-    }
-
-
-    public String getRole() {
-        return Role;
-    }
-
-    public void setRole(String Role) {
-        this.Role = Role;
-    }
-
-           
     
 }
