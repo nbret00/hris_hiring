@@ -75,7 +75,7 @@ public class ActivitiesServices {
     }
 
     @GET
-    @Path("act/{id}")
+    @Path("act/{id}")//by person ID
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<NsbActivities> getActivities1(@PathParam("id") int id) {
         List jq = null;

@@ -7,6 +7,9 @@
 
 $(document).ready(function () {
 
+    var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
+    $("#activityDOM").remove();
+    
     getActivities(function () {
         showActivityForm(function () {
             //show remarks()    
@@ -29,20 +32,83 @@ $(document).ready(function () {
         });
     });
 
+    function saveActivityHandler() {
+        $("#activityform").submit(function (event) {
+            event.preventDefault();
+            //console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
+            //activityData = getActivityFormData();
+            console.log("saving new contact."+ getActivityFormData());
+            $.ajax({
+                type: 'POST',
+                url: save_activities_url,
+                contentType: 'application/json',
+                data: getActivityFormData(),
+                success: function (data) {
+                    getActivities(function () {
+                        showActivityForm();
+                    });
+                }
+            });
+        })
+    }
+    function updateActivityHandler() {
+        $("#activityform").submit(function (event) {
+            if ($("#sourcingBut").text() == "Update") {
+                console.log("updating sourcing record # " + working_sourcing_id);
+                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
+                $.ajax({
+                    type: 'PUT',
+                    url: update_sourcing_url + working_person_id,
+                    contentType: 'application/json',
+                    data: SourcingData,
+                    success: function (data) {
+                        console.log("update successfull");
+                        sourcing = data;
+                    },
+                    error: function () {
+                        alert("Application Error!");
+                    }
+                });
+            }
+        });
+    }
+    function getActivityFormData() {
+        var activityData = JSON.stringify({
+            idSourcingActivities: working_activity_id,
+            createdBy: credentialID,
+            updatedBy: credentialID,
+            description: $('#description').val(),
+            nsbActivityStatusTp: {idactivityStatus: $("#act_status_new").val()},
+            nsbActivityTp: {idActivityTp: $("#act_type").val()},
+            nsbEntityActivities: {ididentityActivities: working_person_id}
+        });
+        return activityData;
+    }
+    function getActivityNewPersonData() {
+        var activityData = JSON.stringify({
+            //idSourcingActivities: working_activity_id,
+            createdBy: credentialID,
+            updatedBy: credentialID,
+            description: 'This activity pertains to the initial creation of the record.',
+            nsbActivityStatusTp: {idactivityStatus: '1'},
+            nsbActivityTp: {idActivityTp: '1'},
+            nsbEntityActivities: {ididentityActivities: working_person_id}
+        });
+        return activityData;
+    }
     function showActivityForm(callback) {
         //console.log(working_sourcing_id + "() called....." + $(sourcing).html());
-        console.log("working activity form");
-        var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
+        console.log("working activity form...showActivityForm");
         //console.log("html: "+$(tempActivityDisplay).html());
-        $("#activityRow").remove();
+        
         $(activities).find("nsbActivities").each(function () {
             console.log("activity type: " + $(this).find("nsbActivityTp").find("name").text());
             var composeActivities = tempActivityDisplay.cloneNode(true);
             //console.log("html: " + $(composeActivities).html());
             var activity_id = $(this).find("idSourcingActivities").text();
             $(composeActivities).attr("data-act-id", activity_id);
-            $(composeActivities).find("#act_heading").text("Activity Type: " + $(this).find("nsbActivityTp").find("name").text());
-            $(composeActivities).find("#act_id").text("Activity ID: " + activity_id);
+            $(composeActivities).find("#act_heading").text($(this).find("nsbActivityTp").find("name").text());
+            $(composeActivities).find("#act_id").text(activity_id);
             $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
             $(composeActivities).find("#act_description").text($(this).find("description").text());
             //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         

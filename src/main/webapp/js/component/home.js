@@ -5,6 +5,9 @@ var get_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
 var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
 var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
 var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
+var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
+var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
+var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
 
 var working_jobqualification_id = "";
 var jobQualification = null;
@@ -476,10 +479,8 @@ $(document).ready(function () {
 //------------------------- activities
 
 
-    
+
     var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/";
-    var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
-    var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
     var add_remark_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
     var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
 
@@ -574,80 +575,14 @@ $(document).ready(function () {
      }
      */
 
-    function getActivityFormData() {
-        var activityData = JSON.stringify({
-            idSourcingActivities: working_activity_id,
-            createdBy: credentialID,
-            updatedBy: credentialID,
-            description: $('#description').val(),
-            nsbActivityStatusTp: {idactivityStatus: '1'},
-            nsbActivityTp: {idActivityTp: '1'},
-            nsbEntityActivities: {ididentityActivities: '1'}
-        });
-        return activityData;
-    }
-    function getActivityNewPersonData() {
-        var activityData = JSON.stringify({
-            //idSourcingActivities: working_activity_id,
-            createdBy: credentialID,
-            updatedBy: credentialID,
-            description: 'This activity pertains to the initial creation of the record.',
-            nsbActivityStatusTp: {idactivityStatus: '1'},
-            nsbActivityTp: {idActivityTp: '1'},
-            nsbEntityActivities: {ididentityActivities: credentialID}
-        });
-        return activityData;
-    }
 
-    function saveActivityHandler() {
-        console.log("clicked activities save handler");
-        $("#activityform").submit(function (event) {
-            event.preventDefault();
-            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
-            //activityData = getActivityFormData();
-            console.log("saving new contact.");
-            $.ajax({
-                type: 'POST',
-                url: save_activities_url,
-                contentType: 'application/json',
-                data: getActivityFormData(),
-                success: function (data) {
-                    getActivities(function () {
-                        showActivityForm();
-                    });
-                }
-            });
-        })
-    }
-    function updateActivityHandler() {
-        $("#activityform").submit(function (event) {
-            if ($("#sourcingBut").text() == "Update") {
-                console.log("updating sourcing record # " + working_sourcing_id);
-                //JobQualificationData["jobQualificationPK"] = $(jobQualification).find("jobQualification").find("idJobQualification").text();
-                $.ajax({
-                    type: 'PUT',
-                    url: update_sourcing_url + working_person_id,
-                    contentType: 'application/json',
-                    data: SourcingData,
-                    success: function (data) {
-                        console.log("update successfull");
-                        sourcing = data;
-                    },
-                    error: function () {
-                        alert("Application Error!");
-                    }
-                });
-            }
-        });
-    }
-    ;
+
 //this is not working yet TODO
     function changeActivityStatusHandler() {
         $("[id^=act_status]").on("change", "select", function () {
             showAlert("clicked!!!!!!" + $(this).attr("id").val());
         })
     }
-//------------------------- drop down list
 
 
 });
