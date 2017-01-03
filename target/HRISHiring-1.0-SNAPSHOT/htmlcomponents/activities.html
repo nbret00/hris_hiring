@@ -1,8 +1,5 @@
 
-<div class="panel panel-default" id="panel">
-    <div class="panel-heading">
-        Hiring Activities
-    </div>      
+<div class="panel panel-default" id="panel_activity">     
     <div class="panel-body" id="activity_panel">
         <div class="row">
             <div class="col-md-12">
@@ -17,7 +14,7 @@
                                     <div class="form-group">
                                         <label for="Name" class="col-sm-4 control-label input-sm">Activity Type</label>
                                         <div class="col-sm-8">
-                                            <select class="selectpicker" id="act_type">
+                                            <select class="selectpicker" id="act_type_new">
                                                 <option></option>
                                             </select>
                                         </div>
@@ -60,30 +57,30 @@
                 </div>
             </div>
         </div>
-        <div class="row" id="activityRow">
-            <div class="col-md-12 pad5" id="activityDOM">
-
-                <div class="panel panel-info">
-                    <div class="panel-body" id="activityBody">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <strong>Activity ID: </strong><font id="act_heading"> 123 </font>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <strong>Activity ID: </strong><font id="act_id"> 123 </font>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <strong>Description: </strong><br/> <font id="act_description"></font>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <form class="form-horizontal" id="searchForm">
+        <div class="row pad5" id="activities-container-row">
+            <div class="col-md-12" id="activities-container-col">
+                <div class="row" id="activityRow">
+                    <div class="panel panel-info">
+                        <div class="panel-body" id="activityBody">
+                            <div class="row">
                                 <div class="col-md-12">
-                                    <br/>
+                                    <strong>Activity ID: </strong><font id="act_heading"> 123 </font>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <strong>Activity ID: </strong><font id="act_id"> 123 </font>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <strong>Description: </strong><br/> <font id="act_description"></font>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <form class="form-horizontal" id="searchForm">
+                                    <div class="col-md-12">
+                                        <br/>
                                         <div class="input-group">
                                             <strong>Status:</strong>
 
@@ -94,58 +91,56 @@
                                                 <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Change Status
                                             </button>
                                         </div>                        
+                                    </div>
+                                </form>
+                            </div>
+                            <!--
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <Strong>Remarks: </Strong>
                                 </div>
-                            </form>
+                            </div>    
+    
+                            <div class="row">
+                                <div class="col-md-12" id="remarks">
+                                    <div class="row" id="remarks_row">
+                                        <div class="col-xs-10" id="remarks_col_div">
+                                            <blockquote class="small-font" id="remarks_body">This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks
+                                                <footer id="remarks_footer">posted date: 2005-04-04 | by: Nino</footer>
+                                            </blockquote>
+                                        </div>
+                                    </div>    
+                                </div>
+                            </div>  
+                            <div class="row" id="remarks_new">
+                                <div class="col-xs-10" id="remarks_col_div">
+                                    <form class="form-horizontal" id="searchForm">
+                                        <div class="input-group">
+                                            <input class="form-control" id="searchStr" placeholder="Add Remarks">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="submit" id="submitSearch">
+                                                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                                                </button>
+                                            </span>                                
+                                        </div>
+                                    </form>                                
+                                </div>
+                            </div> 
+                            -->
                         </div>
-                        <!--
-                        <div class="row">
-                            <div class="col-md-6">
-                                <Strong>Remarks: </Strong>
-                            </div>
-                        </div>    
 
-                        <div class="row">
-                            <div class="col-md-12" id="remarks">
-                                <div class="row" id="remarks_row">
-                                    <div class="col-xs-10" id="remarks_col_div">
-                                        <blockquote class="small-font" id="remarks_body">This is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarksThis is a sample remarks
-                                            <footer id="remarks_footer">posted date: 2005-04-04 | by: Nino</footer>
-                                        </blockquote>
-                                    </div>
-                                </div>    
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <small>Date Created: <font id="act_createddt"></font>&nbsp;&nbsp;&nbsp; Created By: <font id="act_createdby"></font></small>
+                                </div>
                             </div>
-                        </div>  
-                        <div class="row" id="remarks_new">
-                            <div class="col-xs-10" id="remarks_col_div">
-                                <form class="form-horizontal" id="searchForm">
-                                    <div class="input-group">
-                                        <input class="form-control" id="searchStr" placeholder="Add Remarks">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="submit" id="submitSearch">
-                                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-                                            </button>
-                                        </span>                                
-                                    </div>
-                                </form>                                
-                            </div>
-                        </div> 
-                        -->
+                        </div>                    
                     </div>
-
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-9">
-                                <small>Date Created: <font id="act_createddt"></font>&nbsp;&nbsp;&nbsp; Created By: <font id="act_createdby"></font></small>
-                            </div>
-                        </div>
-                    </div>                    
-                </div>
+                </div> 
             </div>
-
-        </div>        
-
+        </div>
     </div>            
-</div>
 </div>
 
 <!--modal for updating the status of activities-->

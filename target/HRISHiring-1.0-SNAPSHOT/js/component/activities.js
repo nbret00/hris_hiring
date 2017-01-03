@@ -7,49 +7,88 @@
 
 $(document).ready(function () {
 
-    var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
-    $("#activityDOM").remove();
+    var activity_container_row = document.getElementById("activities-container-row").cloneNode(true);
     
-    getActivities(function () {
-        showActivityForm(function () {
-            //show remarks()    
-            $(activities).find("nsbActivities").each(function () {
-                var sel_act_status_tp = $("#act_status_" + $(this).find("idSourcingActivities").text());
-                lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text(), function () {
-                    console.log("Called getFramework act status");
-                })
-            })
-            updateActivityHandler();
-            saveActivityHandler();
-            //populate dropdown for activity type
-            var sel_act_status_tp = $("#act_status_new");
-            lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "1", function () {
-            })
-            var sel_act_tp = $("#act_type");
-            lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "2", function () {
+    var activity_row = document.getElementById("activityRow").cloneNode(true);
+    
+    $(activity_container_row).find("#activityRow").remove();
+    
+    init();
 
-            })
+    function init() {
+        document.getElementById("activityform").reset();
+        $("#activities-container-row").remove();
+        
+        getActivities(function () {
+            showActivityForm(function () {
+                prepActivities();
+            });
         });
-    });
+    }
+    
+    function showActivityForm(callback) {
+        console.log("working activity form...showActivityForm");
+        
+        var activity_container = activity_container_row.cloneNode(true);
+
+        $(activities).find("nsbActivities").each(function () {
+            console.log("activity type: " + $(this).find("nsbActivityTp").find("name").text());
+            var composeActivities = activity_row.cloneNode(true);
+            //console.log("html: " + $(composeActivities).html());
+            var activity_id = $(this).find("idSourcingActivities").text();
+            $(composeActivities).attr("data-act-id", activity_id);
+            $(composeActivities).find("#act_heading").text($(this).find("nsbActivityTp").find("name").text());
+            $(composeActivities).find("#act_id").text(activity_id);
+            $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
+            $(composeActivities).find("#act_description").text($(this).find("description").text());
+            //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
+            $(activity_container).find("#activities-container-col").append(composeActivities);
+        });
+        
+        $("#activity_panel").append(activity_container);
+        
+        if (callback && typeof (callback) === "function") {
+            //do something here from your call back function
+            console.log("Calling the callback inside the function...showActivityForm");
+            callback();
+        }
+    }
+    
+    function prepActivities() {
+        $(activities).find("nsbActivities").each(function () {
+            var sel_act_status_tp = $("#act_status_" + $(this).find("idSourcingActivities").text());
+            lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text(), function () {
+                console.log("Called getFramework act status");
+            })
+        })
+        updateActivityHandler();
+        saveActivityHandler();
+        //populate dropdown for activity type
+        var sel_act_status_tp = $("#act_status_new");
+        lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "1", function () {
+        });
+        var sel_act_tp = $("#act_type_new");
+        lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "2", function () {
+
+        });
+    }
 
     function saveActivityHandler() {
         $("#activityform").submit(function (event) {
             event.preventDefault();
             //console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
             //activityData = getActivityFormData();
-            console.log("saving new contact."+ getActivityFormData());
+            console.log("saving new activity." + getActivityFormData());
             $.ajax({
                 type: 'POST',
                 url: save_activities_url,
                 contentType: 'application/json',
                 data: getActivityFormData(),
                 success: function (data) {
-                    getActivities(function () {
-                        showActivityForm();
-                    });
+                    init();
                 }
             });
-        })
+        });
     }
     function updateActivityHandler() {
         $("#activityform").submit(function (event) {
@@ -79,48 +118,24 @@ $(document).ready(function () {
             updatedBy: credentialID,
             description: $('#description').val(),
             nsbActivityStatusTp: {idactivityStatus: $("#act_status_new").val()},
-            nsbActivityTp: {idActivityTp: $("#act_type").val()},
+            nsbActivityTp: {idActivityTp: $("#act_type_new").val()},
             nsbEntityActivities: {ididentityActivities: working_person_id}
         });
         return activityData;
     }
-    function getActivityNewPersonData() {
-        var activityData = JSON.stringify({
-            //idSourcingActivities: working_activity_id,
-            createdBy: credentialID,
-            updatedBy: credentialID,
-            description: 'This activity pertains to the initial creation of the record.',
-            nsbActivityStatusTp: {idactivityStatus: '1'},
-            nsbActivityTp: {idActivityTp: '1'},
-            nsbEntityActivities: {ididentityActivities: working_person_id}
-        });
-        return activityData;
-    }
-    function showActivityForm(callback) {
-        //console.log(working_sourcing_id + "() called....." + $(sourcing).html());
-        console.log("working activity form...showActivityForm");
-        //console.log("html: "+$(tempActivityDisplay).html());
-        
-        $(activities).find("nsbActivities").each(function () {
-            console.log("activity type: " + $(this).find("nsbActivityTp").find("name").text());
-            var composeActivities = tempActivityDisplay.cloneNode(true);
-            //console.log("html: " + $(composeActivities).html());
-            var activity_id = $(this).find("idSourcingActivities").text();
-            $(composeActivities).attr("data-act-id", activity_id);
-            $(composeActivities).find("#act_heading").text($(this).find("nsbActivityTp").find("name").text());
-            $(composeActivities).find("#act_id").text(activity_id);
-            $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
-            $(composeActivities).find("#act_description").text($(this).find("description").text());
-            //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
-            $("#activity_panel").append(composeActivities);
-        });
-        if (callback && typeof (callback) === "function") {
-            //do something here from your call back function
-            console.log("Calling the callback inside the function...showActivityForm");
-            callback();
-        }
-        ;
+    /*
+     function getActivityNewPersonData() {
+     var activityData = JSON.stringify({
+     //idSourcingActivities: working_activity_id,
+     createdBy: credentialID,
+     updatedBy: credentialID,
+     description: 'This activity pertains to the initial creation of the record.',
+     nsbActivityStatusTp: {idactivityStatus: '1'},
+     nsbActivityTp: {idActivityTp: '1'},
+     nsbEntityActivities: {ididentityActivities: working_person_id}
+     });
+     return activityData;
+     }
+     */
 
-    }
-    ;
 })
