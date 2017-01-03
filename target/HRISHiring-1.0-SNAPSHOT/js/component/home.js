@@ -1,8 +1,28 @@
 
 //register global variable for sharing data between components
+var get_personProfile_url = "http://localhost:8080/hris_hiring/webresources/person/";
+var get_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
+var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
+var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
+var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
+
+var working_jobqualification_id = "";
+var jobQualification = null;
+
+var personProfile = null;
+var working_person_id = "";
+
+var credentialID = "";
+var credential = null;
+
+var contactInfo = null;
+var working_contact_id = "";
 
 var searchNamesForm_fname = "";
 var searchNamesForm_lname = "";
+
+var activities = null;
+var working_activity_id = "";
 
 $(document).ready(function () {
 
@@ -19,18 +39,10 @@ $(document).ready(function () {
      //alert("working_person_id" + working_person_id);
      */
 
-    var credentialID = "";
-    var credential = null;
-    var working_person_id = "";
-    var working_jobqualification_id = "";
-    var working_contact_id = "";
+
     var working_sourcing_id = "";
-    var working_activity_id = "";
     var cand_name = "";
-    var personProfile = null;
-    var jobQualification = null;
-    var contactInfo = null;
-    var activities = null;
+
     var sourcing = null;
     var searchStr = null;
 
@@ -55,6 +67,7 @@ $(document).ready(function () {
                     if (recid !== undefined) {
                         getPersonalProfile(recid, function () {
                             showPersonalProfileForm();
+                            prepActivePerson(personProfile);
                         });
                     }
                 }
@@ -127,6 +140,8 @@ $(document).ready(function () {
                 getPersonalProfile(searchStr, function () {
                     //setTimeout(alert("Searching record # " + searchStr), 10000);
                     showPersonalProfileForm();
+                    prepActivePerson(personProfile);
+
                 });
             }
             ;
@@ -152,7 +167,6 @@ $(document).ready(function () {
 //----------------------------------------------------- Person Profile
     var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
     var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
-    var get_personProfile_url = "http://localhost:8080/hris_hiring/webresources/person/";
     //nav bars
     $("#canprofile").on("click", function (e) {
         showLoader();
@@ -197,8 +211,7 @@ $(document).ready(function () {
         console.log("Active person: " + cand_name);
         document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" +
                 working_person_id + ") " + cand_name +
-                "</h3><a href='home.html' class='btn btn-default btn-sm'>Enter new Candidate</a> " +
-                " <a class='btn btn-default btn-sm' href='#' id='activities-but'>Hiring Activities</a>";
+                "</h3><a href='home.html' class='btn btn-default btn-sm'>Enter new Candidate</a> ";
         if (callback && typeof (callback) === "function") {
             //do something here from your call back function
             console.log("Calling the callback inside the function...");
@@ -207,36 +220,7 @@ $(document).ready(function () {
         ;
     }
     ;
-    function getPersonalProfile(id, callback) {
-        console.log("------>getPersonalProfile");
-        $.ajax({
-            type: 'GET',
-            url: get_personProfile_url + id,
-            success: function (data) {
-                console.log("person:" + data);
-                if (data == null) {
-                    showAlert("No record found for rec#: " + searchStr);
-                } else {
-                    working_person_id = $(data).find("idPerson").text();
-                    console.log("Found in get Person: " + working_person_id);
-                    personProfile = data; //register to global variable
-                    prepActivePerson(data, function () {
-                        activityButEvent(); //register button event
-                    });
-                }
-                if (callback && typeof (callback) === "function") {
-                    console.log("calling callback function from getPerson");
-                    callback();
-                }
-                ;
-            },
-            error: function (jqXHR, status) {
-                showAlert("Error message: " + status);
-            }
-        });
-        console.log("<------");
-    }
-    ;
+
     function personProfileSaveUpdateHandler() {
         $("#personform").submit(function (event) {
             event.preventDefault();
@@ -285,7 +269,7 @@ $(document).ready(function () {
     }
     ;
 //----------------------------------------------------- Job Qualification
-    var get_jobQualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
+
     var save_jobqualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/save/";
     var update_jobqualification_url = "http://localhost:8080/hris_hiring/webresources/jobqualification/";
     $("#jobqualification").on("click", function (e) {
@@ -336,34 +320,7 @@ $(document).ready(function () {
         console.log("<<---prepJobQualificationForm");
     }
     ;
-    function getJobQualificationByPersonID(callback) {
-        $.ajax({
-            type: 'GET',
-            url: get_jobQualification_url + working_person_id,
-            success: function (data) {
-                console.log("job qualification get result:" + data);
-                if (data == "noresult") {
-                    //showAlert("Creat: " + working_person_id);
-                    jobQualification = null;
-                    working_jobqualification_id = "";
-                } else {
-                    jobQualification = data; //global
-                    working_jobqualification_id = $(data).find("jobQualification").find("idJobQualification").text();
-                    //alert("job qualification pk: "+working_jobqualification_id);
-                }
-                if (callback && typeof (callback) === "function") {
-                    //do something here from your call back function
-                    console.log("Calling the callback inside the function...");
-                    callback();
-                }
-                ;
-            },
-            error: function (jqXHR, status) {
-                showAlert("Application Error Found: " + status);
-            }
-        });
-    }
-    ;
+
     function jobQualificationSaveUpdateHandler() {
         $("#jobqualificationform").submit(function (event) {
             event.preventDefault();
@@ -422,7 +379,6 @@ $(document).ready(function () {
     ;
 //-------------------------contacts
 
-    var get_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
     var save_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/save/";
     var update_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
     $("#contact").on("click", function (e) {
@@ -465,34 +421,7 @@ $(document).ready(function () {
         console.log("<<---prepContactForm");
     }
     ;
-    function getContactByPersonID(callback) {
-        $.ajax({
-            type: 'GET',
-            url: get_contact_url + working_person_id,
-            success: function (data) {
-                console.log("contact get result:" + data);
-                if (data == "noresult") {
-                    //showAlert("No record found for rec#: " + working_person_id);
-                    contactInfo = null;
-                    working_contact_id = "";
-                } else {
-                    contactInfo = data; //global
-                    working_contact_id = $(data).find("contact").find("idcontact").text();
-                    //showAlert("contact pk: " + working_contact_id);
-                }
-                if (callback && typeof (callback) === "function") {
-                    //do something here from your call back function
-                    console.log("Calling the callback inside the function...");
-                    callback();
-                }
-                ;
-            },
-            error: function (jqXHR, status) {
-                showAlert("Application Error Found: " + status);
-            }
-        });
-    }
-    ;
+
     function contactSaveUpdateHandler() {
         $("#contactForm").submit(function (event) {
             event.preventDefault();
@@ -547,81 +476,26 @@ $(document).ready(function () {
 //------------------------- activities
 
 
-    var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/act/";
+    
     var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/";
     var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
     var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
     var add_remark_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
-    var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
     var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
-    function activityButEvent() {
-        
-        $("#activities-but").on("click", function (e) {
-            //function activitiesBadgeOnclick(){
-            console.log("activities-badge clicked");
-            if (working_person_id == null || working_person_id == "") {
-                showAlert("Search for a record first to view activities.");
-            } else {
-                getActivities(function () {
-                    showActivityForm(function () {
-                        //show remarks()    
-                        $(activities).find("nsbActivities").each(function () {
-                            /* Removing the remarks on the activities
-                             showRemarks($(this).find("idSourcingActivities").text(), function () {
-                             });
-                             */
-                            var sel_act_status_tp = $("#act_status_" + $(this).find("idSourcingActivities").text());
-                            lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text(), function () {
-                                console.log("Called getFramework act status");
-                            })
-                        })
-                        updateActivityHandler();
-                        saveActivityHandler();
-                        //populate dropdown for activity type
-                        var sel_act_status_tp = $("#act_status_new");
-                        lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "1", function () {
-                        })
-                        var sel_act_tp = $("#act_type");
-                        lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "2", function () {
 
-                        })
-                    });
-                });
-            }
-        });
-    }
-
-    function showActivityForm(callback) {
-        //console.log(working_sourcing_id + "() called....." + $(sourcing).html());
-        console.log("working activity form");
-        $("#panel").remove();
-        $("#section1").load("htmlcomponents/activities.html", function () {
-
-            var tempActivityDisplay = document.getElementById("activityRow").cloneNode(true);
-            //console.log("html: "+$(tempActivityDisplay).html());
-            $("#activityRow").remove();
-            $(activities).find("nsbActivities").each(function () {
-                console.log("activity type: " + $(this).find("nsbActivityTp").find("name").text());
-                var composeActivities = tempActivityDisplay.cloneNode(true);
-                //console.log("html: " + $(composeActivities).html());
-                var activity_id = $(this).find("idSourcingActivities").text();
-                $(composeActivities).attr("data-act-id", activity_id);
-                $(composeActivities).find("#act_heading").text("Activity Type: " + $(this).find("nsbActivityTp").find("name").text());
-                $(composeActivities).find("#act_id").text("Activity ID: " + activity_id);
-                $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
-                $(composeActivities).find("#act_description").text($(this).find("description").text());
-                //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
-                $("#activity_panel").append(composeActivities);
+    $("#activities-but").on("click", function (e) {
+        if (working_person_id == null || working_person_id == "") {
+            //showAlert("Search for a record first to view activities.");
+        } else {
+            $("#panel").remove();
+            //$("#activities-but").attr("class","active");
+            //$("#remarks-but").attr("class","");
+            $("#rem_container").load("htmlcomponents/activities.html", function () {
+                $.getScript("js/component/activities.js");
             });
-            if (callback && typeof (callback) === "function") {
-                //do something here from your call back function
-                console.log("Calling the callback inside the function...showActivityForm");
-                callback();
-            }
-            ;
-        });
-    }
-    ;
+        }
+    });
+
     /* No remarks on activities. This snippet could still be useful.
      function showRemarks(activityID, callback) {
      getActivityRemarks(activityID, function (data) {
@@ -699,30 +573,7 @@ $(document).ready(function () {
      })
      }
      */
-    function getActivities(callback) {
-        $.ajax({
-            type: 'GET',
-            url: get_activities_url + working_person_id,
-            success: function (data) {
-                console.log("activites get result:" + data);
-                if (data == "noresult") {
-                    //showAlert("Warning! No activity found for this candidate: " + working_person_id);
-                } else {
-                    activities = data;
-                }
-                if (callback && typeof (callback) === "function") {
-                    //do something here from your call back function
-                    console.log("Calling the callback inside the function getActivities...")
-                    callback(data);
-                }
-                ;
-            },
-            error: function (jqXHR, status) {
-                showAlert("Application Error Found: " + status);
-            }
-        });
-    }
-    ;
+
     function getActivityFormData() {
         var activityData = JSON.stringify({
             idSourcingActivities: working_activity_id,
@@ -798,56 +649,125 @@ $(document).ready(function () {
     }
 //------------------------- drop down list
 
-    function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_id, callback) {
 
-        $.ajax({
-            type: 'GET',
-            url: url,
-            success: function (data) {
-
-                if (selinput != null) {
-
-                    $(data).find(objname).each(function () {
-                        var opt_text = $(this).find(name_dom).text();
-                        console.log("opt_text: " + opt_text);
-                        var opt_id = $(this).find(opt_id_dom).text();
-                        if (active_id == opt_id) {
-                            $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
-                        } else {
-                            $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
-                        }
-                    });
-                }
-                if (callback && typeof (callback) === "function") {
-                    //do something here from your call back function
-                    console.log("Calling the callback inside the function getActivities...")
-                    callback(data);
-                }
-                ;
-            },
-            error: function (jqXHR, status) {
-                showAlert("Application Error encountered in getFramework: " + status);
-            }
-        });
-    }
-//-------------------------start utils
-
-
-    function ifnull(type) {
-        if (type === null) {
-            return "";
-        } else {
-            return type;
-        }
-
-    }
-
-    function TimeStampToDate(xmlDate)
-    {
-        var dt = new Date(xmlDate);
-        return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear();
-    }
 });
+
+function getActivities(callback) {
+    $.ajax({
+        type: 'GET',
+        url: get_activities_url + working_person_id,
+        success: function (data) {
+            console.log("activites get result:" + data);
+            if (data == "noresult") {
+                //showAlert("Warning! No activity found for this candidate: " + working_person_id);
+            } else {
+                activities = data;
+            }
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback(data);
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
+;
+
+function getJobQualificationByPersonID(callback) {
+    $.ajax({
+        type: 'GET',
+        url: get_jobQualification_url + working_person_id,
+        success: function (data) {
+            console.log("job qualification get result:" + data);
+            if (data == "noresult") {
+                //showAlert("Creat: " + working_person_id);
+                jobQualification = null;
+                working_jobqualification_id = "";
+            } else {
+                jobQualification = data; //global
+                working_jobqualification_id = $(data).find("jobQualification").find("idJobQualification").text();
+                //alert("job qualification pk: "+working_jobqualification_id);
+            }
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function...");
+                callback();
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
+;
+// this are shared functions
+function getContactByPersonID(callback) {
+    $.ajax({
+        type: 'GET',
+        url: get_contact_url + working_person_id,
+        success: function (data) {
+            if (data == "noresult") {
+                //showAlert("No record found for rec#: " + working_person_id);
+                contactInfo = null;
+                working_contact_id = "";
+            } else {
+                contactInfo = data; //global
+                working_contact_id = $(data).find("contact").find("idcontact").text();
+                //showAlert("contact pk: " + working_contact_id);
+            }
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function...");
+                callback();
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
+;
+function getPersonalProfile(id, callback) {
+    console.log("------>getPersonalProfile");
+    $.ajax({
+        type: 'GET',
+        url: get_personProfile_url + id,
+        success: function (data) {
+            console.log("person:" + data);
+            if (data == null) {
+                showAlert("No record found for rec#: " + searchStr);
+            } else {
+                working_person_id = $(data).find("idPerson").text();
+                console.log("Found in get Person: " + working_person_id);
+                personProfile = data; //register to global variable
+            }
+            if (callback && typeof (callback) === "function") {
+                console.log("calling callback function from getPerson");
+                callback();
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Error message: " + status);
+        }
+    });
+    console.log("<------");
+}
+
+function ifnull(type) {
+    if (type === null) {
+        return "";
+    } else {
+        return type;
+    }
+
+}
 
 function showAlert(msg) {
     $("#alert-msg").html("<p>" + msg + "</p>");
@@ -865,7 +785,11 @@ function hideLoader() {
     $("#loader_comp").removeClass("overlay_center");
     $("#section1").removeClass("disableddiv");
 }
-
+function TimeStampToDate(xmlDate)
+{
+    var dt = new Date(xmlDate);
+    return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear();
+}
 function GetURLParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
@@ -878,4 +802,37 @@ function GetURLParameter(sParam)
             return sParameterName[1];
         }
     }
+}
+
+function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_id, callback) {
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (data) {
+
+            if (selinput != null) {
+
+                $(data).find(objname).each(function () {
+                    var opt_text = $(this).find(name_dom).text();
+                    console.log("opt_text: " + opt_text);
+                    var opt_id = $(this).find(opt_id_dom).text();
+                    if (active_id == opt_id) {
+                        $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
+                    } else {
+                        $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
+                    }
+                });
+            }
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback(data);
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error encountered in getFramework: " + status);
+        }
+    });
 }

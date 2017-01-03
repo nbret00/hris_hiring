@@ -53,7 +53,7 @@
                     <a class="navbar-brand" href="#">MOCean</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                     <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Candidates</a></li>
                         <li><a href="#">Job Openings</a></li>
                         <li><a href="#">Reports</a></li>
@@ -106,12 +106,31 @@
 
 
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-5">
                     <br/><div id="loader_comp"></div>
-                    <div class="container-fluid" id="section1">
-
+                    <div id="section1">
 
                     </div>
+
+
+                </div>
+                <div class="col-md-4">
+
+                        
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="nav nav-pills">
+                                    <li role="presentation"><a href="#" id="remarks-but">Remarks</a></li>
+                                    <li role="presentation"><a href="#" id="activities-but">Hiring Activities</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" id="rem_container">
+
+                            </div>
+                        </div>
 
 
                 </div>
@@ -163,28 +182,28 @@
             ga('create', 'UA-XXXXX-X', 'auto');
             ga('send', 'pageview');
         </script>
-        
 
-  <!-- Modal -->
-  <div class="modal fade" id="myModalalert" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p class="modal-title">Note:</p>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModalalert" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <p class="modal-title">Note:</p>
+                    </div>
+                    <div class="modal-body" id="alert-msg">
+                        <p>Some text in the modal.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-          <div class="modal-body" id="alert-msg">
-          <p>Some text in the modal.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
+
     </body>
 </html>

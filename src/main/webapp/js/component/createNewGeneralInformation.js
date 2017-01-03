@@ -9,6 +9,7 @@ $(document).ready(function () {
     console.log("loaded generalInformation"+searchNamesForm_fname);
     //showAlert("This is my message!!"+searchNamesForm_fname);
     $("#FirstName").val(searchNamesForm_fname);
+   
     
     function getNamesFormData(){
         
