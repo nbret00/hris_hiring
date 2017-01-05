@@ -7,7 +7,7 @@ var get_activities_url = "http://localhost:8080/hris_hiring/webresources/activit
 var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitystatustp";
 var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
 var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
-var update_activities_url = "http://localhost:8080/hris_hiring/webresources/sourcing/update/";
+var update_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/";//put
 
 var working_jobqualification_id = "";
 var jobQualification = null;
@@ -720,6 +720,19 @@ function hideLoader() {
     $("#loader_comp").removeClass("overlay_center");
     $("#section1").removeClass("disableddiv");
 }
+
+function showLoaderActivities() {
+    $("#loader_section2").addClass("loader-sm");
+    $("#loader_section2").addClass("overlay_center");
+    $("#section2").addClass("disableddiv");
+}
+
+function hideLoaderActivities() {
+    $("#loader_section2").removeClass("loader-sm");
+    $("#loader_section2").removeClass("overlay_center");
+    $("#section2").removeClass("disableddiv");
+}
+
 function TimeStampToDate(xmlDate)
 {
     var dt = new Date(xmlDate);

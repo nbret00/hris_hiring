@@ -6,7 +6,7 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-01-03T09:26:46")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-01-05T18:24:36")
 @StaticMetamodel(NsbActivityStatusTp.class)
 public class NsbActivityStatusTp_ { 
 

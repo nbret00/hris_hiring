@@ -140,12 +140,13 @@ public class ActivitiesServices {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, Contact entity) {
+    public Response edit(@PathParam("id") Integer id, NsbActivities entity) {
         try {
-            Person p = new Person();
+            /*Person p = new Person();
             p.setIdPerson(id);
             entity.setPersonidPerson(p);
-            System.out.println("Edit for jobqualification :" + entity.getIdcontact().toString());
+*/
+            System.out.println("Edit for Activities :"+id);
             em.merge(entity);
             return Response.ok(entity).build();
         } catch (Exception e) {

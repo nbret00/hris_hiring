@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
  * @author nbret00
  */
 @Stateless
-@Path("com.nino.app.hrishiring.nsbactivity")
+@Path("nsbactivity")
 public class NsbActivityFacadeREST extends AbstractFacade<NsbActivity> {
 
     @PersistenceContext(unitName = "com.nino.app_HRISHiring_war_1.0-SNAPSHOTPU")
@@ -46,6 +46,7 @@ public class NsbActivityFacadeREST extends AbstractFacade<NsbActivity> {
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, NsbActivity entity) {
+        System.out.println("Updating the activities..."+id);
         super.edit(entity);
     }
 
