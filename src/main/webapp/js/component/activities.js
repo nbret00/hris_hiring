@@ -150,19 +150,6 @@ $(document).ready(function () {
         });
         return activityData;
     }
-    /*
-     function getActivityNewPersonData() {
-     var activityData = JSON.stringify({
-     //idSourcingActivities: working_activity_id,
-     createdBy: credentialID,
-     updatedBy: credentialID,
-     description: 'This activity pertains to the initial creation of the record.',
-     nsbActivityStatusTp: {idactivityStatus: '1'},
-     nsbActivityTp: {idActivityTp: '1'},
-     nsbEntityActivities: {ididentityActivities: working_person_id}
-     });
-     return activityData;
-     }
-     */
+
 
 })

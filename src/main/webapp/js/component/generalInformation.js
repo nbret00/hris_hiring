@@ -72,10 +72,5 @@ $(document).ready(function () {
     }
     ;
 
-    $("#panel").remove();
-    $("#rem_container").load("htmlcomponents/remarks.html", function () {
-
-
-    });
 })
 

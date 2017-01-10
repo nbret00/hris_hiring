@@ -75,6 +75,7 @@ $(document).ready(function () {
                 } else {
                     $("#panel").remove();
                     searchNamesForm_fname = $("#FirstName").val();
+                    searchNamesForm_lname = $("#LastName").val();
 
                     $("#section1").load("htmlcomponents/createNewGeneralInformation.html", function () {
                         showAlert("No duplicate record found for name: " + form_fname + " " + form_lname + ". Continue to create new candidate.");
@@ -87,7 +88,3 @@ $(document).ready(function () {
     })
 
 })
-
-
-
-//            });

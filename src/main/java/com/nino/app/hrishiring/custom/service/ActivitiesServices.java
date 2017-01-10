@@ -103,7 +103,7 @@ public class ActivitiesServices {
     @GET
     @Path("remarks/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<NsbRemarks> getRemarks(@PathParam("id") int id) {
+    public List<NsbRemarks> getRemarksByActivity(@PathParam("id") int id) {
         try {
             System.out.println("Remarks search by activity id");
             //Person p = new Person(id);
@@ -122,6 +122,36 @@ public class ActivitiesServices {
         }
     }
 
+    @GET
+    @Path("remarksByPerson/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<NsbRemarks> getRemarksByPerson(@PathParam("id") int id) {
+        List remarks = null;
+        try {
+            System.out.println("Activity search by id");
+            //Person p = new Person(id);
+            //NsbActivities jq = em.find(NsbActivities.class, id);
+
+            NsbEntityActivities entity_act = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.entityId = :entityId")
+                    .setParameter("entityId", id)
+                    .getSingleResult();
+
+            List jq = em.createQuery("SELECT n FROM NsbActivities n WHERE n.nsbEntityActivities = :nsbEntityActivities ORDER BY n.idSourcingActivities DESC")
+                    .setParameter("nsbEntityActivities", entity_act)
+                    .getResultList();
+
+            remarks = (List) em.createQuery("SELECT n FROM NsbRemarks n WHERE n.nsbactivitiesidSourcingActivities IN :nsbactivitiesidSourcingActivities ORDER BY n.idremarks DESC")
+                    .setParameter("nsbactivitiesidSourcingActivities", jq)
+                    .getResultList();
+
+            //System.out.println("Contact #:" + jq.getIdcontact());
+        } catch (Exception e) {
+            e.printStackTrace();
+            //return Response.ok("noresult").build();
+        }
+        return remarks;
+    }
+
     @PUT
     @Path("remarks/add")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -130,7 +160,7 @@ public class ActivitiesServices {
             em.persist(remarks);
             em.flush();
             //System.out.println("Create new job qualification with ID: " + entity.getIdcontact());
-            return Response.ok(remarks).build();
+            return Response.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.ok(e.getMessage()).build();
@@ -145,8 +175,8 @@ public class ActivitiesServices {
             /*Person p = new Person();
             p.setIdPerson(id);
             entity.setPersonidPerson(p);
-*/
-            System.out.println("Edit for Activities :"+id);
+             */
+            System.out.println("Edit for Activities :" + id);
             em.merge(entity);
             return Response.ok(entity).build();
         } catch (Exception e) {

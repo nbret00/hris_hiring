@@ -8,6 +8,8 @@ var get_activity_status_tp = "http://localhost:8080/hris_hiring/webresources/nsb
 var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
 var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/save";
 var update_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/";//put
+var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarksByPerson/";
+var add_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
 
 var working_jobqualification_id = "";
 var jobQualification = null;
@@ -69,9 +71,10 @@ $(document).ready(function () {
                     console.log("person id = " + recid);
                     if (recid !== undefined) {
                         getPersonalProfile(recid, function () {
-                            showPersonalProfileForm();
-                            prepActivePerson(personProfile);
+                            initWithProfile();
                         });
+                    } else {
+                        init();
                     }
                 }
             } else {
@@ -84,18 +87,30 @@ $(document).ready(function () {
         }
     });
     //load the default panel and data
-    $("#section1").load("htmlcomponents/createNewCheckDup.html", function () {
-        $.getScript("js/component/createNewCheckDup.js");
-    });
-    $("#generalinfopage").on("click", function (e) {
-        $("#panel").remove();
+    function init() {
+        $("#section1").load("htmlcomponents/createNewCheckDup.html", function () {
+            $.getScript("js/component/createNewCheckDup.js");
+        });
+
+        $("#leftnavbar").addClass("disableddiv");
+    }
+    function initWithProfile() {
+        prepActivePerson(personProfile);
+        $("#leftnavbar").removeClass("disableddiv");
+
         $("#section1").load("htmlcomponents/generalInformation.html", function () {
             $.getScript("js/component/generalInformation.js");
         });
-    });
+        $("#remarks-panel").remove();
+        $("#rem_container").load("htmlcomponents/remarks.html", function () {
+            $.getScript("js/component/remarks.js");
+            activatePill("remarks_pill");
+        });
+
+    }
+
     $("#logout").submit(function (event) {
         event.preventDefault();
-//alert("loging out");
         $.ajax({
             type: 'GET',
             url: 'http://localhost:8080/hris_hiring/webresources/hrisaccount/logout',
@@ -107,11 +122,7 @@ $(document).ready(function () {
             }
         });
     });
-    //checking global variables
-    $("#globalvar").click(function (event) {
-        console.log("global - name " + cand_name);
-        console.log("global - id " + working_person_id);
-    });
+
     //submit of search
     $("#searchForm").submit(function (event) {
         //alert("clicked!");
@@ -142,8 +153,7 @@ $(document).ready(function () {
                 //document.getElementById("activePerson").innerHTML = "Searching...";
                 getPersonalProfile(searchStr, function () {
                     //setTimeout(alert("Searching record # " + searchStr), 10000);
-                    showPersonalProfileForm();
-                    prepActivePerson(personProfile);
+                    initWithProfile();
 
                 });
             }
@@ -152,21 +162,28 @@ $(document).ready(function () {
         ;
     });
     //handlers
-    function initQuickPage(id) {
-        //if id not set
-        alert("initQuickPage");
-        if (id == "") {
-            //set buttom to add
-            alert("no id");
-            $("#quickpage_button").value = 'Add New';
-        } else {
-            alert("id found");
-            //load the data from service, set buttom to update  
-            $("#quickpage_button").value = 'Update';
-        }
-    }
-
-
+    /* to remove
+     function initQuickPage(id) {
+     //if id not set
+     alert("initQuickPage");
+     if (id == "") {
+     //set buttom to add
+     alert("no id");
+     $("#quickpage_button").value = 'Add New';
+     } else {
+     alert("id found");
+     //load the data from service, set buttom to update  
+     $("#quickpage_button").value = 'Update';
+     }
+     }
+     */
+//------------------------------------General Info
+    $("#generalinfopage").on("click", function (e) {
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/generalInformation.html", function () {
+            $.getScript("js/component/generalInformation.js");
+        });
+    });
 //----------------------------------------------------- Person Profile
     var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
     var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
@@ -478,12 +495,6 @@ $(document).ready(function () {
     ;
 //------------------------- activities
 
-
-
-    var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/";
-    var add_remark_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
-    var get_activity_tp = "http://localhost:8080/hris_hiring/webresources/nsbactivitytp";
-
     $("#activities-but").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
             //showAlert("Search for a record first to view activities.");
@@ -493,100 +504,64 @@ $(document).ready(function () {
             //$("#remarks-but").attr("class","");
             $("#rem_container").load("htmlcomponents/activities.html", function () {
                 $.getScript("js/component/activities.js");
+                activatePill("activity_pill");
             });
         }
     });
 
-    /* No remarks on activities. This snippet could still be useful.
-     function showRemarks(activityID, callback) {
-     getActivityRemarks(activityID, function (data) {
-     var dom_select_act = "div[data-act-id=\'" + activityID + "\']";
-     var remarks_dom = $(dom_select_act).find("#remarks_row").clone();
-     $(dom_select_act).find("#remarks_row").remove();
-     $(data).find("nsbRemarks").each(function () {
-     console.log("remarks: " + $(this).find("remarks").text());
-     var i_remarks_dom = remarks_dom.clone();
-     i_remarks_dom.find("#remarks_body").text($(this).find("remarks").text());
-     $(dom_select_act).find("#remarks").append(i_remarks_dom);
-     });
-     if (callback && typeof (callback) === "function") {
-     //do something here from your call back function
-     console.log("Calling the callback inside the function getActivities...")
-     callback();
-     }
-     })
-     }
-     
-     function getActivityRemarks(activity_id, callback) {
-     console.log("URL: " + get_remarks_url + activity_id);
-     $.ajax({
-     type: 'GET',
-     url: get_remarks_url + activity_id,
-     success: function (data) {
-     console.log("data from getActivityRemarks: " + $(data).html());
-     if (callback && typeof (callback) === "function") {
-     //do something here from your call back function
-     console.log("Calling the callback inside the function getActivities...")
-     callback(data);
-     }
-     ;
-     },
-     error: function (jqXHR, status) {
-     showAlert("Application Error Found: " + status);
-     }
-     });
-     }
-     
-     
-     function getRemarksFormData() {
-     var remarksData = JSON.stringify({
-     remarks: credentialID,
-     nsbactivitiesidSourcingActivities: {idSourcingActivities: '1'},
-     });
-     return remarksData;
-     }
-     
-     function addRemarks(callback) {
-     console.log("clicked activities save handler");
-     $("#activityform").submit(function (event) {
-     event.preventDefault();
-     console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
-     //activityData = getActivityFormData();
-     console.log("saving new contact.");
-     $.ajax({
-     type: 'POST',
-     url: add_remark_url,
-     contentType: 'application/json',
-     data: getRemarksFormData(),
-     success: function (data) {
-     getActivities(function () {
-     showActivityForm();
-     });
-     
-     if (callback && typeof (callback) === "function") {
-     //do something here from your call back function
-     console.log("Calling the callback inside the function getActivities...")
-     callback(data);
-     }
-     ;
-     }
-     });
-     })
-     }
-     */
+    function getRemarksFormData() {
+        var remarksData = JSON.stringify({
+            remarks: credentialID,
+            nsbactivitiesidSourcingActivities: {idSourcingActivities: '1'},
+        });
+        return remarksData;
+    }
 
+    function addRemarks(callback) {
+        console.log("clicked activities save handler");
+        $("#activityform").submit(function (event) {
+            event.preventDefault();
+            console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
+            //activityData = getActivityFormData();
+            console.log("saving new contact.");
+            $.ajax({
+                type: 'POST',
+                url: add_remark_url,
+                contentType: 'application/json',
+                data: getRemarksFormData(),
+                success: function (data) {
+                    getActivities(function () {
+                        showActivityForm();
+                    });
 
-
-//this is not working yet TODO
-    function changeActivityStatusHandler() {
-        $("[id^=act_status]").on("change", "select", function () {
-            showAlert("clicked!!!!!!" + $(this).attr("id").val());
+                    if (callback && typeof (callback) === "function") {
+                        //do something here from your call back function
+                        console.log("Calling the callback inside the function getActivities...")
+                        callback(data);
+                    }
+                    ;
+                }
+            });
         })
     }
 
 
-});
+//-------------------------- remarks
 
+    $("#remarks-but").on("click", function (e) {
+        if (working_person_id == null || working_person_id == "") {
+            //showAlert("Search for a record first to view activities.");
+        } else {
+            $("#remarks-panel").remove();
+            $("#rem_container").load("htmlcomponents/remarks.html", function () {
+                $.getScript("js/component/remarks.js");
+            });
+        }
+    });
+
+
+});
+//----------------------------------------------------------------------document.ready ends here
 function getActivities(callback) {
     $.ajax({
         type: 'GET',
@@ -640,7 +615,6 @@ function getJobQualificationByPersonID(callback) {
     });
 }
 ;
-// this are shared functions
 function getContactByPersonID(callback) {
     $.ajax({
         type: 'GET',
@@ -695,6 +669,26 @@ function getPersonalProfile(id, callback) {
     console.log("<------");
 }
 
+function getActivityRemarks(activity_id, callback) {
+    console.log("URL: " + get_remarks_url + activity_id);
+    $.ajax({
+        type: 'GET',
+        url: get_remarks_url + activity_id,
+        success: function (data) {
+            console.log("data from getActivityRemarks: " + $(data).html());
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback(data);
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
+
 function ifnull(type) {
     if (type === null) {
         return "";
@@ -738,6 +732,13 @@ function TimeStampToDate(xmlDate)
     var dt = new Date(xmlDate);
     return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear();
 }
+
+function FormatTimestamp(xmlTimestamp)
+{
+    var dt = new Date(xmlTimestamp);
+    return (dt.getMonth() + 1) + "/" + dt.getDay() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes();
+}
+
 function GetURLParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
@@ -750,6 +751,14 @@ function GetURLParameter(sParam)
             return sParameterName[1];
         }
     }
+}
+
+function activatePill(pillid) {
+
+    $("#remarks_pill").removeClass("active");
+    $("#activity_pill").removeClass("active");
+
+    $("#" + pillid).addClass("active");
 }
 
 function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_id, callback) {

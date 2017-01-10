@@ -9,6 +9,7 @@ $(document).ready(function () {
     console.log("loaded generalInformation"+searchNamesForm_fname);
     //showAlert("This is my message!!"+searchNamesForm_fname);
     $("#FirstName").val(searchNamesForm_fname);
+    $("#LastName").val(searchNamesForm_lname);
    
     
     function getNamesFormData(){
@@ -22,7 +23,15 @@ $(document).ready(function () {
     function getContactsFormDataSize(){
         var str = $("#mobilenum").val()+$("#email").val();
         return str.length;
-    }    
+    }
+    
+    function getProfileData(){
+        var profiledata = JSON.stringify({
+            firstname : $("#FirstName").val(),
+            lastname: $("#LastName").val(),
+            name : $("#name").val()
+        })
+    }
     
     $("#newCandidateForm").submit(function (event) {
         event.preventDefault();
