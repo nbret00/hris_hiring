@@ -6,46 +6,44 @@
 
 
 $(document).ready(function () {
-    console.log("loaded generalInformation"+searchNamesForm_fname);
+    console.log("loaded generalInformation" + searchNamesForm_fname);
     //showAlert("This is my message!!"+searchNamesForm_fname);
     $("#FirstName").val(searchNamesForm_fname);
     $("#LastName").val(searchNamesForm_lname);
-   
-    
-    function getNamesFormData(){
-        
+
+
+    function getNamesFormData() {
+
     }
-    
-    function getNamesFormDataSize(){
-        var str = $("#FirstName").val()+$("#LastName").val()+$("#name").val();
+
+    function getNamesFormDataSize() {
+        var str = $("#FirstName").val() + $("#LastName").val() + $("#name").val();
         return str.length;
     }
-    function getContactsFormDataSize(){
-        var str = $("#mobilenum").val()+$("#email").val();
+    function getContactsFormDataSize() {
+        var str = $("#mobilenum").val() + $("#email").val();
         return str.length;
     }
-    
-    function getProfileData(){
-        var profiledata = JSON.stringify({
-            firstname : $("#FirstName").val(),
-            lastname: $("#LastName").val(),
-            name : $("#name").val()
-        })
-    }
-    
+
+
     $("#newCandidateForm").submit(function (event) {
         event.preventDefault();
-        console.log("Submit button!"+getNamesFormDataSize());
         
-        if (getNamesFormDataSize()>0){
-            console.log("names present");
-            
+        if (getNamesFormDataSize() > 0) {
+            var profiledata = JSON.stringify({
+                firstName: $("#FirstName").val(),
+                lastName: $("#LastName").val(),
+                name: $("#name").val()
+            });
+            saveProfile(profiledata, function(){
+                console.log("saveProfile done")
+            })
         }
-        if (getContactsFormDataSize()>0){
+        if (getContactsFormDataSize() > 0) {
             console.log("contacts present");
         }
-        
+
     })
-    
-    
+
+
 })

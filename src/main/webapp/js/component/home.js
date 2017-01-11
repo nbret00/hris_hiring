@@ -10,6 +10,7 @@ var save_activities_url = "http://localhost:8080/hris_hiring/webresources/activi
 var update_activities_url = "http://localhost:8080/hris_hiring/webresources/activities/";//put
 var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarksByPerson/";
 var add_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
+var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
 
 var working_jobqualification_id = "";
 var jobQualification = null;
@@ -185,7 +186,7 @@ $(document).ready(function () {
         });
     });
 //----------------------------------------------------- Person Profile
-    var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
+    
     var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
     //nav bars
     $("#canprofile").on("click", function (e) {
@@ -254,18 +255,11 @@ $(document).ready(function () {
             });
             console.log("This is the text of the button: " + $("#personProfileBut").text());
             if ($("#personProfileBut").text() === "Save") {
-                console.log("saving new record person profile.");
-                $.ajax({
-                    type: 'POST',
-                    url: create_personalprofile_url,
-                    contentType: 'application/json',
-                    data: Person,
-                    success: function (data) {
-                        personProfile = data;
-                        showAlert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
-                        prepActivePerson(data);
-                        prepPersonProfileForm(data);
-                    }
+                saveProfile(Person, function () {
+                    personProfile = data;
+                    showAlert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
+                    prepActivePerson(data);
+                    prepPersonProfileForm(data);
                 });
             }
             if ($("#personProfileBut").text() === "Update") {
@@ -562,6 +556,24 @@ $(document).ready(function () {
 
 });
 //----------------------------------------------------------------------document.ready ends here
+
+function saveProfile(personformdata, callback) {
+    console.log("saving new record person profile.");
+    $.ajax({
+        type: 'POST',
+        url: create_personalprofile_url,
+        contentType: 'application/json',
+        data: personformdata,
+        success: function (data) {
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback(data);
+            }
+            ;
+        }
+    });
+}
 function getActivities(callback) {
     $.ajax({
         type: 'GET',
