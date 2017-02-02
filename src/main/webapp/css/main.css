@@ -3,7 +3,12 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
+    .selected-row > td {
+        background-color: #c4e2ff;
+        background: #c4e2ff;
+        color: red;
+        border-color: #c4e2ff;
+    }
 
 .loader-sm {
     border: 8px solid #f3f3f3; /* Light grey */

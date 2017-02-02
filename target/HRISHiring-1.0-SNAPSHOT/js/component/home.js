@@ -11,6 +11,10 @@ var update_activities_url = "http://localhost:8080/hris_hiring/webresources/acti
 var get_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarksByPerson/";
 var add_remarks_url = "http://localhost:8080/hris_hiring/webresources/activities/remarks/add";
 var create_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/personProfile/save";
+var save_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/save/";
+var get_activityEntity_url = "http://localhost:8080/hris_hiring/webresources/activities/activityEntity/";
+
+var activityEntityID = null;
 
 var working_jobqualification_id = "";
 var jobQualification = null;
@@ -95,20 +99,7 @@ $(document).ready(function () {
 
         $("#leftnavbar").addClass("disableddiv");
     }
-    function initWithProfile() {
-        prepActivePerson(personProfile);
-        $("#leftnavbar").removeClass("disableddiv");
 
-        $("#section1").load("htmlcomponents/generalInformation.html", function () {
-            $.getScript("js/component/generalInformation.js");
-        });
-        $("#remarks-panel").remove();
-        $("#rem_container").load("htmlcomponents/remarks.html", function () {
-            $.getScript("js/component/remarks.js");
-            activatePill("remarks_pill");
-        });
-
-    }
 
     $("#logout").submit(function (event) {
         event.preventDefault();
@@ -147,6 +138,8 @@ $(document).ready(function () {
             contactInfo = null;
             activities = null;
             sourcing = null;
+            activityEntity = null;
+            
             if (isNaN(searchStr)) {
                 showAlert("Rec # should be a number.");
             } else {
@@ -154,8 +147,12 @@ $(document).ready(function () {
                 //document.getElementById("activePerson").innerHTML = "Searching...";
                 getPersonalProfile(searchStr, function () {
                     //setTimeout(alert("Searching record # " + searchStr), 10000);
-                    initWithProfile();
-
+                    if (working_person_id == null || working_person_id == "") {
+                        showAlert("Search for a candidate - No record found.")
+                    } else {
+                        initWithProfile();
+                    }
+                    hideLoader();
                 });
             }
             ;
@@ -186,7 +183,7 @@ $(document).ready(function () {
         });
     });
 //----------------------------------------------------- Person Profile
-    
+
     var update_personalprofile_url = "http://localhost:8080/hris_hiring/webresources/person/";
     //nav bars
     $("#canprofile").on("click", function (e) {
@@ -226,21 +223,7 @@ $(document).ready(function () {
         console.log("<<---prepPersonProfileForm");
     }
     ;
-    function prepActivePerson(data, callback) {
-        cand_name = $(data).find("name").text();
-        working_person_id = $(data).find("idPerson").text();
-        console.log("Active person: " + cand_name);
-        document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" +
-                working_person_id + ") " + cand_name +
-                "</h3><a href='home.html' class='btn btn-default btn-sm'>Enter new Candidate</a> ";
-        if (callback && typeof (callback) === "function") {
-            //do something here from your call back function
-            console.log("Calling the callback inside the function...");
-            callback();
-        }
-        ;
-    }
-    ;
+
 
     function personProfileSaveUpdateHandler() {
         $("#personform").submit(function (event) {
@@ -255,11 +238,10 @@ $(document).ready(function () {
             });
             console.log("This is the text of the button: " + $("#personProfileBut").text());
             if ($("#personProfileBut").text() === "Save") {
-                saveProfile(Person, function () {
-                    personProfile = data;
-                    showAlert("New Record Successfully Created. Record # " + $(data).find("idPerson").text());
-                    prepActivePerson(data);
-                    prepPersonProfileForm(data);
+                saveProfile(Person, function (data) {
+                    showAlert("New Record Successfully Created. Record # " + $(personProfile).find("idPerson").text());
+                    prepActivePerson(personProfile);
+                    prepPersonProfileForm(personProfile);
                 });
             }
             if ($("#personProfileBut").text() === "Update") {
@@ -326,9 +308,9 @@ $(document).ready(function () {
             document.getElementById("industriesIdindustries").value = ifnull($(this).find("industriesIdindustries").find("idindustries").text());
             document.getElementById("industryLevelIdindustryLevel").value = ifnull($(this).find("industryLevelIdindustryLevel").find("idindustryLevel").text());
             document.getElementById("payrateIdpayrate").value = ifnull($(this).find("payrateIdpayrate").find("idpayrate").text());
-            document.getElementById("qualificationSummary").value = ifnull($(this).find("qualificationSummary").text());
+            //document.getElementById("qualificationSummary").value = ifnull($(this).find("qualificationSummary").text());
             document.getElementById("skills").value = ifnull($(this).find("skills").text());
-            document.getElementById("searchText").value = ifnull($(this).find("searchText").text());
+            //document.getElementById("searchText").value = ifnull($(this).find("searchText").text());
         });
         document.getElementById("jobQualificationBut").innerHTML = "Update";
         console.log("<<---prepJobQualificationForm");
@@ -392,8 +374,6 @@ $(document).ready(function () {
     }
     ;
 //-------------------------contacts
-
-    var save_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/save/";
     var update_contact_url = "http://localhost:8080/hris_hiring/webresources/contact/";
     $("#contact").on("click", function (e) {
         if (working_person_id == null || working_person_id == "") {
@@ -419,7 +399,7 @@ $(document).ready(function () {
             }
         });
     }
-    ;
+    
     function prepContactForm(contactInfoXMLdata) {
         console.log("prepContactForm--->>>");
         $(contactInfoXMLdata).find("contact").each(function () {
@@ -434,7 +414,6 @@ $(document).ready(function () {
         document.getElementById("contactBut").innerHTML = "Update";
         console.log("<<---prepContactForm");
     }
-    ;
 
     function contactSaveUpdateHandler() {
         $("#contactForm").submit(function (event) {
@@ -453,17 +432,12 @@ $(document).ready(function () {
             console.log("This is the text of the button111: " + ContactData.toString());
             if ($("#contactBut").text() == "Save") {
                 console.log("saving new contact.");
-                $.ajax({
-                    type: 'POST',
-                    url: save_contact_url + working_person_id,
-                    contentType: 'application/json',
-                    data: ContactData,
-                    success: function (data) {
-                        countryInfo = data;
-                        showAlert("Contact Successfully Created. - " + $(data).find("email").text());
-                        prepContactForm(data);
-                    }
-                });
+                saveContact(ContactData, function () {
+                    getContactByPersonID(function () {
+                        showAlert("Contact Successfully Created. - " + $(contactInfo).find("email").text());
+                        prepContactForm(contactInfo);
+                    })
+                })
             }
             if ($("#contactBut").text() == "Update") {
                 console.log("updating person profile # " + working_person_id);
@@ -486,7 +460,7 @@ $(document).ready(function () {
             }
         });
     }
-    ;
+    
 //------------------------- activities
 
     $("#activities-but").on("click", function (e) {
@@ -566,6 +540,8 @@ function saveProfile(personformdata, callback) {
         data: personformdata,
         success: function (data) {
             if (callback && typeof (callback) === "function") {
+                personProfile = data;
+                working_person_id = $(data).find("idPerson").text();
                 //do something here from your call back function
                 console.log("Calling the callback inside the function getActivities...")
                 callback(data);
@@ -574,12 +550,34 @@ function saveProfile(personformdata, callback) {
         }
     });
 }
+
+function saveContact(contactFormData, callback) {
+    console.log("saveContact called");
+    $.ajax({
+        type: 'POST',
+        url: save_contact_url + working_person_id,
+        contentType: 'application/json',
+        data: contactFormData,
+        success: function (data) {
+            countryInfo = data;
+            console.log("Save contact done");
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback();
+            }
+        },
+        error: function (jqXHR, status) {
+            console.log(status);
+        }
+    });
+}
+
 function getActivities(callback) {
     $.ajax({
         type: 'GET',
         url: get_activities_url + working_person_id,
         success: function (data) {
-            console.log("activites get result:" + data);
             if (data == "noresult") {
                 //showAlert("Warning! No activity found for this candidate: " + working_person_id);
             } else {
@@ -701,6 +699,57 @@ function getActivityRemarks(activity_id, callback) {
     });
 }
 
+function getActivityEntityID(callback) {
+    console.log("get Activity Entity URL ");
+    $.ajax({
+        type: 'GET',
+        url: get_activityEntity_url + working_person_id,
+        success: function (data) {
+            activityEntityID = $(data).find("ididentityActivities").text();
+            console.log("Entity ID "+activityEntityID);
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                console.log("Calling the callback inside the function getActivities...")
+                callback();
+            }
+            ;
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
+
+function initWithProfile() {
+    getActivityEntityID();
+    prepActivePerson(personProfile);
+    $("#leftnavbar").removeClass("disableddiv");
+
+    $("#section1").load("htmlcomponents/generalInformation.html", function () {
+        $.getScript("js/component/generalInformation.js");
+    });
+    $("#remarks-panel").remove();
+    $("#rem_container").load("htmlcomponents/remarks.html", function () {
+        $.getScript("js/component/remarks.js");
+        activatePill("remarks_pill");
+    });
+
+}
+
+function prepActivePerson(data, callback) {
+    cand_name = $(data).find("name").text();
+    working_person_id = $(data).find("idPerson").text();
+    console.log("Active person: " + cand_name);
+    document.getElementById("activePerson").innerHTML = "<h5>You're currenty working on candidate #</h5><h3>(" +
+            working_person_id + ") " + cand_name +
+            "</h3><a href='home.html' class='btn btn-default btn-sm'>Enter new Candidate</a> ";
+    if (callback && typeof (callback) === "function") {
+        //do something here from your call back function
+        console.log("Calling the callback inside the function...");
+        callback();
+    }
+}
+
 function ifnull(type) {
     if (type === null) {
         return "";
@@ -708,11 +757,6 @@ function ifnull(type) {
         return type;
     }
 
-}
-
-function showAlert(msg) {
-    $("#alert-msg").html("<p>" + msg + "</p>");
-    $("#myModalalert").modal();
 }
 
 function showLoader() {
@@ -773,34 +817,3 @@ function activatePill(pillid) {
     $("#" + pillid).addClass("active");
 }
 
-function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_id, callback) {
-
-    $.ajax({
-        type: 'GET',
-        url: url,
-        success: function (data) {
-
-            if (selinput != null) {
-
-                $(data).find(objname).each(function () {
-                    var opt_text = $(this).find(name_dom).text();
-                    var opt_id = $(this).find(opt_id_dom).text();
-                    if (active_id == opt_id) {
-                        $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
-                    } else {
-                        $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
-                    }
-                });
-            }
-            if (callback && typeof (callback) === "function") {
-                //do something here from your call back function
-                //console.log("Calling the callback inside the function getActivities...")
-                callback(data);
-            }
-            ;
-        },
-        error: function (jqXHR, status) {
-            showAlert("Application Error encountered in getFramework: " + status);
-        }
-    });
-}

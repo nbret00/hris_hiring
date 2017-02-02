@@ -85,8 +85,6 @@ $(document).ready(function () {
         showLoaderActivities();
         $("#activityform").submit(function (event) {
             event.preventDefault();
-            //console.log("clicked contactSaveUpdateHandler :" + $("#sourcingBut").text());
-            //activityData = getActivityFormData();
             console.log("saving new activity." + getActivityFormData());
             $.ajax({
                 type: 'POST',
@@ -132,7 +130,7 @@ $(document).ready(function () {
             //description: $(working_dom).find("#description").text(),
             nsbActivityStatusTp: {idactivityStatus: $("#" + domData).find("#act_status_"+activityID).val()},
             nsbActivityTp: {idActivityTp: $(working_dom).find("#act_heading").data("id")},
-            nsbEntityActivities: {ididentityActivities: working_person_id}
+            nsbEntityActivities: {ididentityActivities: activityEntityID}
         });
         console.log("Activity data for update: "+ activityData);
         return activityData;
@@ -140,13 +138,13 @@ $(document).ready(function () {
     
     function getActivityFormData() {
         var activityData = JSON.stringify({
-            idSourcingActivities: working_activity_id,
+            //idSourcingActivities: working_activity_id,
             createdBy: credentialID,
             updatedBy: credentialID,
             description: $('#description').val(),
             nsbActivityStatusTp: {idactivityStatus: $("#act_status_new").val()},
             nsbActivityTp: {idActivityTp: $("#act_type_new").val()},
-            nsbEntityActivities: {ididentityActivities: working_person_id}
+            nsbEntityActivities: {ididentityActivities: activityEntityID}
         });
         return activityData;
     }

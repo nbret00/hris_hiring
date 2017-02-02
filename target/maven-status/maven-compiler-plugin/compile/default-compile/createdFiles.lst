@@ -1,6 +1,7 @@
 com\nino\app\hrishiring\NsbActivity.class
 com\nino\app\hrishiring\NsbActivityStatusHist_.class
 com\nino\app\hrishiring\service\NsbActivityStatusTpFacadeREST.class
+com\nino\app\hrishiring\custom\service\jobs\JobRestService.class
 com\nino\app\hrishiring\NsbActivities_.class
 com\nino\app\hrishiring\NsbActivity_.class
 com\nino\app\hrishiring\filter\NewJaxRsFilter.class
@@ -19,6 +20,7 @@ com\nino\app\hrishiring\data\SearchResult.class
 com\nino\app\hrishiring\NewClass.class
 com\nino\app\hrishiring\service\NsbActivityFacadeREST.class
 com\nino\app\hrishiring\Job.class
+com\nino\app\hrishiring\service\JobFacadeREST.class
 com\nino\app\hrishiring\service\NsbActivityTpFacadeREST.class
 com\nino\app\hrishiring\JobQualification.class
 com\nino\app\hrishiring\NsbActivityStatusTp.class
@@ -54,6 +56,7 @@ com\nino\app\hrishiring\service\ApplicationConfig.class
 com\nino\app\hrishiring\NsbActivityDoc_.class
 com\nino\app\hrishiring\NsbActivityStatus_.class
 com\nino\app\hrishiring\service\EndorsementFacadeREST.class
+com\nino\app\hrishiring\custom\service\EndorsementRestService.class
 com\nino\app\hrishiring\Contact.class
 com\nino\app\hrishiring\IndustryLevel.class
 com\nino\app\hrishiring\Payrate.class

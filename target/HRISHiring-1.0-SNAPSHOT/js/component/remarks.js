@@ -9,29 +9,29 @@ $(document).ready(function () {
     var remarks_dom = $("#row_model").clone(true);
 
     var default_activity_id = null; // this will be used to associate when adding remark
-    
+
     if (working_person_id == null) {
         console.log("activities is null");
         $("#remarks").remove();
     } else {
         console.log("init remarks");
         init();
-        if (activities==null){
+        if (activities == null) {
             console.log("activity is null");
-                    getActivities(function () {
-            console.log("activities found");
-            default_activity_id = $(activities).find("nsbActivities").first().find("idSourcingActivities").text();
-
-        });
-        }else{
+            getActivities(function () {
+                console.log("activities found");
+                default_activity_id = $(activities).find("nsbActivities").first().find("idSourcingActivities").text();
+            });
+        } else {
             console.log('activity is NOT null');
             default_activity_id = $(activities).find("nsbActivities").first().find("idSourcingActivities").text();
         }
     }
 
     function init() {
+        $("#remarks_field").val("");
         $("#remarks").remove();
-
+        
         getActivityRemarks(working_person_id, function (data) {
             //var dom_select_act = "div[data-act-id=\'" + activityID + "\']";
             var remarks_working_dom = $(remarks_dom).clone(true);
@@ -40,13 +40,10 @@ $(document).ready(function () {
             $(remarks_working_dom).find("#remarks_row").remove();
 
             $(data).find("nsbRemarks").each(function () {
-                console.log("remarks: " + $(this).find("remarks").text());
                 var i_remarks_dom = $(remarks_working_row).clone(true);
-
                 i_remarks_dom.find("#remarks_body").text($(this).find("remarks").text());
                 i_remarks_dom.find("#dt_created").text(FormatTimestamp($(this).find("createdDt").text()));
                 i_remarks_dom.find("#created_by").text($(this).find("createdBy").text());
-
                 $(remarks_working_dom).find("#remarks").append(i_remarks_dom);
             });
             $("#row_model").append(remarks_working_dom);
@@ -66,7 +63,6 @@ $(document).ready(function () {
             remarks: $("#remarks_field").val(),
             nsbactivitiesidSourcingActivities: {idSourcingActivities: default_activity_id}
         });
-        console.log("clicked ADDREMARKS :" + form_data);
 
         $.ajax({
             type: 'PUT',

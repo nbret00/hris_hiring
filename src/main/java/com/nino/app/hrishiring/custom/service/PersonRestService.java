@@ -5,6 +5,7 @@
  */
 package com.nino.app.hrishiring.custom.service;
 
+import com.nino.app.hrishiring.NsbEntityActivities;
 import com.nino.app.hrishiring.Person;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -48,6 +49,11 @@ public class PersonRestService {
             em.persist(person);
             em.flush();
             System.out.println(person.getIdPerson());
+            NsbEntityActivities ent = new NsbEntityActivities();
+            ent.setEntityName("person");
+            ent.setEntityId(person.getIdPerson());
+            em.persist(ent);
+            em.flush();
             return Response.ok(person).build();
         } catch (Exception e) {
             e.printStackTrace();

@@ -185,4 +185,19 @@ public class ActivitiesServices {
         }
     }
 
+    @GET
+    @Path("activityEntity/{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public NsbEntityActivities getActivityEntity(@PathParam("id") Integer id) {
+        NsbEntityActivities ent = null;
+        try {
+            ent = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.entityId = :entityId")
+                    .setParameter("entityId", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+
+        }
+        return ent;
+    }
+
 }

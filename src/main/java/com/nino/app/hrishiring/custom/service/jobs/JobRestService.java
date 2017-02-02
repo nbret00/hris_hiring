@@ -3,148 +3,90 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nino.app.hrishiring.custom.service;
+package com.nino.app.hrishiring.custom.service.jobs;
 
-import com.nino.app.hrishiring.JobQualification;
-import com.nino.app.hrishiring.Person;
-import com.nino.app.hrishiring.data.SearchResult;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.nino.app.hrishiring.Company;
+import com.nino.app.hrishiring.Job;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *
  * @author nbret00
  */
-@Path("jobqualification")
+@Path("jobs")
 @Stateless
-public class JobQualificationRestService {
+public class JobRestService {
 
     @PersistenceContext(unitName = "com.nino.app_HRISHiring_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public JobQualificationRestService() {
+    public JobRestService() {
+    }
+    
+    @GET
+    @Path("bycompany/{companyid}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Job> byCompany(@PathParam("companyid") int comapanyid){
+        
+        Company c = em.find(Company.class, comapanyid);
+        
+        List<Job> jl = em.createQuery("SELECT j FROM Job j WHERE j.companyIdclient = :companyIdclient")
+                .setParameter("companyIdclient", c)
+                .getResultList();
+        
+        return jl;
     }
 
     @POST
-    @Path("save/{personid}")
+    @Path("filter")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response save(JobQualification jobqualification,
-            @PathParam("personid") int personid) {
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Job> filter(Job job) {
         try {
-            System.out.println("createNew " + jobqualification.getJobTitle());
-            Person p = em.find(Person.class, personid);
-            jobqualification.setPersonId(p);
-            em.persist(jobqualification);
-            em.flush();
-            System.out.println("Create new job qualification with ID: " + jobqualification.getIdJobQualification());
-            return Response.ok(jobqualification).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok(e.getMessage()).build();
-        }
-
-    }
-
-    @GET
-    @Path("{id}")
-    public Response getJobQualification(@PathParam("id") int id) {
-        try {
-            System.out.println("Job qualification search by person id");
-
-            Person p = new Person();
-            p.setIdPerson(id);
-
-            JobQualification jq = (JobQualification) em.createQuery("SELECT j FROM JobQualification j WHERE j.personId = :personId")
-                    .setParameter("personId", p)
-                    .getSingleResult();
-            System.out.println("Job qualification #:" + jq.getIdJobQualification());
-            return Response.ok(jq).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok("noresult").build();
-        }
-    }
-
-    @GET
-    @Path("searchFirstname/{fname}")
-    public List<SearchResult> getJobQualificationByFirstName(@PathParam("fname") String fname) {
-        ArrayList alsearchresult = new ArrayList();
-        try {
-            System.out.println("Job qualification search by person id");
-            List q = em.createQuery("SELECT p FROM Person p WHERE p.firstName LIKE :firstName")
-                    .setParameter("firstName", "%" + fname + "%")
-                    .getResultList();
-
-            System.out.println("Num of people: " + q.size());
-            String ids = new String();
-            Iterator iq = q.iterator();
-            while (iq.hasNext()) {
-                Person p = (Person) iq.next();
-                ids = ids + p.getIdPerson() + ",";
+            System.out.println("filter " + job.getIdjobpk());
+            String sql = "Select ...";
+            boolean isFilterSet = false;
+            if (job.getTitle() != "") {
+                System.out.println("title found: " + job.getTitle());
+                isFilterSet = true;
+                sql = sql + " / title found ";
             }
-            if (ids != null) {
-                if (ids.endsWith(",")) {
-                    ids = ids.substring(0, ids.length() - 1);
-                }
-
-                System.out.println("Person ids to search: " + ids);
-
-                String query = "SELECT p.idPerson, p.FirstName, p.LastName, jq.JobTitle "
-                        + "FROM hris_hiring.job_qualification jq right join hris_hiring.person p on p.idPerson = jq.person_id "
-                        + "where p.idPerson in (" + ids + ")";
-                List<Object[]> jq = em.createNativeQuery(query)
-                        //.setParameter("personIds", "(" + ids + ")")
-                        .getResultList();
-
-                System.out.println("Job qualification #:" + jq.size());
-
-                //ArrayList alsearchresult = new ArrayList();
-                //Iterator i = jq.iterator();
-                //while (i.hasNext()) {
-                for (Object[] a : jq) {
-                    //Object o = i.next();
-                    System.out.println("testing --- "+a[0]);
-                    
-                    SearchResult sr = new SearchResult((int)a[0],(String)a[1],(String)a[2],"",(String)a[3]);
-                    alsearchresult.add(sr);
-                }
-                
+            if (job.getDescription() != "") {
+                System.out.println("description: " + job.getDescription());
+                isFilterSet = true;
+                sql = sql + " / description found ";
+            }
+            if (job.getStatus() != "") {
+                isFilterSet = true;
+                sql = sql + " / status ID";
+            }
+            if (isFilterSet) {
+                System.out.println("sql: " + sql);
+            } else {
+                TypedQuery<Job> query
+                        = em.createNamedQuery("Job.findAll", Job.class);
+                List<Job> results = query.getResultList();
+                System.out.println("Size: "+results.size());
+                return results;
             }
 
-            return alsearchresult;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+     
         }
-    }
+        return null;
 
-    @PUT
-    @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, JobQualification entity) {
-        try {
-            Person p = new Person();
-            p.setIdPerson(id);
-            entity.setPersonId(p);
-            System.out.println("Edit for jobqualification :" + entity.getIdJobQualification().toString());
-            em.merge(entity);
-            return Response.ok(entity).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok("notok").build();
-        }
     }
 
 }
