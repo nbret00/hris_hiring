@@ -2,9 +2,10 @@
 
 
 $(document).ready(function () {
-    
+
     var url_getJob = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
-    
+    var update_jobs_data = null;
+
     console.log("ID: " + updateJobsID);
     $("#endorsement-but").click(function () {
         $("#rem_container").load("htmlcomponents/jobs/endorsement.html", function () {
@@ -32,19 +33,42 @@ $(document).ready(function () {
             $.ajax({
                 type: 'GET',
                 url: url_getJob + updateJobsID,
-                success : function(data){
-                    $("#jobtitle").val($(data).find("title").text());
-                    $("#description_short").text($(data).find("description").text());
-                    $("#description_long").text($(data).find("descriptionLong").text());
-                    $("#qualification").val($(data).find("qualifications").text());
-                    $("#targetposition").val($(data).find("responsibility").text());
-                    $("#dateRecieved").val($(data).find("dateRecieved").text());
-                    $("#dateClosing").text();//todo
+                success: function (data) {
+                    update_jobs_data = data;
+                    setFormData(data);
                 }
             })
         }
+    }
+
+    function setFormData(result) {
+        $("#jobtitle").val($(result).find("title").text());
+        $("#description_short").text($(result).find("description").text());
+        $("#description_long").text($(result).find("descriptionLong").text());
+        $("#qualification").val($(result).find("qualifications").text());
+        $("#targetposition").val($(result).find("responsibility").text());
+        $("#dateRecieved").val($(result).find("dateRecieved").text());
+        $("#dateClosing").text();//todo
 
     }
+    
+    function getFormData(){
+        var fd = JSON.stringify({
+            title: $("#jobtitle").val(),
+            description: $("#description_short").text(),
+            descriptionLong: $("#description_long").text(),
+            qualifications: $("#qualification").val(),
+            responsibility: $("#targetposition").val(),
+            dateRecieved: $("#dateRecieved").val(),
+            companyIdclient : {idclient: updateCompanyID},
+        });
+        return fd;
+    }
+    
+    $("#jobForm").submit(function(event){
+        event.preventDefault();
+        console.log(getFormData());
+    })
 
 })
 

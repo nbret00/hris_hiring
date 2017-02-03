@@ -20,13 +20,14 @@ $(document).ready(function () {
                 updateCompanyName = $(this).text();
                 $("#parag_company").text("Create Job for the selected company");
                 $("#jsGrid").jsGrid("loadData").done(function () {
-
+                    
                 });
 
             })
             $("#parag_company").click(function () {
 
                 $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
+                    updateJobsID = "";
                     $.getScript("js/component/jobs/updateJobs.js");
                     $("#jobBut").text("Create New");
                     $("#endorsement-but").text("");
@@ -50,7 +51,7 @@ $(document).ready(function () {
 
                 return $.ajax({
                     type: "GET",
-                    url: url_getJobsByCompany +updateCompanyID,
+                    url: url_getJobsByCompany + updateCompanyID,
                     contentType: "application/json",
                     dataType: "JSON"
                 })
@@ -59,9 +60,9 @@ $(document).ready(function () {
         rowClick: function (args) {
             //var srow = this.rowByItem(args.item);
             //$(srow).addClass("selected-row");
-updateJobsID = "";
-updateCompanyID = "";
-updateCompanyName = "";
+            updateJobsID = "";
+            updateCompanyID = "";
+            updateCompanyName = "";
 
             console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
