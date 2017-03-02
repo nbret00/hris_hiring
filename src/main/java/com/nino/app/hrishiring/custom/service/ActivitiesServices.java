@@ -7,7 +7,7 @@ package com.nino.app.hrishiring.custom.service;
 
 import com.nino.app.hrishiring.Contact;
 import com.nino.app.hrishiring.NsbActivities;
-import com.nino.app.hrishiring.NsbEntityActivities;
+import com.nino.app.hrishiring.NsbPersonActivities;
 import com.nino.app.hrishiring.NsbRemarks;
 import com.nino.app.hrishiring.Person;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ActivitiesServices {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response save(NsbActivities entity) {
         try {
-            System.out.println("createNew " + entity.getIdSourcingActivities());
+            System.out.println("createNew description" + entity.getDescription());
             //entity.setPersonidPerson(p);
             em.persist(entity);
             em.flush();
@@ -62,7 +62,7 @@ public class ActivitiesServices {
         try {
             System.out.println("Activity search by id");
             //Person p = new Person(id);
-            NsbEntityActivities jq = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.ididentityActivities = :ididentityActivities ORDER BY n.ididentityActivities DESC")
+            NsbPersonActivities jq = (NsbPersonActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.ididentityActivities = :ididentityActivities ORDER BY n.ididentityActivities DESC")
                     .setParameter("ididentityActivities", id)
                     .getSingleResult();
             //System.out.println("Contact #:" + jq.getIdcontact());
@@ -77,15 +77,15 @@ public class ActivitiesServices {
     @GET
     @Path("act/{id}")//by person ID
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<NsbActivities> getActivities1(@PathParam("id") int id) {
+    public List<NsbActivities> getActivities1(@PathParam("id") int personid) {
         List jq = null;
         try {
-            System.out.println("Activity search by id");
-            //Person p = new Person(id);
+            System.out.println("Activity search by person id");
+            Person p = new Person(personid);
             //NsbActivities jq = em.find(NsbActivities.class, id);
 
-            NsbEntityActivities entity_act = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.entityId = :entityId")
-                    .setParameter("entityId", id)
+            NsbPersonActivities entity_act = (NsbPersonActivities) em.createQuery("SELECT n FROM NsbPersonActivities n WHERE n.personidPerson = :personidPerson")
+                    .setParameter("personidPerson", p)
                     .getSingleResult();
 
             jq = em.createQuery("SELECT n FROM NsbActivities n WHERE n.nsbEntityActivities = :nsbEntityActivities ORDER BY n.idSourcingActivities DESC")
@@ -129,19 +129,21 @@ public class ActivitiesServices {
         List remarks = null;
         try {
             System.out.println("Activity search by id");
-            //Person p = new Person(id);
+            Person p = new Person(id);
             //NsbActivities jq = em.find(NsbActivities.class, id);
 
-            NsbEntityActivities entity_act = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.entityId = :entityId")
-                    .setParameter("entityId", id)
+            NsbPersonActivities entity_act = (NsbPersonActivities) em.createQuery("SELECT n FROM NsbPersonActivities n WHERE n.personidPerson = :personidPerson")
+                    .setParameter("personidPerson", p)
                     .getSingleResult();
-
+            
+            /*
             List jq = em.createQuery("SELECT n FROM NsbActivities n WHERE n.nsbEntityActivities = :nsbEntityActivities ORDER BY n.idSourcingActivities DESC")
                     .setParameter("nsbEntityActivities", entity_act)
                     .getResultList();
-
-            remarks = (List) em.createQuery("SELECT n FROM NsbRemarks n WHERE n.nsbactivitiesidSourcingActivities IN :nsbactivitiesidSourcingActivities ORDER BY n.idremarks DESC")
-                    .setParameter("nsbactivitiesidSourcingActivities", jq)
+            */
+            
+            remarks = (List) em.createQuery("SELECT n FROM NsbRemarks n WHERE n.identityActivities = :identityActivities ORDER BY n.idremarks DESC")
+                    .setParameter("identityActivities", entity_act)
                     .getResultList();
 
             //System.out.println("Contact #:" + jq.getIdcontact());
@@ -188,11 +190,14 @@ public class ActivitiesServices {
     @GET
     @Path("activityEntity/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public NsbEntityActivities getActivityEntity(@PathParam("id") Integer id) {
-        NsbEntityActivities ent = null;
+    public NsbPersonActivities getActivityEntity(@PathParam("id") Integer id) {
+        NsbPersonActivities ent = null;
         try {
-            ent = (NsbEntityActivities) em.createQuery("SELECT n FROM NsbEntityActivities n WHERE n.entityId = :entityId")
-                    .setParameter("entityId", id)
+            Person p = new Person();
+            p.setIdPerson(id);
+            
+            ent = (NsbPersonActivities) em.createQuery("SELECT n FROM NsbPersonActivities n WHERE n.personidPerson = :personidPerson")
+                    .setParameter("personidPerson", p)
                     .getSingleResult();
         } catch (Exception e) {
 

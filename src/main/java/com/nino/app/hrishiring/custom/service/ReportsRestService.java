@@ -5,9 +5,11 @@
  */
 package com.nino.app.hrishiring.custom.service;
 
-import com.nino.app.hrishiring.NsbEntityActivities;
+import com.nino.app.hrishiring.NsbPersonActivities;
 import com.nino.app.hrishiring.Person;
+import com.nino.app.hrishiring.data.AllPersonActivity;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -19,6 +21,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,122 +29,142 @@ import javax.ws.rs.core.Response;
  *
  * @author nbret00
  */
-@Path("personProfile")
+@Path("reports")
 @Stateless
-public class PersonRestService {
+public class ReportsRestService {
 
     @PersistenceContext(unitName = "com.nino.app_HRISHiring_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public PersonRestService() {
+    public ReportsRestService() {
     }
 
-    @POST
-    @Path("save")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response save(Person person
+    @GET
+    @Path("allPersonActivities/{act}/{acttp}/{ecomp}/{jo}")
+    public List<AllPersonActivity> allPersonActivitiesFiltered(
+            @PathParam("act") String act,
+            @PathParam("acttp") String acttp,
+            @PathParam("ecomp") String ecomp,
+            @PathParam("jo") String jo
     ) {
+        String query = "SELECT "
+                + "p.idPerson, "
+                + "p.FirstName, "
+                + "p.FirstName, "
+                + "j.JobTitle, "
+                + "j.company, "
+                + "j.YrsOfExperience, "
+                + "a.nsb_activity_tp, "
+                + "a.nsb_activity_status_tp, "
+                + "c.CompanyName, "
+                + "jo.Title "
+                + "FROM "
+                + "hris_hiring.nsb_person_activities pa "
+                + "RIGHT OUTER JOIN hris_hiring.nsb_activities a "
+                + "ON a.nsb_entity_activities = pa.idpersonactivities, "
+                + "hris_hiring.person p "
+                + "LEFT OUTER JOIN	hris_hiring.job_qualification j "
+                + "ON j.person_id = p.idPerson "
+                + "LEFT OUTER JOIN	hris_hiring.endorsement e "
+                + "ON p.idPerson = e.person_idPerson "
+                + "LEFT OUTER JOIN hris_hiring.company c "
+                + "ON e.company_idclient = c.idclient "
+                + "LEFT OUTER JOIN hris_hiring.job jo "
+                + "ON e.job_idjobpk = jo.idjobpk "
+                + "WHERE "
+                + "p.idPerson = pa.person_idPerson ";
+
+        String wherec = new String("");
+
+        System.out.println("Input: " + act + "-" + acttp + "-" + ecomp + "-" + jo);
+
+        if (!act.equalsIgnoreCase("nah")) {
+            wherec = wherec + ("AND a.nsb_activity_tp = " + Integer.parseInt(act) + " ");
+        }
+        if (!acttp.equalsIgnoreCase("nah")) {
+            wherec = wherec + ("AND a.nsb_activity_status_tp = " + Integer.parseInt(acttp) + " ");
+        }
+        if (!ecomp.equalsIgnoreCase("nah")) {
+            wherec = wherec + ("AND c.CompanyName = \"" + ecomp + "\" ");
+        }
+        if (!jo.equalsIgnoreCase("nah")) {
+            wherec = wherec + ("AND jo.Title=\"" + jo + "\" ");
+        }
+
+        query = query + wherec;
+
+        System.out.println("SQL Where clause for SEARCH: " + wherec);
+
+        List alsearchresult = new ArrayList();
+
         try {
-            System.out.println("createNew " + person.getFirstName());
-            person.setLastUpdateDate(new Timestamp(new Date().getTime()));
-            person.setLastUpdatePersonID(1);
-            //person.setDateOfBirth(dt.parse);
-            em.persist(person);
-            em.flush();
-            System.out.println(person.getIdPerson());
-            NsbEntityActivities ent = new NsbEntityActivities();
-            ent.setEntityName("person");
-            ent.setEntityId(person.getIdPerson());
-            em.persist(ent);
-            em.flush();
-            return Response.ok(person).build();
+
+            List<Object[]> jq = em.createNativeQuery(query)
+                    //.setParameter("personIds", "(" + ids + ")")
+                    .getResultList();
+
+            System.out.println("Reports - Person Activities #:" + jq.size());
+
+            //ArrayList alsearchresult = new ArrayList();
+            //Iterator i = jq.iterator();
+            //while (i.hasNext()) {
+            for (Object[] a : jq) {
+                //Object o = i.next();
+                System.out.println("testing --- " + a[0]);
+
+                AllPersonActivity sr = new AllPersonActivity(
+                        (int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (int) a[6], (int) a[7], (String) a[8], (String) a[9]);
+
+                alsearchresult.add(sr);
+            }
+
+            System.out.println("object size: " + alsearchresult.size());
+
+            return alsearchresult;
+
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.ok(e.getMessage()).build();
+            return null;
         }
 
     }
     
-    @GET
-    @Path("searchByNames")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public List<Person> searchByNames(
-            Person p
-    ) {
-        List personres = null;
-        try {
-            String sq = "SELECT p FROM Person p WHERE ";
-            System.out.println("searchByNames sql: "+p.getFirstName());
-            if(p.getFirstName()!=""){
-                sq = sq + "p.firstName LIKE :firstName ";
-            }
-            System.out.println("searchByNames sql--: "+p.getLastName());
-            if(p.getLastName()!=""){
-                sq = sq + "OR p.lastName LIKE :lastName ";
-            }
-            System.out.println("searchByNames sql: "+sq);
-            Query q = em.createQuery(sq);
+    /*
 
-            if(p.getFirstName()!=""){
-                q.setParameter("firstName", "%"+p.getFirstName()+"%");
-            }
-            if(p.getLastName()!=""){
-                q.setParameter("lastName", "%"+p.getLastName()+"%");
-            }
-            personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
-            return personres;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return personres;
-        }
-        
-    }    
-    
-        @GET
-    @Path("searchByLastname/{lname}")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public List<Person> searchByLastname(@PathParam("lname") String lname
-    ) {
-        List personres = null;
-        try {
-            String sq = "SELECT p FROM Person p WHERE ";
-            //if(null != person.getFirstName()){
-                sq = sq + "p.lastName LIKE :lastName";
-            //}
-            Query q = em.createQuery(sq);
-            q.setParameter("lastName", "%"+lname+"%");
-            
-            personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
-            return personres;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return personres;
-        }
-    }    
- 
     @GET
-    @Path("searchByName/{name}")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public List<Person> searchByName(@PathParam("name") String name
-    ) {
-        List personres = null;
+    @Path("allPersonActivities")
+    public List<AllPersonActivity> allPersonActivities() {
+        List alsearchresult = new ArrayList();
+
         try {
-            String sq = "SELECT p FROM Person p WHERE ";
-            //if(null != person.getFirstName()){
-                sq = sq + "p.name LIKE :name";
-            //}
-            Query q = em.createQuery(sq);
-            q.setParameter("name", "%"+name+"%");
-            
-            personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
-            return personres;
+
+            List<Object[]> jq = em.createNativeQuery(query)
+                    //.setParameter("personIds", "(" + ids + ")")
+                    .getResultList();
+
+            System.out.println("Reports - Person Activities #:" + jq.size());
+
+            //ArrayList alsearchresult = new ArrayList();
+            //Iterator i = jq.iterator();
+            //while (i.hasNext()) {
+            for (Object[] a : jq) {
+                //Object o = i.next();
+                System.out.println("testing --- " + a[0]);
+
+                AllPersonActivity sr = new AllPersonActivity(
+                        (int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (int) a[6], (int) a[7], (String) a[8], (String) a[9]);
+
+                alsearchresult.add(sr);
+            }
+
+            System.out.println("object size: " + alsearchresult.size());
+
+            return alsearchresult;
+
         } catch (Exception e) {
             e.printStackTrace();
-            return personres;
+            return null;
         }
-    }    
-    
+    }
+*/
 }

@@ -36,6 +36,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.nino.app.hrishiring.custom.service.EndorsementRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.JobQualificationRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.PersonRestService.class);
+        resources.add(com.nino.app.hrishiring.custom.service.ReportsRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.jobs.JobRestService.class);
         resources.add(com.nino.app.hrishiring.filter.NewJaxRsFilter.class);
         resources.add(com.nino.app.hrishiring.service.CompanyFacadeREST.class);
@@ -45,10 +46,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.nino.app.hrishiring.service.IndustryLevelFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.JobFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.JobQualificationFacadeREST.class);
-        resources.add(com.nino.app.hrishiring.service.NsbActivityFacadeREST.class);
-        resources.add(com.nino.app.hrishiring.service.NsbActivityStatusFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.NsbActivityStatusTpFacadeREST.class);
-        resources.add(com.nino.app.hrishiring.service.NsbActivitySuccessCriteriaFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.NsbActivityTpFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.PayrateFacadeREST.class);
         resources.add(com.nino.app.hrishiring.service.PersonFacadeREST.class);

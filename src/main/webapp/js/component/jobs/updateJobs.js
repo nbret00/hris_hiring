@@ -4,6 +4,9 @@
 $(document).ready(function () {
 
     var url_getJob = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
+    var url_addJob = "http://localhost:8080/hris_hiring/webresources/jobs/save";
+    var url_updateJob = "http://localhost:8080/hris_hiring/webresources/jobs/update/";
+
     var update_jobs_data = null;
 
     console.log("ID: " + updateJobsID);
@@ -28,6 +31,7 @@ $(document).ready(function () {
     function init() {
         if (updateJobsID == "") {
             //do nothing this is a create new record
+            $("#jobBut").text("Create New Job Opening");
         } else {
             //retrive
             $.ajax({
@@ -48,11 +52,15 @@ $(document).ready(function () {
         $("#qualification").val($(result).find("qualifications").text());
         $("#targetposition").val($(result).find("responsibility").text());
         $("#dateRecieved").val($(result).find("dateRecieved").text());
-        $("#dateClosing").text();//todo
-
+        $("#dateClosing").val($(result).find("closingDate").text());//todo
+        $("#openPosition").val($(result).find("openPosition").text());
+        $("#status").val($(result).find("status").text());
+        $("#targetEndorse").val($(result).find("ptargetToEndorse").text());
+        $("#assignedTo").val($(result).find("PAssignement").text());
+        $("#targetMatch").val($(result).find("ptargetToMatch").text());
     }
-    
-    function getFormData(){
+
+    function getFormData() {
         var fd = JSON.stringify({
             title: $("#jobtitle").val(),
             description: $("#description_short").text(),
@@ -60,15 +68,56 @@ $(document).ready(function () {
             qualifications: $("#qualification").val(),
             responsibility: $("#targetposition").val(),
             dateRecieved: $("#dateRecieved").val(),
-            companyIdclient : {idclient: updateCompanyID},
+            closingDate: $("#dateClosing").val(),
+            openPosition: $("#openPosition").val(),
+            status: $("#status").val(),
+            ptargetToEndorse: $("#targetEndorse").val(),
+            PAssignement: $("#assignedTo").val(),
+            ptargetToMatch: $("#targetMatch").val(),
+            companyIdclient: {idclient: updateCompanyID}
         });
         return fd;
     }
-    
-    $("#jobForm").submit(function(event){
-        event.preventDefault();
-        console.log(getFormData());
-    })
+
+    if ($("#jobBut").text() == "Create New Job Opening") {
+        $("#jobForm").submit(function (event) {
+            event.preventDefault();
+            console.log(getFormData());
+            $.ajax({
+                type: 'POST',
+                url: url_addJob,
+                contentType: 'application/json',
+                data: getFormData(),
+                success: function (data) {
+                    update_jobs_data = data;
+                    setFormData(data);
+                    $("#jsGrid").jsGrid("loadData").done(function () {
+
+                    });
+                }
+            })
+        })
+    }
+    if ($("#jobBut").text() == "Update") {
+        $("#jobForm").submit(function (event) {
+            event.preventDefault();
+            console.log(getFormData());
+            $.ajax({
+                type: 'POST',
+                url: url_updateJob + updateJobsID,
+                contentType: 'application/json',
+                data: getFormData(),
+                success: function (data) {
+                    update_jobs_data = data;
+                    setFormData(data);
+                    $("#jsGrid").jsGrid("loadData").done(function () {
+
+                    });
+                }
+            })
+        })
+    }
+
 
 })
 

@@ -32,9 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "JobQualification.findAll", query = "SELECT j FROM JobQualification j"),
     @NamedQuery(name = "JobQualification.findByIdJobQualification", query = "SELECT j FROM JobQualification j WHERE j.idJobQualification = :idJobQualification"),
     @NamedQuery(name = "JobQualification.findByJobTitle", query = "SELECT j FROM JobQualification j WHERE j.jobTitle = :jobTitle"),
+    @NamedQuery(name = "JobQualification.findByCompany", query = "SELECT j FROM JobQualification j WHERE j.company = :company"),
     @NamedQuery(name = "JobQualification.findBySkillsCategorymo", query = "SELECT j FROM JobQualification j WHERE j.skillsCategorymo = :skillsCategorymo"),
     @NamedQuery(name = "JobQualification.findByJoblevelmo", query = "SELECT j FROM JobQualification j WHERE j.joblevelmo = :joblevelmo"),
-    @NamedQuery(name = "JobQualification.findByQualificationSummary", query = "SELECT j FROM JobQualification j WHERE j.qualificationSummary = :qualificationSummary"),
     @NamedQuery(name = "JobQualification.findByYrsOfExperience", query = "SELECT j FROM JobQualification j WHERE j.yrsOfExperience = :yrsOfExperience"),
     @NamedQuery(name = "JobQualification.findByCurrentSalary", query = "SELECT j FROM JobQualification j WHERE j.currentSalary = :currentSalary"),
     @NamedQuery(name = "JobQualification.findByTargetSalary", query = "SELECT j FROM JobQualification j WHERE j.targetSalary = :targetSalary"),
@@ -53,28 +53,32 @@ public class JobQualification implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_job_qualification")
     private Integer idJobQualification;
-    @Size(max = 45)
+    @Size(max = 150)
     @Column(name = "JobTitle")
     private String jobTitle;
-    @Size(max = 45)
+    @Size(max = 150)
+    @Column(name = "company")
+    private String company;
+    @Size(max = 500)
     @Column(name = "SkillsCategory_mo")
     private String skillsCategorymo;
-    @Size(max = 45)
+    @Size(max = 500)
     @Column(name = "Joblevel_mo")
     private String joblevelmo;
-    @Size(max = 255)
+    @Lob
+    @Size(max = 65535)
     @Column(name = "QualificationSummary")
     private String qualificationSummary;
-    @Size(max = 10)
+    @Size(max = 200)
     @Column(name = "YrsOfExperience")
     private String yrsOfExperience;
-    @Size(max = 10)
+    @Size(max = 100)
     @Column(name = "CurrentSalary")
     private String currentSalary;
-    @Size(max = 10)
+    @Size(max = 100)
     @Column(name = "TargetSalary")
     private String targetSalary;
-    @Size(max = 45)
+    @Size(max = 100)
     @Column(name = "TargetPosition")
     private String targetPosition;
     @Size(max = 45)
@@ -121,6 +125,14 @@ public class JobQualification implements Serializable {
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getSkillsCategorymo() {

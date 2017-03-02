@@ -83,6 +83,9 @@ public class Endorsement implements Serializable {
     @JoinColumn(name = "company_idclient", referencedColumnName = "idclient")
     @ManyToOne(optional = false)
     private Company companyIdclient;
+    @JoinColumn(name = "job_idjobpk", referencedColumnName = "idjobpk")
+    @ManyToOne(optional = false)
+    private Job jobIdjobpk;
     @JoinColumn(name = "person_idPerson", referencedColumnName = "idPerson")
     @ManyToOne(optional = false)
     private Person personidPerson;
@@ -190,6 +193,14 @@ public class Endorsement implements Serializable {
         this.companyIdclient = companyIdclient;
     }
 
+    public Job getJobIdjobpk() {
+        return jobIdjobpk;
+    }
+
+    public void setJobIdjobpk(Job jobIdjobpk) {
+        this.jobIdjobpk = jobIdjobpk;
+    }
+
     public Person getPersonidPerson() {
         return personidPerson;
     }
@@ -220,7 +231,7 @@ public class Endorsement implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nino.app.hrishiring.service.service.Endorsement[ idendorsement=" + idendorsement + " ]";
+        return "com.nino.app.hrishiring.Endorsement[ idendorsement=" + idendorsement + " ]";
     }
     
 }

@@ -25,32 +25,28 @@ $(document).ready(function () {
         controller: {
             loadData: function (filter) {
 
-                console.log("filter: " + JSON.stringify(filter));
+                console.log("filter: " + updateCompanyID);
 
                 return $.ajax({
                     type: "GET",
-                    url: "http://localhost:8080/hris_hiring/webresources/endorsements/"+updateCompanyID,
-                    data: JSON.stringify(filter),
-                    contentType: "application/json",
+                    url: "http://localhost:8080/hris_hiring/webresources/endorsements/"+updateCompanyID+"/"+updateJobsID,
                     dataType: "JSON"
                 })
             }
         },
         rowClick: function (args) {
             var srow = this.rowByItem(args.item);
-            $(srow).addClass("selected-row");
-
             console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
-            $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-                $.getScript("js/component/jobs/updateJobs.js");
-            });
-
+            
+            
         },
         fields: [
-            {title: 'Job Num', name: 'companyIdclient.companyName', width: 50, key: true},
-            {title: 'Job Title', name: 'personidPerson.firstName', type: 'text', width: 50},
-            {title: 'Description', name: 'personidPerson.lastName', type: 'text', width: 200}
+            {title: 'Rec #', name: 'personidPerson.idPerson', width: 20, key: true},
+            {title: 'First Name', name: 'personidPerson.firstName', type: 'text', width: 30},
+            {title: 'Lastname', name: 'personidPerson.lastName', type: 'text', width: 30},
+            {title: 'Status', name: 'status', type: 'text', width: 20},
+            {title: 'Date', name: 'endorsedDate', type: 'text', width: 30}
         ]
     });
 })

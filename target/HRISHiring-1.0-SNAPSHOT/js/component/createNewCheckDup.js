@@ -5,15 +5,19 @@
  */
 
 
+
 console.log("loaded generalInformation.js");
-var url_searchByNames = "http://localhost:8080/hris_hiring/webresources/jobqualification/searchFirstname/";
+
 //            $("#searchNameForm").ready(function (data) {
 
 var searchResultDiv = $("#searchResultDiv").clone(true);
 $("#searchResultDiv").remove();
 
+
 $(document).ready(function () {
 
+    
+    
     function getSearchFormData() {
         var person = JSON.stringify({
             firstName: $("#FirstName").val(),
@@ -21,6 +25,52 @@ $(document).ready(function () {
         });
         return person;
     }
+
+    //$("#batchUpload").click(function (e) {
+    var fileInputCSV = document.getElementById('batchUpload'); 
+    fileInputCSV.addEventListener('change', function (e) {
+        console.log("batch upload")
+        
+        var file = e.target.files[0];
+        var csvParser = new SimpleExcel.Parser.CSV();
+        csvParser.setDelimiter(',');
+        csvParser.loadFile(file, function () {
+
+            // draw HTML table based on sheet data
+            var sheet = csvParser.getSheet();
+            var table = document.getElementById('result');
+            table.innerHTML = "";
+            sheet.forEach(function (el, i) {
+                var row = document.createElement('tr');
+                el.forEach(function (el, i) {
+                    var cell = document.createElement('td');
+                    cell.innerHTML = el.value;
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+            });
+
+            // create button to export as TSV
+            var btnSave = document.getElementById('fileExport');
+            btnSave.hidden = false;
+            btnSave.value = 'Save as TSV file ->';
+            document.body.appendChild(btnSave);
+
+            // export when button clicked
+            btnSave.addEventListener('click', function (e) {
+                var tsvWriter = new SimpleExcel.Writer.TSV();
+                tsvWriter.insertSheet(csvParser.getSheet(1));
+                tsvWriter.saveFile();
+            });
+
+            // print to console just for quick testing
+            console.log(csvParser.getSheet(1));
+            console.log(csvParser.getSheet(1).getRow(1));
+            console.log(csvParser.getSheet(1).getColumn(2));
+            console.log(csvParser.getSheet(1).getCell(3, 1));
+            console.log(csvParser.getSheet(1).getCell(2, 3).value);
+        });
+    })
 
     $("#searchNamesForm").submit(function (event) {
         event.preventDefault();
@@ -42,14 +92,12 @@ $(document).ready(function () {
             //console.log("search for f and l name");
         }
 
-
-
         $("#searchResultDiv").remove();
         $.ajax({
             type: 'GET',
             url: search_url,
             success: function (data) {
-                console.log("data cound!!!" + $(data).find("searchResult").size());// + data.find("firstname").text());
+                console.log("data found!!!" + $(data).find("searchResult").size());// + data.find("firstname").text());
                 if ($(data).find("searchResult").size() > 0) {
 
                     var resclone = searchResultDiv.clone(true);
@@ -64,7 +112,7 @@ $(document).ready(function () {
                         var recid = $(this).find("personID").text();
                         var recol = foreachresRecCol.find("#recnum");
                         $(recol).text(recid);
-                        $(recol).attr("href","home.html?recid="+recid);
+                        $(recol).attr("href", "home.html?recid=" + recid);
                         foreachresRecCol.find("#fnameCol").text($(this).find("firstname").text());
                         foreachresRecCol.find("#lnameCol").text($(this).find("lastname").text());
                         foreachresRecCol.find("#titlecol").text($(this).find("title").text());
@@ -73,15 +121,21 @@ $(document).ready(function () {
 
                     $("#resultDivContainer").append(resclone);
                 } else {
-                    $("#panel").remove();
-                    searchNamesForm_fname = $("#FirstName").val();
-                    searchNamesForm_lname = $("#LastName").val();
 
-                    $("#section1").load("htmlcomponents/createNewGeneralInformation.html", function () {
-                        showAlert("No duplicate record found for name: " + form_fname + " " + form_lname + ". Continue to create new candidate.");
+                    var r = confirm("Click OK to create new record for " + $("#FirstName").val() + " " + $("#LastName").val());
 
-                        $.getScript("js/component/createNewGeneralInformation.js");
-                    });
+                    if (r == true) {
+
+                        $("#panel").remove();
+
+                        searchNamesForm_fname = $("#FirstName").val();
+                        searchNamesForm_lname = $("#LastName").val();
+
+                        $("#section1").load("htmlcomponents/createNewGeneralInformation.html", function () {
+                            //showAlert("No duplicate record found for name: " + form_fname + " " + form_lname + ". Continue to create new candidate.");
+                            $.getScript("js/component/createNewGeneralInformation.js");
+                        });
+                    }
                 }
             }
         });

@@ -14,17 +14,16 @@ $(document).ready(function () {
         console.log("activities is null");
         $("#remarks").remove();
     } else {
-        console.log("init remarks");
-        init();
-        if (activities == null) {
-            console.log("activity is null");
-            getActivities(function () {
-                console.log("activities found");
-                default_activity_id = $(activities).find("nsbActivities").first().find("idSourcingActivities").text();
+        console.log("init remarks...");
+        if (activityEntityID == "" || activityEntityID == null) {
+            console.log("No Person Activity... setting...");
+            getActivityEntityID(function(){
+                console.log("Person Activity: "+activityEntity);
+                init();
             });
-        } else {
-            console.log('activity is NOT null');
-            default_activity_id = $(activities).find("nsbActivities").first().find("idSourcingActivities").text();
+        }else{
+            console.log("Person Activity ID: "+activityEntityID);
+            init();
         }
     }
 
@@ -61,9 +60,9 @@ $(document).ready(function () {
         var form_data = JSON.stringify({
             createdBy: $(personProfile).find("name").text(),
             remarks: $("#remarks_field").val(),
-            nsbactivitiesidSourcingActivities: {idSourcingActivities: default_activity_id}
+            identityActivities: {idpersonactivities: activityEntityID}
         });
-
+        console.log("New Remarks: "+form_data);
         $.ajax({
             type: 'PUT',
             url: add_remarks_url,

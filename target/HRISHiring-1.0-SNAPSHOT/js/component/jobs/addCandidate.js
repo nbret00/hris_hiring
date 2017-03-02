@@ -23,8 +23,9 @@ $("#jobsum-but").click(function () {
 })
 
 var url_searchByNames = "http://localhost:8080/hris_hiring/webresources/jobqualification/searchFirstname/";
-//            $("#searchNameForm").ready(function (data) {
+var url_addCandidates = "http://localhost:8080/hris_hiring/webresources/endorsements/save";
 
+//            $("#searchNameForm").ready(function (data) {
 
 $(document).ready(function () {
 
@@ -39,13 +40,34 @@ $(document).ready(function () {
 
     $("#searchResultSelCan").click(function () {
         console.log("value selected : " + $(this).val() + "----" + updateJobsID);
-        var r = confirm("This will add a match to the job. - " + $("#searchResultSelCan option:selected").text());
-        if (r) {
-            var endorsement = JSON.stringify({
-                companyIdclient: updateJobsID
-            })
+        if ($(this).val() == "") {
         } else {
-            console.log("this is false");
+            var r = confirm("This will add a match to the job. - " + $("#searchResultSelCan option:selected").text());
+            if (r) {
+                var endorsement = JSON.stringify({
+                    companyIdclient: {idclient: updateCompanyID},
+                    personidPerson: {idPerson: $(this).val()},
+                    jobIdjobpk: {idjobpk: updateJobsID}
+                })
+                $.ajax({
+                    type: 'PUT',
+                    url: url_addCandidates,
+                    contentType: 'application/json',
+                    data: endorsement,
+                    success: function (data) {
+                        showAlert("Candidate has been added to this job opening.");
+                        $(document).find("#searchResultSelCan").empty();
+                    },
+                    error: function () {
+                        showAlert("Application Error! Please contact system admin.");
+                    }
+                });
+
+
+                console.log("end: " + endorsement);
+            } else {
+                console.log("this is false");
+            }
         }
     })
 
@@ -74,7 +96,7 @@ $(document).ready(function () {
         $("#LastName").val("");
 
         $(document).find("#searchResultSelCan").empty();
-        console.log("hhhhh");
+
         var foreachresRecCol = $(document).find("#searchResultSelCan");
         $.ajax({
             type: 'GET',
@@ -82,9 +104,6 @@ $(document).ready(function () {
             success: function (data) {
                 console.log("data cound!!!" + $(data).find("searchResult").size());// + data.find("firstname").text());
                 if ($(data).find("searchResult").size() > 0) {
-
-
-
                     $(data).find("searchResult").each(function () {
 
                         //var option = document.createElement("option");

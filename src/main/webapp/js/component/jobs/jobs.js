@@ -19,17 +19,14 @@ $(document).ready(function () {
                 updateCompanyID = $(this).val();
                 updateCompanyName = $(this).text();
                 $("#parag_company").text("Create Job for the selected company");
-                $("#jsGrid").jsGrid("loadData").done(function () {
-                    
+                $("#jsGrid").jsGrid("loadData").done(function () { 
                 });
-
             })
             $("#parag_company").click(function () {
 
                 $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
                     updateJobsID = "";
                     $.getScript("js/component/jobs/updateJobs.js");
-                    $("#jobBut").text("Create New");
                     $("#endorsement-but").text("");
                     $("#addcand-but").text("");
                 });
@@ -60,9 +57,6 @@ $(document).ready(function () {
         rowClick: function (args) {
             //var srow = this.rowByItem(args.item);
             //$(srow).addClass("selected-row");
-            updateJobsID = "";
-            updateCompanyID = "";
-            updateCompanyName = "";
 
             console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
@@ -72,10 +66,13 @@ $(document).ready(function () {
 
         },
         fields: [
-            {title: 'Job Num', name: 'idjobpk', width: 50, key: true},
+            {title: 'Job #', name: 'idjobpk', width: 30, key: true},
             {title: 'Job Title', name: 'title', type: 'text', width: 50},
-            {title: 'Description', name: 'description', type: 'text', width: 200},
-            {title: 'Status', name: 'status', type: 'text', width: 50}
+            {title: 'Status', name: 'status', type: 'text', width: 50},
+            {title: 'Closing Date', name: 'closingDate', type: 'text', width: 50},
+            {title: 'Assigned To', name: 'PAssignement', type: 'text', width: 50},
+            {title: 'To Match (Num)', name: 'ptargetToMatch', type: 'text', width: 30},
+            {title: 'To Endorse (Num)', name: 'ptargetToEndorse', type: 'text', width: 30}
         ]
     });
 })

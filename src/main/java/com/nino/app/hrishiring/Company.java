@@ -125,7 +125,7 @@ public class Company implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nino.app.hrishiring.service.service.Company[ idclient=" + idclient + " ]";
+        return "com.nino.app.hrishiring.Company[ idclient=" + idclient + " ]";
     }
     
 }

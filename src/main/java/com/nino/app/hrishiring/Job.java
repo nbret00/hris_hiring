@@ -6,22 +6,27 @@
 package com.nino.app.hrishiring;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,15 +40,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Job.findByIdjobpk", query = "SELECT j FROM Job j WHERE j.idjobpk = :idjobpk"),
     @NamedQuery(name = "Job.findByTitle", query = "SELECT j FROM Job j WHERE j.title = :title"),
     @NamedQuery(name = "Job.findByDescription", query = "SELECT j FROM Job j WHERE j.description = :description"),
-    @NamedQuery(name = "Job.findByDescriptionLong", query = "SELECT j FROM Job j WHERE j.descriptionLong = :descriptionLong"),
     @NamedQuery(name = "Job.findByLocation", query = "SELECT j FROM Job j WHERE j.location = :location"),
     @NamedQuery(name = "Job.findByStatus", query = "SELECT j FROM Job j WHERE j.status = :status"),
     @NamedQuery(name = "Job.findByRemarks", query = "SELECT j FROM Job j WHERE j.remarks = :remarks"),
     @NamedQuery(name = "Job.findByQualifications", query = "SELECT j FROM Job j WHERE j.qualifications = :qualifications"),
-    @NamedQuery(name = "Job.findByResponsibility", query = "SELECT j FROM Job j WHERE j.responsibility = :responsibility"),
     @NamedQuery(name = "Job.findByDateRecieved", query = "SELECT j FROM Job j WHERE j.dateRecieved = :dateRecieved"),
     @NamedQuery(name = "Job.findByLastUpdatedDt", query = "SELECT j FROM Job j WHERE j.lastUpdatedDt = :lastUpdatedDt"),
-    @NamedQuery(name = "Job.findByLastUpdateUser", query = "SELECT j FROM Job j WHERE j.lastUpdateUser = :lastUpdateUser")})
+    @NamedQuery(name = "Job.findByLastUpdateUser", query = "SELECT j FROM Job j WHERE j.lastUpdateUser = :lastUpdateUser"),
+    @NamedQuery(name = "Job.findByOpenPosition", query = "SELECT j FROM Job j WHERE j.openPosition = :openPosition"),
+    @NamedQuery(name = "Job.findByClosingDate", query = "SELECT j FROM Job j WHERE j.closingDate = :closingDate"),
+    @NamedQuery(name = "Job.findByPAssignement", query = "SELECT j FROM Job j WHERE j.pAssignement = :pAssignement"),
+    @NamedQuery(name = "Job.findByPtargetToMatch", query = "SELECT j FROM Job j WHERE j.ptargetToMatch = :ptargetToMatch"),
+    @NamedQuery(name = "Job.findByPtargetToEndorse", query = "SELECT j FROM Job j WHERE j.ptargetToEndorse = :ptargetToEndorse")})
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,7 +66,8 @@ public class Job implements Serializable {
     @Size(max = 250)
     @Column(name = "Description")
     private String description;
-    @Size(max = 255)
+    @Lob
+    @Size(max = 65535)
     @Column(name = "DescriptionLong")
     private String descriptionLong;
     @Size(max = 45)
@@ -73,7 +82,8 @@ public class Job implements Serializable {
     @Size(max = 255)
     @Column(name = "Qualifications")
     private String qualifications;
-    @Size(max = 255)
+    @Lob
+    @Size(max = 65535)
     @Column(name = "Responsibility")
     private String responsibility;
     @Column(name = "DateRecieved")
@@ -84,6 +94,20 @@ public class Job implements Serializable {
     private Date lastUpdatedDt;
     @Column(name = "last_update_user")
     private Integer lastUpdateUser;
+    @Column(name = "OpenPosition")
+    private Integer openPosition;
+    @Column(name = "ClosingDate")
+    @Temporal(TemporalType.DATE)
+    private Date closingDate;
+    @Size(max = 100)
+    @Column(name = "p_assignement")
+    private String pAssignement;
+    @Column(name = "p_targetToMatch")
+    private Integer ptargetToMatch;
+    @Column(name = "p_targetToEndorse")
+    private Integer ptargetToEndorse;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobIdjobpk")
+    private Collection<Endorsement> endorsementCollection;
     @JoinColumn(name = "company_idclient", referencedColumnName = "idclient")
     @ManyToOne(optional = false)
     private Company companyIdclient;
@@ -191,6 +215,55 @@ public class Job implements Serializable {
         this.lastUpdateUser = lastUpdateUser;
     }
 
+    public Integer getOpenPosition() {
+        return openPosition;
+    }
+
+    public void setOpenPosition(Integer openPosition) {
+        this.openPosition = openPosition;
+    }
+
+    public Date getClosingDate() {
+        return closingDate;
+    }
+
+    public void setClosingDate(Date closingDate) {
+        this.closingDate = closingDate;
+    }
+
+    public String getPAssignement() {
+        return pAssignement;
+    }
+
+    public void setPAssignement(String pAssignement) {
+        this.pAssignement = pAssignement;
+    }
+
+    public Integer getPtargetToMatch() {
+        return ptargetToMatch;
+    }
+
+    public void setPtargetToMatch(Integer ptargetToMatch) {
+        this.ptargetToMatch = ptargetToMatch;
+    }
+
+    public Integer getPtargetToEndorse() {
+        return ptargetToEndorse;
+    }
+
+    public void setPtargetToEndorse(Integer ptargetToEndorse) {
+        this.ptargetToEndorse = ptargetToEndorse;
+    }
+
+    @XmlTransient
+    public Collection<Endorsement> getEndorsementCollection() {
+        return endorsementCollection;
+    }
+
+    public void setEndorsementCollection(Collection<Endorsement> endorsementCollection) {
+        this.endorsementCollection = endorsementCollection;
+    }
+
     public Company getCompanyIdclient() {
         return companyIdclient;
     }
@@ -221,7 +294,7 @@ public class Job implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nino.app.hrishiring.service.service.Job[ idjobpk=" + idjobpk + " ]";
+        return "com.nino.app.hrishiring.Job[ idjobpk=" + idjobpk + " ]";
     }
     
 }

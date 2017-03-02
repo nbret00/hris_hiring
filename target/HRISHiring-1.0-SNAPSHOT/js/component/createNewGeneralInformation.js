@@ -24,23 +24,55 @@ $(document).ready(function () {
         var str = $("#mobilenum").val() + $("#email").val();
         return str.length;
     }
+    function getJobQualificationDataSize() {
+        var str = $("#title").val() + $("#company").val() + $("#yrsOfExp").val() + $("#skills").val();
+        return str.length;
+    }
 
 
     $("#newCandidateForm").submit(function (event) {
         event.preventDefault();
+        showLoader();
         saveProfileForm(function () {
             console.log("Save profile form done");
             saveContactForm(function () {
                 console.log("Save contact form done");
                 getActivityEntityID(function () {
                     createActivity(function () {
+                        createQualification(function(){
+                            console.log("Save new activty");
+                            hideLoader();
+                            initWithProfile();
+                        })
                         console.log("Save new activty");
-                        initWithProfile();
                     });
                 })
             })
         })
     })
+
+    function createQualification(callback) {
+        if (getJobQualificationDataSize() > 0) {
+            var qualificationData = JSON.stringify({
+                jobTitle: $("#title").val(),
+                company: $("#company").val(),
+                yrsOfExperience: $("#yrsOfExp").val(),
+                skills: $("#skills").val()
+            });
+            console.log("Data for new job qualification: " + qualificationData);
+            saveJobQualification(qualificationData, function () {
+                console.log("Save JobQualification.");
+                if (callback && typeof (callback) === "function") {
+                    callback();
+                }
+            })
+        } else {
+            if (callback && typeof (callback) === "function") {
+                callback();
+            }
+        }
+
+    }
 
     function createActivity(callback) {
         var activityData = JSON.stringify({
@@ -50,7 +82,7 @@ $(document).ready(function () {
             description: "Initial creation of record.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},
-            nsbEntityActivities: {ididentityActivities: activityEntityID}
+            nsbEntityActivities: {idpersonactivities: activityEntityID}
         });
         console.log("Data for new activity: " + activityData);
 

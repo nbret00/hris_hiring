@@ -12,12 +12,15 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,6 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Person.findByGender", query = "SELECT p FROM Person p WHERE p.gender = :gender"),
     @NamedQuery(name = "Person.findByLastUpdateDate", query = "SELECT p FROM Person p WHERE p.lastUpdateDate = :lastUpdateDate"),
     @NamedQuery(name = "Person.findByLastUpdatePersonID", query = "SELECT p FROM Person p WHERE p.lastUpdatePersonID = :lastUpdatePersonID")})
+
+
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,10 +84,14 @@ public class Person implements Serializable {
     private Collection<HrisAccount> hrisAccountCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
     private Collection<Endorsement> endorsementCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
+    private Collection<NsbPersonActivities> nsbPersonActivitiesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
     private Collection<JobQualification> jobQualificationCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personidPerson")
     private Collection<Contact> contactCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    private Collection<Personstagestatus> personstagestatusCollection;
 
     public Person() {
     }
@@ -180,6 +189,15 @@ public class Person implements Serializable {
     }
 
     @XmlTransient
+    public Collection<NsbPersonActivities> getNsbPersonActivitiesCollection() {
+        return nsbPersonActivitiesCollection;
+    }
+
+    public void setNsbPersonActivitiesCollection(Collection<NsbPersonActivities> nsbPersonActivitiesCollection) {
+        this.nsbPersonActivitiesCollection = nsbPersonActivitiesCollection;
+    }
+
+    @XmlTransient
     public Collection<JobQualification> getJobQualificationCollection() {
         return jobQualificationCollection;
     }
@@ -195,6 +213,15 @@ public class Person implements Serializable {
 
     public void setContactCollection(Collection<Contact> contactCollection) {
         this.contactCollection = contactCollection;
+    }
+
+    @XmlTransient
+    public Collection<Personstagestatus> getPersonstagestatusCollection() {
+        return personstagestatusCollection;
+    }
+
+    public void setPersonstagestatusCollection(Collection<Personstagestatus> personstagestatusCollection) {
+        this.personstagestatusCollection = personstagestatusCollection;
     }
 
     @Override
@@ -221,5 +248,5 @@ public class Person implements Serializable {
     public String toString() {
         return "com.nino.app.hrishiring.Person[ idPerson=" + idPerson + " ]";
     }
-    
+
 }

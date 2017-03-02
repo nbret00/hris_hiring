@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -46,6 +47,41 @@ public class JobRestService {
                 .getResultList();
         
         return jl;
+    }
+    
+    @POST
+    @Path("save")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response saveNew(Job job) {
+        try {
+            //System.out.println("createNew " + jobqualification.getJobTitle());
+            em.persist(job);
+            em.flush();
+            System.out.println("Save Job: " + job.getIdjobpk());
+            return Response.ok(job).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok(e.getMessage()).build();
+        }
+
+    }    
+    
+    @POST
+    @Path("update/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(@PathParam("id") Integer id,Job job) {
+        try {
+            //System.out.println("createNew " + jobqualification.getJobTitle());
+            job.setIdjobpk(id);
+            em.merge(job);
+            em.flush();
+            System.out.println("Save Job: " + job.getIdjobpk());
+            return Response.ok(job).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok(e.getMessage()).build();
+        }
+
     }
 
     @POST
