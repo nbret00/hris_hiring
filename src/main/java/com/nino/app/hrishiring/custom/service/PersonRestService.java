@@ -44,7 +44,7 @@ public class PersonRestService {
         try {
             System.out.println("createNew " + person.getFirstName());
             person.setLastUpdateDate(new Timestamp(new Date().getTime()));
-            person.setLastUpdatePersonID(1);
+            //person.setLastUpdatePersonID(1);
             //person.setDateOfBirth(dt.parse);
             em.persist(person);
             em.flush();

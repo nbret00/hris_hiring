@@ -200,6 +200,7 @@ $(document).ready(function () {
             var profiledata = JSON.stringify({
                 firstName: $("#FirstName").val(),
                 lastName: $("#LastName").val(),
+                lastUpdatePersonID: credentialPersonID,
                 name: $("#name").val()
             });
 

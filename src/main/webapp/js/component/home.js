@@ -2,8 +2,9 @@
 
 $(document).ready(function () {
 
+    
+     console.log("document.URL : "+credentialPersonID);
     /*
-     console.log("document.URL : "+document.URL);
      console.log("document.location.href : "+document.location.href);
      console.log("document.location.origin : "+document.location.origin);
      console.log("document.location.hostname : "+document.location.hostname);
@@ -176,6 +177,7 @@ $(document).ready(function () {
                 name: $('#Name').val(),
                 firstName: $('#FirstName').val(),
                 lastName: $('#LastName').val(),
+                lastUpdatePersonID: credentialPersonID,
                 dateOfBirth: new Date($('#DOB').val()),
                 gender: $('#Gender').val()
             });

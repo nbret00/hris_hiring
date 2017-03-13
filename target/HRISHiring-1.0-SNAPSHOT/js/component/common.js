@@ -41,6 +41,8 @@ var personProfile = null;
 var working_person_id = "";
 
 var credentialID = "";
+var credentialPersonID = "";
+var credentialPersonName = "";
 var credential = null;
 
 var contactInfo = null;
@@ -63,7 +65,12 @@ function checkCredential(callback) {
                 //alert("success");
                 credential = data;
                 credentialID = $(data).find("credential").find("accountID").text();
-                console.log("credential data -" + credentialID);
+                
+                credentialPersonID = $(data).find("credential").find("person").find("idPerson").text();
+                credentialPersonName = $(data).find("credential").find("person").find("name").text();   
+                
+                console.log("credential data -" + credentialID +"-"+credentialPersonID+"-"+credentialPersonName);
+                
                 if (credentialID == "") {
                     window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
                 } else {

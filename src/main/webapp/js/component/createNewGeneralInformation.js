@@ -77,8 +77,8 @@ $(document).ready(function () {
     function createActivity(callback) {
         var activityData = JSON.stringify({
             //idSourcingActivities: working_activity_id,
-            createdBy: credentialID,
-            updatedBy: credentialID,
+            createdBy: credentialPersonID,
+            updatedBy: credentialPersonID,
             description: "Initial creation of record.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},
@@ -130,6 +130,7 @@ $(document).ready(function () {
             var profiledata = JSON.stringify({
                 firstName: $("#FirstName").val(),
                 lastName: $("#LastName").val(),
+                lastUpdatePersonID: credentialPersonID,
                 name: $("#name").val()
             });
 

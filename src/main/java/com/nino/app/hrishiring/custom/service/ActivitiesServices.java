@@ -10,6 +10,8 @@ import com.nino.app.hrishiring.NsbActivities;
 import com.nino.app.hrishiring.NsbPersonActivities;
 import com.nino.app.hrishiring.NsbRemarks;
 import com.nino.app.hrishiring.Person;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -45,6 +47,8 @@ public class ActivitiesServices {
         try {
             System.out.println("createNew description" + entity.getDescription());
             //entity.setPersonidPerson(p);
+            entity.setCreatedDt(new Timestamp(new Date().getTime()));
+            entity.setLastUpdatedDt(new Date());
             em.persist(entity);
             em.flush();
             //System.out.println("Create new job qualification with ID: " + entity.getIdcontact());

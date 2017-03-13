@@ -119,8 +119,8 @@ $(document).ready(function () {
     function getActivityFormData() {
         var activityData = JSON.stringify({
             //idSourcingActivities: working_activity_id,
-            createdBy: credentialID,
-            updatedBy: credentialID,
+            createdBy: credentialPersonID,
+            updatedBy: credentialPersonID,
             description: $('#description').val(),
             nsbActivityStatusTp: {idactivityStatus: $("#act_status_new").val()},
             nsbActivityTp: {idActivityTp: $("#act_type_new").val()},
