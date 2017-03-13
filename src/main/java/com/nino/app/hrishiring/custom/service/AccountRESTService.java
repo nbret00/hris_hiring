@@ -6,6 +6,7 @@
 package com.nino.app.hrishiring.custom.service;
 
 import com.nino.app.hrishiring.HrisAccount;
+import com.nino.app.hrishiring.Person;
 import com.nino.app.hrishiring.data.Credential;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,12 @@ public class AccountRESTService {
                 new Cookie("credentialid", user), "authenticate", 1200, false);
 
         HrisAccount ha = em.find(HrisAccount.class, Integer.valueOf(user));
-        Credential cred = new Credential(ha.getIdhrisAccount().intValue(), ha.getUsername(),ha.getRole());
         
-
+        Person p = ha.getPersonidPerson();
+        System.out.println("Person outhenticated "+p.getIdPerson());
+        
+        Credential cred = new Credential(ha.getIdhrisAccount().intValue(), ha.getUsername(),ha.getRole(), p);
+        
         System.out.println("this the user from cookie " + user);
         return Response.ok("success").entity(cred).cookie(nc1).build();
     }

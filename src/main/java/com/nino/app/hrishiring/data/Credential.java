@@ -5,7 +5,7 @@
  */
 package com.nino.app.hrishiring.data;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.nino.app.hrishiring.Person;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,14 +18,26 @@ public class Credential {
     private int accountID;
     private String Username;
     private String Role;
+    private Person person;
     
     public Credential(){}
     
-    public Credential(int accountID,String Username, String Role){
+    public Credential(int accountID,String Username, String Role, Person person){
         this.Role = Role;
         this.Username = Username;
         this.accountID = accountID;
+        this.person = person;
     }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+   
+    
     
     public int getAccountID() {
         return accountID;

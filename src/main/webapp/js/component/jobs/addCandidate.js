@@ -22,9 +22,6 @@ $("#jobsum-but").click(function () {
     });
 })
 
-var url_searchByNames = "http://localhost:8080/hris_hiring/webresources/jobqualification/searchFirstname/";
-var url_addCandidates = "http://localhost:8080/hris_hiring/webresources/endorsements/save";
-
 //            $("#searchNameForm").ready(function (data) {
 
 $(document).ready(function () {
@@ -63,8 +60,7 @@ $(document).ready(function () {
                     }
                 });
 
-
-                console.log("end: " + endorsement);
+                //console.log("end: " + endorsement);
             } else {
                 console.log("this is false");
             }

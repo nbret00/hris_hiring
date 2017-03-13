@@ -15,8 +15,6 @@ $("#searchResultDiv").remove();
 
 
 $(document).ready(function () {
-
-    
     
     function getSearchFormData() {
         var person = JSON.stringify({
@@ -26,59 +24,14 @@ $(document).ready(function () {
         return person;
     }
 
-    //$("#batchUpload").click(function (e) {
-    var fileInputCSV = document.getElementById('batchUpload'); 
-    fileInputCSV.addEventListener('change', function (e) {
-        console.log("batch upload")
-        
-        var file = e.target.files[0];
-        var csvParser = new SimpleExcel.Parser.CSV();
-        csvParser.setDelimiter(',');
-        csvParser.loadFile(file, function () {
 
-            // draw HTML table based on sheet data
-            var sheet = csvParser.getSheet();
-            var table = document.getElementById('result');
-            table.innerHTML = "";
-            sheet.forEach(function (el, i) {
-                var row = document.createElement('tr');
-                el.forEach(function (el, i) {
-                    var cell = document.createElement('td');
-                    cell.innerHTML = el.value;
-                    row.appendChild(cell);
-                });
-                table.appendChild(row);
-            });
-
-            // create button to export as TSV
-            var btnSave = document.getElementById('fileExport');
-            btnSave.hidden = false;
-            btnSave.value = 'Save as TSV file ->';
-            document.body.appendChild(btnSave);
-
-            // export when button clicked
-            btnSave.addEventListener('click', function (e) {
-                var tsvWriter = new SimpleExcel.Writer.TSV();
-                tsvWriter.insertSheet(csvParser.getSheet(1));
-                tsvWriter.saveFile();
-            });
-
-            // print to console just for quick testing
-            console.log(csvParser.getSheet(1));
-            console.log(csvParser.getSheet(1).getRow(1));
-            console.log(csvParser.getSheet(1).getColumn(2));
-            console.log(csvParser.getSheet(1).getCell(3, 1));
-            console.log(csvParser.getSheet(1).getCell(2, 3).value);
-        });
-    })
-
-    $("#searchNamesForm").submit(function (event) {
+    $("#searchNamesFormGen").submit(function (event) {
         event.preventDefault();
+        console.log("Test");
+        
         var search_url = "";
         var form_fname = $("#FirstName").val();
-        //console.log("form_fname: " + form_fname);
         var form_lname = $("#LastName").val();
-        //console.log("form_lname: " + form_lname);
 
         if (form_fname != "" && form_lname == "") {
             //console.log("search for f name");
@@ -139,6 +92,7 @@ $(document).ready(function () {
                 }
             }
         });
+        
     })
 
 })

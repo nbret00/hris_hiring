@@ -5,6 +5,7 @@
  */
 
 var continueDataSheet;
+var table_colsize = 10;
 
 $(document).ready(function () {
 
@@ -39,12 +40,17 @@ $(document).ready(function () {
             
             sheet.forEach(function (el, i) {
                 var row = document.createElement('tr');
-                if (el.length != 4) {
+                if (el.length < table_colsize) {
+                    var x = 0;
                     el.forEach(function (el, i) {
+                        if (x == table_colsize){
+                            return;
+                        }
                         var cell = document.createElement('td');
                         cell.innerHTML = el.value;
-                        console.log("el: " + el.value);
+                        //console.log("el: " + el.value);
                         row.appendChild(cell);
+                        x++;
                     });
                     $(tableerr).find("#errorBody").append(row);
                 } else {
@@ -52,12 +58,16 @@ $(document).ready(function () {
                     continueDataSheet.insertRecord(el);
                     
                     //continueDataSheet = continueDataSheet + 
-                            
+                            var x = 0;
                     el.forEach(function (el, i) {
+                        if (x == table_colsize){
+                            return;
+                        }
                         var cell = document.createElement('td');
                         cell.innerHTML = el.value;
-                        console.log("el: " + el.value);
+                        //console.log("el: " + el.value);
                         row.appendChild(cell);
+                        x++;
                     });
                     $(table).find("#resultBody").append(row);
                 }
@@ -74,11 +84,13 @@ $(document).ready(function () {
             })
 
             // print to console just for quick testing
+            /*
             console.log(csvParser.getSheet(1));
             console.log(csvParser.getSheet(1).getRow(1).toString());
             console.log(csvParser.getSheet(1).getColumn(2).toString());
             console.log(csvParser.getSheet(1).getCell(3, 1));
             console.log(csvParser.getSheet(1).getCell(2, 3).value);
+            */
         });
     })
 

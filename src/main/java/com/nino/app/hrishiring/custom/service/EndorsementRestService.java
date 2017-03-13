@@ -8,6 +8,7 @@ package com.nino.app.hrishiring.custom.service;
 import com.nino.app.hrishiring.Company;
 import com.nino.app.hrishiring.Endorsement;
 import com.nino.app.hrishiring.Job;
+import com.nino.app.hrishiring.Person;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -44,10 +45,10 @@ public class EndorsementRestService {
 
         Company c = new Company();
         c.setIdclient(cid);
-        
+
         Job j = new Job();
         j.setIdjobpk(jib);
-        
+
         List<Endorsement> acc = (List<Endorsement>) em.createQuery("SELECT e FROM Endorsement e WHERE e.companyIdclient = :companyIdclient AND e.jobIdjobpk = :jobIdjobpk")
                 .setParameter("companyIdclient", c)
                 .setParameter("jobIdjobpk", j)
@@ -56,7 +57,7 @@ public class EndorsementRestService {
         System.out.println("acc size: " + acc.size());
         return acc;
     }
-    
+
     @PUT
     @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -75,7 +76,39 @@ public class EndorsementRestService {
             return Response.ok(em.getMessage()).build();
         }
 
-    }     
+    }
 
+    @PUT
+    @Path("saveUnique")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response newEndorsementUnique(Endorsement e) {
+        try {
+            System.out.print("newEndorsementUnique");
+            Company c = e.getCompanyIdclient();
+            Job j = e.getJobIdjobpk();
+            Person p = e.getPersonidPerson();
+            //System.out.println("createNew " + jobqualification.getJobTitle());
+            List<Endorsement> acc = (List<Endorsement>) em.createQuery("SELECT e FROM Endorsement e WHERE e.companyIdclient = :companyIdclient AND e.jobIdjobpk = :jobIdjobpk AND e.personidPerson = :personidPerson")
+                    .setParameter("companyIdclient", c)
+                    .setParameter("jobIdjobpk", j)
+                    .setParameter("personidPerson", p)
+                    .getResultList();
+
+            if (acc.isEmpty()) {
+                e.setStatus("Matched");
+                Date d = new Date();
+                e.setEndorsedDate(d);
+                em.persist(e);
+                em.flush();
+                System.out.println("Save Endorsement: " + e.getIdendorsement());
+            }
+
+            return Response.ok(e).build();
+        } catch (Exception em) {
+            em.printStackTrace();
+            return Response.ok(em.getMessage()).build();
+        }
+
+    }
 
 }
