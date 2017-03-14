@@ -49,8 +49,9 @@ $(document).ready(function () {
 
             $(composeActivities).find("#act_id").text(activity_id);
             $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
-            $(composeActivities).find("#act_description").text($(this).find("description").text());
-            //.text("Activity Type: "+$(this).find("nsbActivityTp").find("name").text());                         
+            $(composeActivities).find("#act_updatedby").text($(this).find("updatedByName").text());
+            $(composeActivities).find("#act_description").text($(this).find("description").first().text());  
+            
             $(activity_container).find("#activities-container-col").append(composeActivities);
         });
 
@@ -105,8 +106,8 @@ $(document).ready(function () {
 
         var activityData = JSON.stringify({
             idSourcingActivities: activityID,
-            createdBy: credentialID,
-            updatedBy: credentialID,
+            createdBy: credentialPersonID,
+            updatedBy: credentialPersonID,
             //description: $(working_dom).find("#description").text(),
             nsbActivityStatusTp: {idactivityStatus: $("#" + domData).find("#act_status_" + activityID).val()},
             nsbActivityTp: {idActivityTp: $(working_dom).find("#act_heading").data("id")},
@@ -121,6 +122,7 @@ $(document).ready(function () {
             //idSourcingActivities: working_activity_id,
             createdBy: credentialPersonID,
             updatedBy: credentialPersonID,
+            updatedByName: credentialPersonName,
             description: $('#description').val(),
             nsbActivityStatusTp: {idactivityStatus: $("#act_status_new").val()},
             nsbActivityTp: {idActivityTp: $("#act_type_new").val()},

@@ -146,4 +146,12 @@ public class PersonRestService {
         }
     }    
     
+    @GET
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Person get(@PathParam("id") String id
+    ){
+        return em.find(Person.class, id);
+    } 
+    
 }

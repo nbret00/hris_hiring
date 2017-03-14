@@ -359,7 +359,7 @@ function getPersonalProfile(id, callback) {
         type: 'GET',
         url: get_personProfile_url + id,
         success: function (data) {
-            console.log("person:" + data);
+            
             if (data == null) {
                 showAlert("No record found for rec#: " + searchStr);
             } else {
@@ -378,6 +378,21 @@ function getPersonalProfile(id, callback) {
         }
     });
     console.log("<------");
+}
+
+function getPersonalProfileData(id, callback) {
+    $.ajax({
+        type: 'GET',
+        url: get_personProfile_url + id,
+        success: function (data) {
+            if (callback && typeof (callback) === "function") {
+                callback(data);
+            }
+        },
+        error: function (jqXHR, status) {
+            showAlert("Error message: " + status);
+        }
+    });
 }
 
 function getActivityEntityID(callback) {
