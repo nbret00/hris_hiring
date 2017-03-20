@@ -46,20 +46,6 @@ $(document).ready(function () {
     }
 
 
-    $("#logout").submit(function (event) {
-        event.preventDefault();
-        $.ajax({
-            type: 'GET',
-            url: 'http://localhost:8080/hris_hiring/webresources/hrisaccount/logout',
-            //"Access-Control-Allow-Origin: ": "*",
-            success: function (data) {
-                if (data == "success") {
-                    window.location.href = "http://localhost:8080/hris_hiring/index.html?logoutok";
-                }
-            }
-        });
-    });
-
     //submit of search
     $("#searchForm").submit(function (event) {
         //alert("clicked!");

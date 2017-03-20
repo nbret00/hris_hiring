@@ -29,7 +29,7 @@ $(document).ready(function () {
 
                 return $.ajax({
                     type: "GET",
-                    url: "http://localhost:8080/hris_hiring/webresources/endorsements/"+updateCompanyID+"/"+updateJobsID,
+                    url: url_getEndorsement+updateCompanyID+"/"+updateJobsID,
                     dataType: "JSON"
                 })
             }

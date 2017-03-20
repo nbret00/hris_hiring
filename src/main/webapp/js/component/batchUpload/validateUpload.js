@@ -8,84 +8,97 @@ $(document).ready(function () {
 
     checkCredential(function () {
         console.log("credential = " + credentialID);
+        init();
     });
 
-    console.log("validate upload - " + credentialID);
-    console.log("data - " + JSON.stringify(continueDataSheet));
+    //$("#section1").find("#resultTable").remove();
+    //$("#section1").find("#duplicateTable").remove();
 
-    var continueforJobMatch = new SimpleExcel.Sheet();
-    var duplicateRec = new SimpleExcel.Sheet();
 
-    var table = document.getElementById('resultTable').cloneNode(true);
-    var duptable = document.getElementById('duplicateTable').cloneNode(true);
+    function init() {
+        var continueforJobMatch = new SimpleExcel.Sheet();
+        var duplicateRec = new SimpleExcel.Sheet();
 
-    $("#section1").find("#resultTable").remove();
-    $("#section1").find("#duplicateTable").remove();
-
-    init(function () {
-
-    });
-
-    function init(callback) {
+        var rectable = $("#resultTable").find("#resultBody");//.cloneNode(true);
+        var recduptable = $("#duplicateTable").find("#resultBody");//.cloneNode(true);
+        console.log("test 11111");
         continueDataSheet["records"].forEach(function (el, i) {
             var row = document.createElement('tr');
 
             getPersonByName(el[0].value, function (data) {
                 var perid = $(data).find("idPerson").text();
-                console.log("perid from validation: " + perid);
                 if (perid == "") {
                     console.log("unique");
                     //setTimeout(function () {
-                        addRecord(el, function () {
-                            //add to the table
-                            var x = 0;
-                            el.forEach(function (el, i) {
-                                if (x = table_colsize) {
-                                    return;
-                                }
-                                var cell = document.createElement('td');
-                                cell.innerHTML = el.value;
-                                console.log("el: " + el.value);
-                                row.appendChild(cell);
-                                x++;
-                            });
-                            continueforJobMatch.insertRecord(el);
-                            $(table).find("#resultBody").append(row);
-                            console.log("here...........................");
+                    addRecord(el, function () {
+                        //add to the table
+                        var x = 0;
+                        el.forEach(function (el, i) {
+                            if (x = table_colsize) {
+                                return;
+                            }
+                            var cell = document.createElement('td');
+                            cell.innerHTML = el.value;
+                            row.appendChild(cell);
+                            rectable.append("test");
+                            x++;
                         });
+                        continueforJobMatch.insertRecord(el);
+
+                        console.log("here...........................");
+                    });
                     //}, 1000);
 
                 } else {
-                    console.log("dups");
+                    console.log("dups!!! -" + perid);
                     var tcomp = el[8].value;
                     var tjob = el[9].value;
                     console.log(tcomp.length + "---------" + tjob.length);
                     if (tcomp != "" && tjob != "") {
                         console.log("passedddddd");
-                        addEndorsement(el, perid, function (data) {
-                            console.log("endorsement saved!")
-                            var x = 0;
-                            el.forEach(function (el, i) {
-                                if (x == table_colsize) {
-                                    return;
-                                }
-                                var cell = document.createElement('td');
-                                cell.innerHTML = el.value;
-                                console.log("el: " + el.value);
-                                row.appendChild(cell);
-                                x++;
+                        setTimeout(function () {
+                            addEndorsement(el, perid, function (data) {
+                                console.log("endorsement saved!")
+
+                                var x = 0;
+                                el.forEach(function (el, i) {
+
+                                    if (x == table_colsize) {
+                                        return;
+                                    }
+                                    var cell = document.createElement('td');
+                                    cell.innerHTML = el.value;
+                                    row.appendChild(cell);
+                                    rectable.append(row);
+                                    x++;
+                                    console.log("testing here....");
+                                });
                             });
-                        });
+                        }, 1000);
+                    } else {
+                                var x = 0;
+                                el.forEach(function (el, i) {
+
+                                    if (x == table_colsize) {
+                                        return;
+                                    }
+                                    var cell = document.createElement('td');
+                                    cell.innerHTML = el.value;
+                                    row.appendChild(cell);
+                                    rectable.append(row);
+                                    x++;
+                                    console.log("testing here....");
+                                });
                     }
                     duplicateRec.insertRecord(el);
-                    $(duptable).find("#resultBody").append(row);
+
                 }
             });
 
         });
 
-        $("#tab_panel").append(table);
-        $("#tab_panel").append(duptable);
+        //$("#tab_panel").append(table);
+        //$("#tab_panel").append(duptable);
     }
 
     //change in requirement - will be doing validation by full name instead of firstname and lastname
@@ -118,16 +131,14 @@ $(document).ready(function () {
                     if (perid.length > 0) {
                         return false;
                     }
-                })
-
+                });
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
                     //console.log("Calling the callback inside the function getActivities...")
                     callback(perid);
                 }
-
             }
-        })
+        });
     }
 
     function addRecord(el, callback) {
@@ -142,30 +153,29 @@ $(document).ready(function () {
         if (JSON.stringify(uploadpersondata).length > 0) {
             saveProfile(uploadpersondata, function (data) {
                 var pidq = $(data).find("idPerson").text();
-                var jqdata = JSON.stringify({
-                    personId: {idPerson: pidq},
-                    company: el[3].value,
-                    jobTitle: el[4].value,
-                    yrsOfExperience: el[5].value
-                });
+
                 console.log("jobqualification to add: " + JSON.stringify(jqdata));
                 var jqdataap = el[3].value + el[4].value + el[5].value;
-
                 if (jqdataap.length > 0) {
+                    var jqdata = JSON.stringify({
+                        personId: {idPerson: pidq},
+                        company: el[3].value,
+                        jobTitle: el[4].value,
+                        yrsOfExperience: el[5].value
+                    });
                     saveJobQualification(jqdata, function () {
                         console.log("Job qualification saved!");
                     });
                 }
 
-                var upload_contactdata = JSON.stringify({
-                    personidPerson: {idPerson: pidq},
-                    cellphoneNum: el[6].value,
-                    email: el[7].value
-                });
-
                 console.log("Contact to add: " + JSON.stringify(upload_contactdata));
                 var condataap = el[6].value + el[7].value;
                 if (condataap.length > 0) {
+                    var upload_contactdata = JSON.stringify({
+                        personidPerson: {idPerson: pidq},
+                        cellphoneNum: el[6].value,
+                        email: el[7].value
+                    });
                     saveContact(upload_contactdata, function () {
                         console.log("Contacts successfully saved");
                     });
@@ -186,9 +196,6 @@ $(document).ready(function () {
         console.log("data:" + JSON.stringify(persondata));
     }
 
-function test(){
-    console.log("mmmmeeee");
-}
     function addEndorsement(el, persID, callback) {
         console.log("debugggg1");
         var endorsement = JSON.stringify({
@@ -196,7 +203,7 @@ function test(){
             personidPerson: {idPerson: persID},
             jobIdjobpk: {idjobpk: el[9].value}
         });
-        console.log("adding endorsement: "+endorsement);
+        console.log("adding endorsement: " + endorsement);
         $.ajax({
             type: 'PUT',
             url: url_addCandidatesUnique,
@@ -218,6 +225,7 @@ function test(){
             //idSourcingActivities: working_activity_id,
             createdBy: credentialPersonID,
             updatedBy: credentialPersonID,
+            updatedByName: credentialPersonName,
             description: "Initial creation of record from batch upload.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},

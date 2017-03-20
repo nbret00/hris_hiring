@@ -3,12 +3,14 @@ var updateJobsID = "";
 var updateCompanyID = "";
 var updateCompanyName = "";
 
-var url_get_companies = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.company";
-var url_getJobsByCompany = "http://localhost:8080/hris_hiring/webresources/jobs/bycompany/";
-
 $(document).ready(function () {
 
-    init();
+    checkCredential(function () {
+        console.log("credential = " + credentialID);
+        init();
+    });
+
+    
 
     function init() {
         lookupSelectValue(url_get_companies, sel_company, "company", "idclient", "companyName", "", function () {
@@ -19,7 +21,7 @@ $(document).ready(function () {
                 updateCompanyID = $(this).val();
                 updateCompanyName = $(this).text();
                 $("#parag_company").text("Create Job for the selected company");
-                $("#jsGrid").jsGrid("loadData").done(function () { 
+                $("#jsGrid").jsGrid("loadData").done(function () {
                 });
             })
             $("#parag_company").click(function () {

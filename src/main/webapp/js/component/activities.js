@@ -49,7 +49,10 @@ $(document).ready(function () {
 
             $(composeActivities).find("#act_id").text(activity_id);
             $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
+            
+            $(composeActivities).find("#act_updateddt").text(FormatTimestamp($(this).find("lastUpdatedDt").text()));
             $(composeActivities).find("#act_updatedby").text($(this).find("updatedByName").text());
+            
             $(composeActivities).find("#act_description").text($(this).find("description").first().text());  
             
             $(activity_container).find("#activities-container-col").append(composeActivities);
@@ -108,6 +111,7 @@ $(document).ready(function () {
             idSourcingActivities: activityID,
             createdBy: credentialPersonID,
             updatedBy: credentialPersonID,
+            updatedByName: credentialPersonName,
             //description: $(working_dom).find("#description").text(),
             nsbActivityStatusTp: {idactivityStatus: $("#" + domData).find("#act_status_" + activityID).val()},
             nsbActivityTp: {idActivityTp: $(working_dom).find("#act_heading").data("id")},

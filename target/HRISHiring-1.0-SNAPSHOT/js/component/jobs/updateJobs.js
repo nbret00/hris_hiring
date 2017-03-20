@@ -3,10 +3,6 @@
 
 $(document).ready(function () {
 
-    var url_getJob = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
-    var url_addJob = "http://localhost:8080/hris_hiring/webresources/jobs/save";
-    var url_updateJob = "http://localhost:8080/hris_hiring/webresources/jobs/update/";
-
     var update_jobs_data = null;
 
     console.log("ID: " + updateJobsID);

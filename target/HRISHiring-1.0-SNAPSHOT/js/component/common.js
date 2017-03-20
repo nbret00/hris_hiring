@@ -32,6 +32,20 @@ var url_searchByNames = "http://localhost:8080/hris_hiring/webresources/jobquali
 var url_addCandidates = "http://localhost:8080/hris_hiring/webresources/endorsements/save";
 var url_addCandidatesUnique = "http://localhost:8080/hris_hiring/webresources/endorsements/saveUnique";
 
+var url_getEndorsement = "http://localhost:8080/hris_hiring/webresources/endorsements/";
+
+//jobss
+var url_get_companies = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.company";
+var url_getJobsByCompany = "http://localhost:8080/hris_hiring/webresources/jobs/bycompany/";
+var url_getJob = "http://localhost:8080/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
+var url_addJob = "http://localhost:8080/hris_hiring/webresources/jobs/save";
+var url_updateJob = "http://localhost:8080/hris_hiring/webresources/jobs/update/";
+
+//Reports
+var url_get_inittemp = "http://localhost:8080/hris_hiring/webresources/reports/allPersonActivities";
+var url_getJobsByCompany = "http://localhost:8080/hris_hiring/webresources/jobs/bycompany/";
+
+
 var activityEntityID = null;
 
 var working_jobqualification_id = "";
@@ -54,6 +68,20 @@ var searchNamesForm_lname = "";
 var activities = null;
 var working_activity_id = "";
 
+$("#logout").submit(function (event) {
+    event.preventDefault();
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/hris_hiring/webresources/hrisaccount/logout',
+        //"Access-Control-Allow-Origin: ": "*",
+        success: function (data) {
+            if (data == "success") {
+                window.location.href = "http://localhost:8080/hris_hiring/index.html?logoutok";
+            }
+        }
+    });
+});
+
 function checkCredential(callback) {
     $.ajax({
         type: 'GET',
@@ -65,18 +93,14 @@ function checkCredential(callback) {
                 //alert("success");
                 credential = data;
                 credentialID = $(data).find("credential").find("accountID").text();
-                
+
                 credentialPersonID = $(data).find("credential").find("person").find("idPerson").text();
-                credentialPersonName = $(data).find("credential").find("person").find("name").text();   
-                
-                console.log("credential data -" + credentialID +"-"+credentialPersonID+"-"+credentialPersonName);
-                
+                credentialPersonName = $(data).find("credential").find("person").find("name").text();
+
                 if (credentialID == "") {
                     window.location.href = "http://localhost:8080/hris_hiring/index.html?nologin";
                 } else {
                     if (callback && typeof (callback) === "function") {
-                        //do something here from your call back function
-                        //console.log("Calling the callback inside the function getActivities...")
                         callback();
                     }
                 }
@@ -359,7 +383,7 @@ function getPersonalProfile(id, callback) {
         type: 'GET',
         url: get_personProfile_url + id,
         success: function (data) {
-            
+
             if (data == null) {
                 showAlert("No record found for rec#: " + searchStr);
             } else {
@@ -417,7 +441,6 @@ function getActivityEntityID(callback) {
 }
 
 function getActivityEntityID1(pid, callback) {
-    console.log("get Activity Entity URL ");
     $.ajax({
         type: 'GET',
         url: get_activityEntity_url + pid,

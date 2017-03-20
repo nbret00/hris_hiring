@@ -3,9 +3,6 @@ var updateJobsID = "";
 var updateCompanyID = "";
 var updateCompanyName = "";
 
-var url_get_inittemp = "http://localhost:8080/hris_hiring/webresources/reports/allPersonActivities";
-var url_getJobsByCompany = "http://localhost:8080/hris_hiring/webresources/jobs/bycompany/";
-
 $(document).ready(function () {
 /*
     init();
