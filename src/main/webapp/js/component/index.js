@@ -5,7 +5,7 @@
  */
 $(document).ready(function () {
 
-
+var url_origin = document.location.origin;
 
 console.log("document.URL : "+document.URL);
 console.log("document.location.href : "+document.location.href);
@@ -14,9 +14,9 @@ console.log("document.location.hostname : "+document.location.hostname);
 console.log("document.location.host : "+document.location.host);
 console.log("document.location.pathname : "+document.location.pathname);
 
-    var login_url = "http://localhost:8080/hris_hiring/webresources/hrisaccount/validate";
-    var home_url = "http://localhost:8080/hris_hiring/home.html";
-    var login_page_url = "http://localhost:8080/hris_hiring/index.html?noaccount";
+    var login_url = url_origin+"/hris_hiring/webresources/hrisaccount/validate";
+    var home_url = url_origin+"/hris_hiring/home.html";
+    var login_page_url = url_origin+"/hris_hiring/index.html?noaccount";
     //init
     //TODO: 1. should check if the user was authenticated therefore load the home instead
     
