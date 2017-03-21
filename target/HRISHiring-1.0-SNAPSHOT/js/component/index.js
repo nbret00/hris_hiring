@@ -5,6 +5,15 @@
  */
 $(document).ready(function () {
 
+
+
+console.log("document.URL : "+document.URL);
+console.log("document.location.href : "+document.location.href);
+console.log("document.location.origin : "+document.location.origin);
+console.log("document.location.hostname : "+document.location.hostname);
+console.log("document.location.host : "+document.location.host);
+console.log("document.location.pathname : "+document.location.pathname);
+
     var login_url = "http://localhost:8080/hris_hiring/webresources/hrisaccount/validate";
     var home_url = "http://localhost:8080/hris_hiring/home.html";
     var login_page_url = "http://localhost:8080/hris_hiring/index.html?noaccount";
