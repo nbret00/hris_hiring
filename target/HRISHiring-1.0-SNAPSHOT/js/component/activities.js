@@ -14,6 +14,7 @@ $(document).ready(function () {
     $(activity_container_row).find("#activityRow").remove();
     showLoaderActivities();
     init();
+    
 
     function init() {
         document.getElementById("activityform").reset();
@@ -26,6 +27,15 @@ $(document).ready(function () {
             });
         });
     }
+
+    function getActivityTypes(){
+        if (activitytp = "" || activitytp == null){
+            getGeneric(get_activity_tp, function(data){
+                
+            })
+        }
+    }
+
 
     function showActivityForm(callback) {
         console.log("working activity form...showActivityForm");
@@ -49,12 +59,12 @@ $(document).ready(function () {
 
             $(composeActivities).find("#act_id").text(activity_id);
             $(composeActivities).find("#act_status").attr("id", "act_status_" + activity_id);
-            
+
             $(composeActivities).find("#act_updateddt").text(FormatTimestamp($(this).find("lastUpdatedDt").text()));
             $(composeActivities).find("#act_updatedby").text($(this).find("updatedByName").text());
-            
-            $(composeActivities).find("#act_description").text($(this).find("description").first().text());  
-            
+
+            $(composeActivities).find("#act_description").text($(this).find("description").first().text());
+
             $(activity_container).find("#activities-container-col").append(composeActivities);
         });
 
@@ -89,7 +99,7 @@ $(document).ready(function () {
         $("#activityform").submit(function (event) {
             event.preventDefault();
             console.log("saving new activity." + getActivityFormData());
-            saveActivity(getActivityFormData(),function(){
+            saveActivity(getActivityFormData(), function () {
                 init();
             })
         });
@@ -99,7 +109,7 @@ $(document).ready(function () {
         showLoaderActivities()
         var elem = "act_row_" + param;
         console.log("url for updating " + update_activities_url + param);
-        updateActivity(getActivityFormDataUpdate(elem, param),function(){
+        updateActivity(getActivityFormDataUpdate(elem, param), function () {
             init();
         })
     }

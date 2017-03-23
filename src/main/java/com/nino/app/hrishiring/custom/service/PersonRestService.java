@@ -48,7 +48,7 @@ public class PersonRestService {
             //person.setDateOfBirth(dt.parse);
             em.persist(person);
             em.flush();
-            System.out.println(person.getIdPerson());
+            System.out.println("Person created ID:"+person.getIdPerson());
             
             NsbPersonActivities ent = new NsbPersonActivities();
             //ent.setEntityName("person");

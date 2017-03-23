@@ -3,50 +3,50 @@
 
 var url_origin = document.location.origin;
 
-var get_personProfile_url = url_origin+"/hris_hiring/webresources/person/";
-var update_personalprofile_url = url_origin+"/hris_hiring/webresources/person/";
-var create_personalprofile_url = url_origin+"/hris_hiring/webresources/personProfile/save";
+var get_personProfile_url = url_origin + "/hris_hiring/webresources/person/";
+var update_personalprofile_url = url_origin + "/hris_hiring/webresources/person/";
+var create_personalprofile_url = url_origin + "/hris_hiring/webresources/personProfile/save";
 
-var get_contact_url = url_origin+"/hris_hiring/webresources/contact/";
-var update_contact_url = url_origin+"/hris_hiring/webresources/contact/";
-var save_contact_url = url_origin+"/hris_hiring/webresources/contact/save/";
+var get_contact_url = url_origin + "/hris_hiring/webresources/contact/";
+var update_contact_url = url_origin + "/hris_hiring/webresources/contact/";
+var save_contact_url = url_origin + "/hris_hiring/webresources/contact/save/";
 
-var get_jobQualification_url = url_origin+"/hris_hiring/webresources/jobqualification/";
-var save_jobqualification_url = url_origin+"/hris_hiring/webresources/jobqualification/save/";
-var update_jobqualification_url = url_origin+"/hris_hiring/webresources/jobqualification/";
+var get_jobQualification_url = url_origin + "/hris_hiring/webresources/jobqualification/";
+var save_jobqualification_url = url_origin + "/hris_hiring/webresources/jobqualification/save/";
+var update_jobqualification_url = url_origin + "/hris_hiring/webresources/jobqualification/";
 
-var get_activities_url = url_origin+"/hris_hiring/webresources/activities/act/";
-var get_activity_status_tp = url_origin+"/hris_hiring/webresources/nsbactivitystatustp";
-var get_activity_tp = url_origin+"/hris_hiring/webresources/nsbactivitytp";
-var save_activities_url = url_origin+"/hris_hiring/webresources/activities/save";
-var update_activities_url = url_origin+"/hris_hiring/webresources/activities/";//put
-var get_activityEntity_url = url_origin+"/hris_hiring/webresources/activities/activityEntity/";
+var get_activities_url = url_origin + "/hris_hiring/webresources/activities/act/";
+var get_activity_status_tp = url_origin + "/hris_hiring/webresources/nsbactivitystatustp";
+var get_activity_tp = url_origin + "/hris_hiring/webresources/nsbactivitytp";
+var save_activities_url = url_origin + "/hris_hiring/webresources/activities/save";
+var update_activities_url = url_origin + "/hris_hiring/webresources/activities/";//put
+var get_activityEntity_url = url_origin + "/hris_hiring/webresources/activities/activityEntity/";
 
-var get_remarks_url = url_origin+"/hris_hiring/webresources/activities/remarksByPerson/";
-var add_remarks_url = url_origin+"/hris_hiring/webresources/activities/remarks/add";
+var get_remarks_url = url_origin + "/hris_hiring/webresources/activities/remarksByPerson/";
+var add_remarks_url = url_origin + "/hris_hiring/webresources/activities/remarks/add";
 
-var get_credential_url = url_origin+"/hris_hiring/webresources/hrisaccount/checkCredential";
+var get_credential_url = url_origin + "/hris_hiring/webresources/hrisaccount/checkCredential";
 
 //searches
-var url_searchByNames = url_origin+"/hris_hiring/webresources/jobqualification/searchFirstname/";
-var url_searchByFullName = url_origin+"/hris_hiring/webresources/personProfile/searchByName/";
+var url_searchByNames = url_origin + "/hris_hiring/webresources/jobqualification/searchFirstname/";
+var url_searchByFullName = url_origin + "/hris_hiring/webresources/personProfile/searchByName/";
 
-var url_searchByNames = url_origin+"/hris_hiring/webresources/jobqualification/searchFirstname/";
-var url_addCandidates = url_origin+"/hris_hiring/webresources/endorsements/save";
-var url_addCandidatesUnique = url_origin+"/hris_hiring/webresources/endorsements/saveUnique";
+var url_searchByNames = url_origin + "/hris_hiring/webresources/jobqualification/searchFirstname/";
+var url_addCandidates = url_origin + "/hris_hiring/webresources/endorsements/save";
+var url_addCandidatesUnique = url_origin + "/hris_hiring/webresources/endorsements/saveUnique";
 
-var url_getEndorsement = url_origin+"/hris_hiring/webresources/endorsements/";
+var url_getEndorsement = url_origin + "/hris_hiring/webresources/endorsements/";
 
 //jobss
-var url_get_companies = url_origin+"/hris_hiring/webresources/com.nino.app.hrishiring.service.company";
-var url_getJobsByCompany = url_origin+"/hris_hiring/webresources/jobs/bycompany/";
-var url_getJob = url_origin+"/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
-var url_addJob = url_origin+"/hris_hiring/webresources/jobs/save";
-var url_updateJob = url_origin+"/hris_hiring/webresources/jobs/update/";
+var url_get_companies = url_origin + "/hris_hiring/webresources/com.nino.app.hrishiring.service.company";
+var url_getJobsByCompany = url_origin + "/hris_hiring/webresources/jobs/bycompany/";
+var url_getJob = url_origin + "/hris_hiring/webresources/com.nino.app.hrishiring.service.job/";
+var url_addJob = url_origin + "/hris_hiring/webresources/jobs/save";
+var url_updateJob = url_origin + "/hris_hiring/webresources/jobs/update/";
 
 //Reports
-var url_get_inittemp = url_origin+"/hris_hiring/webresources/reports/allPersonActivities";
-var url_getJobsByCompany = url_origin+"/hris_hiring/webresources/jobs/bycompany/";
+var url_get_inittemp = url_origin + "/hris_hiring/webresources/reports/allPersonActivities";
+var url_getJobsByCompany = url_origin + "/hris_hiring/webresources/jobs/bycompany/";
 
 
 var activityEntityID = null;
@@ -75,11 +75,11 @@ $("#logout").submit(function (event) {
     event.preventDefault();
     $.ajax({
         type: 'GET',
-        url: url_origin+'/hris_hiring/webresources/hrisaccount/logout',
+        url: url_origin + '/hris_hiring/webresources/hrisaccount/logout',
         //"Access-Control-Allow-Origin: ": "*",
         success: function (data) {
             if (data == "success") {
-                window.location.href = url_origin+"/hris_hiring/index.html?logoutok";
+                window.location.href = url_origin + "/hris_hiring/index.html?logoutok";
             }
         }
     });
@@ -101,19 +101,19 @@ function checkCredential(callback) {
                 credentialPersonName = $(data).find("credential").find("person").find("name").text();
 
                 if (credentialID == "") {
-                    window.location.href = url_origin+"/hris_hiring/index.html?nologin";
+                    window.location.href = url_origin + "/hris_hiring/index.html?nologin";
                 } else {
                     if (callback && typeof (callback) === "function") {
                         callback();
                     }
                 }
             } else {
-                window.location.href = url_origin+"/hris_hiring/index.html?nologin";
+                window.location.href = url_origin + "/hris_hiring/index.html?nologin";
             }
         },
         error: function () {
             setTimeout(showAlert("The application found problem on your credential, please contact administrator."), 3000);
-            window.location.href = url_origin+"/hris_hiring/index.html?nologin";
+            window.location.href = url_origin + "/hris_hiring/index.html?nologin";
         }
     });
 }
@@ -379,7 +379,7 @@ function getContactByPersonID(callback) {
         }
     });
 }
-;
+
 function getPersonalProfile(id, callback) {
     console.log("------>getPersonalProfile");
     $.ajax({
@@ -515,6 +515,28 @@ function getPersonByName(fullname, callback) {
             showAlert("Application Error Found: " + status);
         }
     });
+}
+
+function getGeneric(url, callback) {
+    console.log("------>Generic");
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (data) {
+            if (data == null) {
+                showAlert("No record found for rec#: " + searchStr);
+            } else {
+                if (callback && typeof (callback) === "function") {
+                    console.log("calling callback function from getPerson");
+                    callback(data);
+                }
+            }
+        },
+        error: function (jqXHR, status) {
+            showAlert("Error message: " + status);
+        }
+    });
+    console.log("<------");
 }
 
 function initWithProfile() {
