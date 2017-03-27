@@ -134,6 +134,7 @@ function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_
 
                 $(data).find(objname).each(function () {
                     var opt_text = $(this).children(name_dom).text();
+                    console.log("option text: " + opt_text);
                     var opt_id = $(this).find(opt_id_dom).text();
                     if (active_id == opt_id) {
                         $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
@@ -141,13 +142,14 @@ function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_
                         $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
                     }
                 });
+                
+                if (callback && typeof (callback) === "function") {
+                    //do something here from your call back function
+                    //console.log("Calling the callback inside the function getActivities...")
+                    callback(data);
+                }
+                
             }
-            if (callback && typeof (callback) === "function") {
-                //do something here from your call back function
-                //console.log("Calling the callback inside the function getActivities...")
-                callback(data);
-            }
-            ;
         },
         error: function (jqXHR, status) {
             showAlert("Application Error encountered in getFramework: " + status);

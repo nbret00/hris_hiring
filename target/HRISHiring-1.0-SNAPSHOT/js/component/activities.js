@@ -14,9 +14,10 @@ $(document).ready(function () {
     $(activity_container_row).find("#activityRow").remove();
     showLoaderActivities();
     init();
-    
+
 
     function init() {
+
         document.getElementById("activityform").reset();
         $("#activities-container-row").remove();
 
@@ -27,15 +28,32 @@ $(document).ready(function () {
             });
         });
     }
-
-    function getActivityTypes(){
-        if (activitytp = "" || activitytp == null){
-            getGeneric(get_activity_tp, function(data){
-                
+    
+/* not used. this can be future solution implementing singleton
+    var activitytp = null;
+    function getActivityTypes() {
+        if (activitytp = "" || activitytp == null) {
+            getGeneric(get_activity_tp, function (data) {
+                activitytp = data;
             })
         }
     }
 
+    function layoutSelValue(data,objname,name_dom,opt_id_dom,active_id,selinput) {
+
+        $(data).find(objname).each(function () {
+            var opt_text = $(this).children(name_dom).text();
+            var opt_id = $(this).find(opt_id_dom).text();
+            if (active_id == opt_id) {
+                $(selinput).append("<option selected='selected' value='" + opt_id + "'>" + opt_text + "</option>");
+            } else {
+                $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
+            }
+        });
+
+    }
+
+*/
 
     function showActivityForm(callback) {
         console.log("working activity form...showActivityForm");
@@ -78,18 +96,21 @@ $(document).ready(function () {
     }
 
     function prepActivities() {
+        
         $(activities).find("nsbActivities").each(function () {
             var sel_act_status_tp = $("#act_status_" + $(this).find("idSourcingActivities").text());
+            //$(sel_act_status_tp).reset();
             lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", $(this).find("nsbActivityStatusTp").find("idactivityStatus").text(), function () {
             })
         });
+        
         saveActivityHandler();
         //populate dropdown for activity type
         var sel_act_status_tp = $("#act_status_new");
-        lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "1", function () {
+        lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "", function () {
         });
         var sel_act_tp = $("#act_type_new");
-        lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "1", function () {
+        lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "", function () {
 
         });
     }
