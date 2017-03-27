@@ -5,6 +5,7 @@
  */
 
 $(document).ready(function () {
+    var table_result_colsize = 11;
 
     checkCredential(function () {
         console.log("credential = " + credentialID);
@@ -29,66 +30,107 @@ $(document).ready(function () {
                 var perid = $(data).find("idPerson").text();
                 if (perid == "") {
                     console.log("unique");
-                    //setTimeout(function () {
+
                     addRecord(el, function () {
                         //add to the table
                         var x = 0;
                         el.forEach(function (el, i) {
-                            if (x = table_colsize) {
+                            if (x == table_result_colsize) {
                                 return;
                             }
                             var cell = document.createElement('td');
-                            cell.innerHTML = el.value;
+                            if (x == table_result_colsize - 1) {
+                                cell.innerHTML = "Added";
+                                console.log("added");
+                            } else {
+                                cell.innerHTML = el.value;
+                                console.log("value");
+                            }
                             row.appendChild(cell);
-                            rectable.append("test");
+                            rectable.append(row);
+                            //rectable.append("test");
                             x++;
                         });
                         continueforJobMatch.insertRecord(el);
-
-                        console.log("here...........................");
                     });
-                    //}, 1000);
 
                 } else {
                     console.log("dups!!! -" + perid);
                     var tcomp = el[8].value;
                     var tjob = el[9].value;
-                    console.log(tcomp.length + "---------" + tjob.length);
                     if (tcomp != "" && tjob != "") {
-                        console.log("passedddddd");
-                        setTimeout(function () {
-                            addEndorsement(el, perid, function (data) {
-                                console.log("endorsement saved!")
+                        console.log("With endorsement data...");
 
+                        addEndorsement(el, perid, function (data) {
+                            console.log("endorsement saved!" + $(data).find("idendorsement").text())
+                            if ($(data).find("idendorsement").text() != "") {
+                                console.log("endorsement ID created!");
                                 var x = 0;
                                 el.forEach(function (el, i) {
-
-                                    if (x == table_colsize) {
+                                    
+                                    if (x == table_result_colsize) {
                                         return;
                                     }
                                     var cell = document.createElement('td');
+                                    if (x == table_result_colsize - 1) {
+                                        cell.innerHTML = "Endorsement added";
+                                        console.log("Endorsement added in cell");
+                                    } else {
+                                        cell.innerHTML = el.value;
+                                        console.log("value in x="+x);
+                                    }
+                                    
                                     cell.innerHTML = el.value;
                                     row.appendChild(cell);
                                     rectable.append(row);
                                     x++;
-                                    console.log("testing here....");
                                 });
-                            });
-                        }, 1000);
+                            } else {
+                                console.log("NO endorsement ID created!");
+                                var x = 0;
+                                el.forEach(function (el, i) {
+
+                                    if (x == table_result_colsize) {
+                                        return;
+                                    }
+                                    var cell = document.createElement('td');
+                                    if (x == table_result_colsize - 1) {
+                                        cell.innerHTML = "Unable to add endorsement.";
+                                        console.log("Unable to add endorsement.");
+                                    } else {
+                                        cell.innerHTML = el.value;
+                                        console.log("value in x="+x);
+                                    }
+                                    
+                                    cell.innerHTML = el.value;
+                                    row.appendChild(cell);
+                                    recduptable.append(row);
+                                    x++;
+                                });
+                            }
+                        });
                     } else {
-                                var x = 0;
-                                el.forEach(function (el, i) {
+                        console.log("asfadfasdfadfaf");
+                        var x = 0;
+                        el.forEach(function (el, i) {
 
-                                    if (x == table_colsize) {
-                                        return;
-                                    }
-                                    var cell = document.createElement('td');
-                                    cell.innerHTML = el.value;
-                                    row.appendChild(cell);
-                                    rectable.append(row);
-                                    x++;
-                                    console.log("testing here....");
-                                });
+                            if (x == table_result_colsize) {
+                                return;
+                            }
+                            var cell = document.createElement('td');
+                            if (x == table_result_colsize - 1) {
+                                cell.innerHTML = "Duplicated Record";
+                                console.log("added");
+                            } else {
+                                cell.innerHTML = el.value;
+                                console.log("value");
+                            }
+                            
+                            cell.innerHTML = el.value;
+                            row.appendChild(cell);
+                            recduptable.append(row);
+                            x++;
+                        });
                     }
                     duplicateRec.insertRecord(el);
 
@@ -197,13 +239,12 @@ $(document).ready(function () {
     }
 
     function addEndorsement(el, persID, callback) {
-        console.log("debugggg1");
+        console.log("addEndorsement() --->");
         var endorsement = JSON.stringify({
             companyIdclient: {idclient: el[8].value},
             personidPerson: {idPerson: persID},
             jobIdjobpk: {idjobpk: el[9].value}
         });
-        console.log("adding endorsement: " + endorsement);
         $.ajax({
             type: 'PUT',
             url: url_addCandidatesUnique,

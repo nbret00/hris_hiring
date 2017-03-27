@@ -79,6 +79,7 @@ $(document).ready(function () {
             //idSourcingActivities: working_activity_id,
             createdBy: credentialPersonID,
             updatedBy: credentialPersonID,
+            updatedByName: credentialPersonName,
             description: "Initial creation of record.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},
