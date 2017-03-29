@@ -36,6 +36,5 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/hris_hiring" object-type="user" pool-name="mysql_hris_hiring_nbret00Pool"/>
-    
--->
+    -->
 </resources>

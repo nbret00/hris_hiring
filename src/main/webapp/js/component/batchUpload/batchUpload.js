@@ -75,7 +75,7 @@ $(document).ready(function () {
             $("#section1").append(table);
             $("#section1").append(tableerr);
             $("#contBut").click(function () {
-                console.log("Continue button clisked - stringyfy-" + JSON.stringify(continueDataSheet));
+                //console.log("Continue button clisked - stringyfy-" + JSON.stringify(continueDataSheet));
 
                 $("#section1").load("htmlcomponents/batchUpload/validateUpload.html", function () {
                     $.getScript("js/component/batchUpload/validateUpload.js");

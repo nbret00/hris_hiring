@@ -7,10 +7,7 @@
 $(document).ready(function () {
     var table_result_colsize = 11;
 
-    checkCredential(function () {
-        console.log("credential = " + credentialID);
-        init();
-    });
+init();
 
     //$("#section1").find("#resultTable").remove();
     //$("#section1").find("#duplicateTable").remove();
@@ -61,9 +58,9 @@ $(document).ready(function () {
                     if (tcomp != "" && tjob != "") {
                         console.log("With endorsement data...");
 
-                        addEndorsement(el, perid, function (data) {
-                            console.log("endorsement saved!" + $(data).find("idendorsement").text())
-                            if ($(data).find("idendorsement").text() != "") {
+                        addEndorsement(el, perid, function(data) {
+                            console.log("endorsement id is!" + $(data).find("idendorsement").text());
+                            if ($(data).find("idendorsement").text() != "" || $(data).find("idendorsement").text() != undefined) {
                                 console.log("endorsement ID created!");
                                 var x = 0;
                                 el.forEach(function (el, i) {
@@ -79,8 +76,6 @@ $(document).ready(function () {
                                         cell.innerHTML = el.value;
                                         console.log("value in x="+x);
                                     }
-                                    
-                                    cell.innerHTML = el.value;
                                     row.appendChild(cell);
                                     rectable.append(row);
                                     x++;
@@ -251,6 +246,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: endorsement,
             success: function (data) {
+                console.log("added endorsement");
                 if (callback && typeof (callback) === "function") {
                     callback(data);
                 }
