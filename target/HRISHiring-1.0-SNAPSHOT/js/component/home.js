@@ -38,6 +38,7 @@ $(document).ready(function () {
 
     //load the default panel and data
     function init() {
+        $("#loginas").text(credentialPersonflname+" ("+credentialPersonID+")");
         $("#section1").load("htmlcomponents/createNewCheckDup.html", function () {
             $.getScript("js/component/createNewCheckDup.js");
         });

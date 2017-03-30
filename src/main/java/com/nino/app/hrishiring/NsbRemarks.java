@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "NsbRemarks.findByCreatedBy", query = "SELECT n FROM NsbRemarks n WHERE n.createdBy = :createdBy"),
     @NamedQuery(name = "NsbRemarks.findByCreatedDt", query = "SELECT n FROM NsbRemarks n WHERE n.createdDt = :createdDt"),
     @NamedQuery(name = "NsbRemarks.findByStatus", query = "SELECT n FROM NsbRemarks n WHERE n.status = :status"),
-    @NamedQuery(name = "NsbRemarks.findByParentId", query = "SELECT n FROM NsbRemarks n WHERE n.parentId = :parentId")})
+    @NamedQuery(name = "NsbRemarks.findByParentId", query = "SELECT n FROM NsbRemarks n WHERE n.parentId = :parentId"),
+    @NamedQuery(name = "NsbRemarks.findByCreatedByName", query = "SELECT n FROM NsbRemarks n WHERE n.createdByName = :createdByName")})
 public class NsbRemarks implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,6 +60,9 @@ public class NsbRemarks implements Serializable {
     private Integer status;
     @Column(name = "parent_id")
     private Integer parentId;
+    @Size(max = 100)
+    @Column(name = "created_by_name")
+    private String createdByName;
     @JoinColumn(name = "identity_activities", referencedColumnName = "idpersonactivities")
     @ManyToOne(optional = false)
     private NsbPersonActivities identityActivities;
@@ -116,6 +120,14 @@ public class NsbRemarks implements Serializable {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public String getCreatedByName() {
+        return createdByName;
+    }
+
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
     }
 
     public NsbPersonActivities getIdentityActivities() {

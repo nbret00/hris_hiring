@@ -38,7 +38,7 @@ $(document).ready(function () {
         height: 300,
         sorting: true,
         paging: true,
-        pageSize: 5,
+        pageSize: 20,
         filtering: true,
         pageButtonCount: 3,
         autoload: true,

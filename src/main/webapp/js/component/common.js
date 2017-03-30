@@ -31,7 +31,6 @@ var get_credential_url = url_origin + "/hris_hiring/webresources/hrisaccount/che
 var url_searchByNames = url_origin + "/hris_hiring/webresources/jobqualification/searchFirstname/";
 var url_searchByFullName = url_origin + "/hris_hiring/webresources/personProfile/searchByName/";
 
-var url_searchByNames = url_origin + "/hris_hiring/webresources/jobqualification/searchFirstname/";
 var url_addCandidates = url_origin + "/hris_hiring/webresources/endorsements/save";
 var url_addCandidatesUnique = url_origin + "/hris_hiring/webresources/endorsements/saveUnique";
 
@@ -46,8 +45,6 @@ var url_updateJob = url_origin + "/hris_hiring/webresources/jobs/update/";
 
 //Reports
 var url_get_inittemp = url_origin + "/hris_hiring/webresources/reports/allPersonActivities";
-var url_getJobsByCompany = url_origin + "/hris_hiring/webresources/jobs/bycompany/";
-
 
 var activityEntityID = null;
 
@@ -60,6 +57,7 @@ var working_person_id = "";
 var credentialID = "";
 var credentialPersonID = "";
 var credentialPersonName = "";
+var credentialPersonflname = "";
 var credential = null;
 
 var contactInfo = null;
@@ -99,6 +97,8 @@ function checkCredential(callback) {
 
                 credentialPersonID = $(data).find("credential").find("person").find("idPerson").text();
                 credentialPersonName = $(data).find("credential").find("person").find("name").text();
+                credentialPersonflname = $(data).find("credential").find("person").find("firstName").text() + " " +
+                        $(data).find("credential").find("person").find("lastName").text();
 
                 if (credentialID == "") {
                     window.location.href = url_origin + "/hris_hiring/index.html?nologin";

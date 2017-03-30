@@ -163,6 +163,7 @@ public class ActivitiesServices {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response addRemarks(NsbRemarks remarks) {
         try {
+            remarks.setCreatedDt(new Date());
             em.persist(remarks);
             em.flush();
             //System.out.println("Create new job qualification with ID: " + entity.getIdcontact());

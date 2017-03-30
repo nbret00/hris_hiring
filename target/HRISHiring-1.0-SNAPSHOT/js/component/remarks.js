@@ -42,7 +42,7 @@ $(document).ready(function () {
                 var i_remarks_dom = $(remarks_working_row).clone(true);
                 i_remarks_dom.find("#remarks_body").text($(this).find("remarks").text());
                 i_remarks_dom.find("#dt_created").text(FormatTimestamp($(this).find("createdDt").text()));
-                i_remarks_dom.find("#created_by").text($(this).find("createdBy").text());
+                i_remarks_dom.find("#created_by").text($(this).find("createdByName").text()+" ("+$(this).find("createdBy").text()+")");
                 $(remarks_working_dom).find("#remarks").append(i_remarks_dom);
             });
             $("#row_model").append(remarks_working_dom);
@@ -59,6 +59,7 @@ $(document).ready(function () {
         event.preventDefault();
         var form_data = JSON.stringify({
             createdBy: $(personProfile).find("name").text(),
+            createdByName: credentialPersonflname,
             remarks: $("#remarks_field").val(),
             identityActivities: {idpersonactivities: activityEntityID}
         });
