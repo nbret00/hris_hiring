@@ -7,6 +7,7 @@
                 <goal>clean</goal>
                 <goal>install</goal>
                 <goal>package</goal>
+                
             </goals>
         </action>
     </actions>

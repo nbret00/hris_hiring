@@ -82,6 +82,7 @@ public class EndorsementRestService {
     @Path("saveUnique")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response newEndorsementUnique(Endorsement e) {
+        String emsg = "";
         try {
             System.out.print("newEndorsementUnique");
             Company c = e.getCompanyIdclient();
@@ -100,15 +101,16 @@ public class EndorsementRestService {
                 e.setEndorsedDate(d);
                 em.persist(e);
                 em.flush();
+               
                 System.out.println("Save Endorsement: " + e.getIdendorsement());
             }
 
             return Response.ok(e).build();
         } catch (Exception em) {
             em.printStackTrace();
-            return Response.ok(em.getMessage()).build();
+            emsg = em.getLocalizedMessage();
         }
-
+        return Response.ok(emsg).build();
     }
 
 }

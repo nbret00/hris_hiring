@@ -7,135 +7,105 @@
 $(document).ready(function () {
     var table_result_colsize = 11;
 
-init();
+    var continueforJobMatch = new SimpleExcel.Sheet();
+    var duplicateRec = new SimpleExcel.Parser.CSV();
+    duplicateRec.setDelimiter(',');
+
+    init();
 
     //$("#section1").find("#resultTable").remove();
     //$("#section1").find("#duplicateTable").remove();
 
+    function withEndorsement(el) {
+        var tcomp = el[8].value;
+        var tjob = el[9].value;
+        if (tcomp != "" && tjob != "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function addRecToTable(el, msgsadd, table) {
+        var row = document.createElement('tr');
+        el.forEach(function (el, i) {
+            if (i == table_result_colsize) {
+                return;
+            }
+            var cell = document.createElement('td');
+            if (i == table_result_colsize - 1) {
+                cell.innerHTML = msgsadd;
+            } else {
+                cell.innerHTML = el.value;
+            }
+            row.appendChild(cell);
+            table.append(row);
+        });
+        //continueforJobMatch.insertRecord(el);
+    }
+
 
     function init() {
-        var continueforJobMatch = new SimpleExcel.Sheet();
-        var duplicateRec = new SimpleExcel.Sheet();
 
-        var rectable = $("#resultTable").find("#resultBody");//.cloneNode(true);
+        var rectable = $("#resultTable").find("#resultBody");
         var recduptable = $("#duplicateTable").find("#resultBody");//.cloneNode(true);
-        console.log("test 11111");
+        
+        $("#dp").text(continueDataSheet["records"].length);
+
         continueDataSheet["records"].forEach(function (el, i) {
-            var row = document.createElement('tr');
-
+            //var row = document.createElement('tr');
+            
             getPersonByName(el[0].value, function (data) {
-                var perid = $(data).find("idPerson").text();
+                var perid = $(data).find("idPerson").first().text();
                 if (perid == "") {
-                    console.log("unique");
+                    console.log("unique with endorsement: " + withEndorsement(el));
 
-                    addRecord(el, function () {
-                        //add to the table
-                        var x = 0;
-                        el.forEach(function (el, i) {
-                            if (x == table_result_colsize) {
-                                return;
-                            }
-                            var cell = document.createElement('td');
-                            if (x == table_result_colsize - 1) {
-                                cell.innerHTML = "Added";
-                                console.log("added");
-                            } else {
-                                cell.innerHTML = el.value;
-                                console.log("value");
-                            }
-                            row.appendChild(cell);
-                            rectable.append(row);
-                            //rectable.append("test");
-                            x++;
-                        });
-                        continueforJobMatch.insertRecord(el);
+                    addRecord(el, function (peridcreated) {
+                        var msgsadd = "Added Record ID=" + peridcreated;
+                        if (withEndorsement(el)) {
+                            addEndorsement(el, peridcreated, function (data) {
+
+                            });
+                        }
+                        addRecToTable(el, msgsadd, rectable);
                     });
-
                 } else {
                     console.log("dups!!! -" + perid);
-                    var tcomp = el[8].value;
-                    var tjob = el[9].value;
-                    if (tcomp != "" && tjob != "") {
+                    if (withEndorsement(el)) {
                         console.log("With endorsement data...");
-
-                        addEndorsement(el, perid, function(data) {
-                            console.log("endorsement id is!" + $(data).find("idendorsement").text());
-                            if ($(data).find("idendorsement").text() != "" || $(data).find("idendorsement").text() != undefined) {
-                                console.log("endorsement ID created!");
-                                var x = 0;
-                                el.forEach(function (el, i) {
-                                    
-                                    if (x == table_result_colsize) {
-                                        return;
-                                    }
-                                    var cell = document.createElement('td');
-                                    if (x == table_result_colsize - 1) {
-                                        cell.innerHTML = "Endorsement added";
-                                        console.log("Endorsement added in cell");
-                                    } else {
-                                        cell.innerHTML = el.value;
-                                        console.log("value in x="+x);
-                                    }
-                                    row.appendChild(cell);
-                                    rectable.append(row);
-                                    x++;
-                                });
+                        addEndorsement(el, perid, function (data) {
+                            var endorseid = $(data).find("idendorsement").text();
+                            console.log("Endorsement ID created!-" + endorseid + "-");
+                            if (endorseid != "") {
+                                addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
                             } else {
-                                console.log("NO endorsement ID created!");
-                                var x = 0;
-                                el.forEach(function (el, i) {
-
-                                    if (x == table_result_colsize) {
-                                        return;
-                                    }
-                                    var cell = document.createElement('td');
-                                    if (x == table_result_colsize - 1) {
-                                        cell.innerHTML = "Unable to add endorsement.";
-                                        console.log("Unable to add endorsement.");
-                                    } else {
-                                        cell.innerHTML = el.value;
-                                        console.log("value in x="+x);
-                                    }
-                                    
-                                    cell.innerHTML = el.value;
-                                    row.appendChild(cell);
-                                    recduptable.append(row);
-                                    x++;
-                                });
+                                console.log("NO endorsement ID created! Due to - " + $(data).text());
+                                addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
+                                duplicateRec.insertRecord(el);
                             }
                         });
                     } else {
-                        console.log("asfadfasdfadfaf");
-                        var x = 0;
-                        el.forEach(function (el, i) {
-
-                            if (x == table_result_colsize) {
-                                return;
-                            }
-                            var cell = document.createElement('td');
-                            if (x == table_result_colsize - 1) {
-                                cell.innerHTML = "Duplicated Record";
-                                console.log("added");
-                            } else {
-                                cell.innerHTML = el.value;
-                                console.log("value");
-                            }
-                            
-                            cell.innerHTML = el.value;
-                            row.appendChild(cell);
-                            recduptable.append(row);
-                            x++;
-                        });
+                        addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
+                        duplicateRec.insertRecord(el);
                     }
-                    duplicateRec.insertRecord(el);
+
 
                 }
             });
-
+            
+                $("#cp").text(i+1);
+           
+            
         });
 
-        //$("#tab_panel").append(table);
-        //$("#tab_panel").append(duptable);
+
+        $("#contBut").click(function () {
+            var tsvWriter = new SimpleExcel.Writer.TSV();
+            duplicateRec.setDelimiter(',');
+            tsvWriter.insertSheet(duplicateRec.getSheet(1));
+            tsvWriter.saveFile();
+        });
+
     }
 
     //change in requirement - will be doing validation by full name instead of firstname and lastname
@@ -185,13 +155,11 @@ init();
             firstName: el[1].value,
             lastName: el[2].value
         });
-        console.log("Person to add: " + JSON.stringify(uploadpersondata));
+        //console.log("Person to add: " + JSON.stringify(uploadpersondata));
 
         if (JSON.stringify(uploadpersondata).length > 0) {
             saveProfile(uploadpersondata, function (data) {
                 var pidq = $(data).find("idPerson").text();
-
-                console.log("jobqualification to add: " + JSON.stringify(jqdata));
                 var jqdataap = el[3].value + el[4].value + el[5].value;
                 if (jqdataap.length > 0) {
                     var jqdata = JSON.stringify({
@@ -204,8 +172,6 @@ init();
                         console.log("Job qualification saved!");
                     });
                 }
-
-                console.log("Contact to add: " + JSON.stringify(upload_contactdata));
                 var condataap = el[6].value + el[7].value;
                 if (condataap.length > 0) {
                     var upload_contactdata = JSON.stringify({
@@ -223,14 +189,13 @@ init();
                         if (callback && typeof (callback) === "function") {
                             //do something here from your call back function
                             //console.log("Calling the callback inside the function getActivities...")
-                            callback();
+                            callback(pidq);
                         }
                     });
                 });
 
             });
         }
-        console.log("data:" + JSON.stringify(persondata));
     }
 
     function addEndorsement(el, persID, callback) {
@@ -240,13 +205,14 @@ init();
             personidPerson: {idPerson: persID},
             jobIdjobpk: {idjobpk: el[9].value}
         });
+        console.log(endorsement);
         $.ajax({
             type: 'PUT',
             url: url_addCandidatesUnique,
             contentType: 'application/json',
             data: endorsement,
             success: function (data) {
-                console.log("added endorsement");
+                console.log("added endorsement" + $(data).toString());
                 if (callback && typeof (callback) === "function") {
                     callback(data);
                 }
@@ -262,7 +228,7 @@ init();
             //idSourcingActivities: working_activity_id,
             createdBy: credentialPersonID,
             updatedBy: credentialPersonID,
-            updatedByName: credentialPersonName,
+            updatedByName: credentialPersonflname,
             description: "Initial creation of record from batch upload.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},
@@ -275,7 +241,7 @@ init();
             contentType: 'application/json',
             data: activityData,
             success: function (data) {
-                console.log("new activity cretaed");
+                //console.log("new activity cretaed");
                 if (callback && typeof (callback) === "function") {
                     callback();
                 }

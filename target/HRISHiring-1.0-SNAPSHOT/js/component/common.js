@@ -529,7 +529,6 @@ function getGeneric(url, callback) {
                 showAlert("No record found for rec#: " + searchStr);
             } else {
                 if (callback && typeof (callback) === "function") {
-                    console.log("calling callback function from getPerson");
                     callback(data);
                 }
             }

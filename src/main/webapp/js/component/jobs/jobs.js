@@ -10,12 +10,19 @@ $(document).ready(function () {
         init();
     });
 
-    
+
 
     function init() {
-        lookupSelectValue(url_get_companies, sel_company, "company", "idclient", "companyName", "", function () {
-            console.log("Called getFramework act status");
+        getGeneric(url_get_companies, function (data) {
 
+            $(data).find("company").each(function () {
+                var opt_id = $(this).find("idclient").text();
+                var opt_text = "(" + opt_id + ") " + $(this).children("companyName").text();
+                console.log("option text: " + opt_text);
+
+                $("#sel_company").append("<option value='" + opt_id + "'>" + opt_text + "</option>");
+
+            });
             $("#sel_company").click(function () {
                 console.log("value selected : " + $(this).val());
                 updateCompanyID = $(this).val();
@@ -25,16 +32,39 @@ $(document).ready(function () {
                 });
             })
             $("#parag_company").click(function () {
-
                 $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
                     updateJobsID = "";
                     $.getScript("js/component/jobs/updateJobs.js");
                     $("#endorsement-but").text("");
                     $("#addcand-but").text("");
                 });
-
             })
-        })
+        });
+        /*
+         lookupSelectValue(url_get_companies, sel_company, "company", "idclient", "companyName", "", function () {
+         console.log("Called getFramework act status");
+         
+         $("#sel_company").click(function () {
+         console.log("value selected : " + $(this).val());
+         updateCompanyID = $(this).val();
+         updateCompanyName = $(this).text();
+         $("#parag_company").text("Create Job for the selected company");
+         $("#jsGrid").jsGrid("loadData").done(function () {
+         });
+         })
+         
+         $("#parag_company").click(function () {
+         
+         $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
+         updateJobsID = "";
+         $.getScript("js/component/jobs/updateJobs.js");
+         $("#endorsement-but").text("");
+         $("#addcand-but").text("");
+         });
+         
+         })
+         })
+         */
     }
 
     $("#jsGrid").jsGrid({

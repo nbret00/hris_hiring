@@ -33,7 +33,6 @@ public class NewJaxRsFilter implements ContainerResponseFilter {
             if (!contentType.contains("charset")) {
                 contentType = contentType + ";charset=utf-8";
                 responseContext.getHeaders().putSingle("Content-Type", contentType);
-                System.out.println("Charset test: " + contentType);
             }
         }
     }

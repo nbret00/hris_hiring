@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 
-var continueDataSheet;
+var continueDataSheet = new SimpleExcel.Sheet();
 var table_colsize = 10;
 
 $(document).ready(function () {
 
     console.log("batch upload");
+
+document.getElementById('fform').reset();
 
     var Cell = SimpleExcel.Cell;
 
@@ -22,16 +24,18 @@ $(document).ready(function () {
     //$("#batchUpload").click(function (e) {
     var fileInputCSV = document.getElementById('batchUpload');
     fileInputCSV.addEventListener('change', function (e) {
-
+        
         var file = e.target.files[0];
         var csvParser = new SimpleExcel.Parser.CSV();
         csvParser.setDelimiter(',');
-
+        
         csvParser.loadFile(file, function () {
-            
-            continueDataSheet = new SimpleExcel.Sheet();
+           
             $(tableerr).find("#errorBody").empty();
             $(table).find("#resultBody").empty();
+            $("#fform").remove();
+            $("#flname").text(fileInputCSV.value);
+            
             
             // draw HTML table based on sheet data
             var sheet = csvParser.getSheet();

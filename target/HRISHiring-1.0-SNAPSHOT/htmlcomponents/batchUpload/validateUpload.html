@@ -2,15 +2,16 @@
 <div class="panel panel-default" id="panel">
     <div class="panel-heading">Candidate Batch Upload</div>                            
     <div class="panel-body" id="tab_panel">
-        <table class="table table-striped table-condensed" id="resultTable">
-            <caption>Click Next to continue to with validation.</caption>
-            <thead><tr><th>First Name</th><th>Last Name</th><th>Company</th><th>Job Title</th><th>Years of Exp.</th><th>Mobile #</th><th>Email</th></tr></thead>
+        <p>Processed:&nbsp;<font id="cp"></font> / <font id="dp"></font>
+        <table class="table table-striped table-condensed small-font" id="resultTable">
+            <caption>Batch upload done.</caption>
+            <thead><tr><th>Name</th><th>First Name</th><th>Last Name</th><th>Company</th><th>Job Title</th><th>Yrs. of Exp.</th><th>Mobile #</th><th>Email</th><th>Company To Endorse</th><th>Job Opening</th><th>System Log</th></tr></thead>
             <tfoot><tr><td></td></tr></tfoot>
             <tbody id="resultBody"></tbody>
         </table>           
         <table class="table table-striped table-condensed" id="duplicateTable">
-            <caption>The following records will was not part of batch upload because they match the existing record.</caption>
-            <thead><tr><th>First Name</th><th>Last Name</th><th>Company</th><th>Job Title</th><th>Years of Exp.</th><th>Mobile #</th><th>Email</th></tr></thead>
+            <caption>Batch upload process failed for the following records.</caption>
+            <thead><tr><th>Name</th><th>First Name</th><th>Last Name</th><th>Company</th><th>Job Title</th><th>Yrs. of Exp.</th><th>Mobile #</th><th>Email</th><th>Company To Endorse</th><th>Job Opening</th><th>System Log</th></tr></thead>
             <tfoot><tr><td><button type="button" class="bottom" id="contBut">Download</button></td></tr></tfoot>
             <tbody id="resultBody"></tbody>
         </table>       
