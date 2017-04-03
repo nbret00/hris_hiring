@@ -49,12 +49,12 @@ $(document).ready(function () {
 
         var rectable = $("#resultTable").find("#resultBody");
         var recduptable = $("#duplicateTable").find("#resultBody");//.cloneNode(true);
-        
-        $("#dp").text(continueDataSheet["records"].length);
 
+        $("#dp").text(continueDataSheet["records"].length);
+        var executed = 0;
         continueDataSheet["records"].forEach(function (el, i) {
             //var row = document.createElement('tr');
-            
+
             getPersonByName(el[0].value, function (data) {
                 var perid = $(data).find("idPerson").first().text();
                 if (perid == "") {
@@ -68,6 +68,7 @@ $(document).ready(function () {
                             });
                         }
                         addRecToTable(el, msgsadd, rectable);
+                        executed = executed + 1;
                     });
                 } else {
                     console.log("dups!!! -" + perid);
@@ -78,24 +79,27 @@ $(document).ready(function () {
                             console.log("Endorsement ID created!-" + endorseid + "-");
                             if (endorseid != "") {
                                 addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
+                                executed = executed + 1;
                             } else {
                                 console.log("NO endorsement ID created! Due to - " + $(data).text());
                                 addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
                                 duplicateRec.insertRecord(el);
+                                executed = executed + 1;
                             }
                         });
                     } else {
                         addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
                         duplicateRec.insertRecord(el);
+                        executed = executed + 1;
                     }
 
 
                 }
             });
-            
-                $("#cp").text(i+1);
-           
-            
+
+            $("#cp").text(executed);
+
+
         });
 
 
