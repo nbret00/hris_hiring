@@ -10,33 +10,34 @@ var table_colsize = 10;
 $(document).ready(function () {
 
     console.log("batch upload");
+    checkCredential();
 
-document.getElementById('fform').reset();
+    document.getElementById('fform').reset();
 
     var Cell = SimpleExcel.Cell;
 
     var table = document.getElementById('result').cloneNode(true);
     var tableerr = document.getElementById('errorTable').cloneNode(true);
-    
+
     $("#section1").find("#result").remove();
     $("#section1").find("#errorTable").remove();
 
     //$("#batchUpload").click(function (e) {
     var fileInputCSV = document.getElementById('batchUpload');
     fileInputCSV.addEventListener('change', function (e) {
-        
+
         var file = e.target.files[0];
         var csvParser = new SimpleExcel.Parser.CSV();
         csvParser.setDelimiter(',');
-        
+
         csvParser.loadFile(file, function () {
-           
+
             $(tableerr).find("#errorBody").empty();
             $(table).find("#resultBody").empty();
             $("#fform").remove();
             $("#flname").text(fileInputCSV.value);
-            
-            
+
+
             // draw HTML table based on sheet data
             var sheet = csvParser.getSheet();
             //console.log("raw sheet stringify " + JSON.stringify(sheet));

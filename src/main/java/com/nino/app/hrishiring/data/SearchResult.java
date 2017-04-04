@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SearchResult {
     
     private int personID;
+    private String name;
     private String firstname;
     private String lastname;
     private String company;
@@ -23,12 +24,21 @@ public class SearchResult {
     
     public SearchResult(){}
 
-    public SearchResult(int personID, String firstname, String lastname, String company, String title) {
+    public SearchResult(int personID, String name, String firstname, String lastname, String company, String title) {
         this.personID = personID;
+        this.name = name;
         this.firstname = firstname;
         this.lastname = lastname;
         this.company = company;
         this.title = title;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getPersonID() {

@@ -117,8 +117,8 @@ public class JobQualificationRestService {
                     //Object o = i.next();
                     System.out.println("testing --- "+a[0]);
                     
-                    SearchResult sr = new SearchResult((int)a[0],(String)a[1],(String)a[2],"",(String)a[3]);
-                    alsearchresult.add(sr);
+                    //SearchResult sr = new SearchResult((int)a[0],(String)a[1],(String)a[2],"",(String)a[3]);
+                    //alsearchresult.add(sr);
                 }
                 
             }

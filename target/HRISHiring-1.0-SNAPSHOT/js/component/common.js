@@ -30,6 +30,7 @@ var get_credential_url = url_origin + "/hris_hiring/webresources/hrisaccount/che
 //searches
 var url_searchByNames = url_origin + "/hris_hiring/webresources/jobqualification/searchFirstname/";
 var url_searchByFullName = url_origin + "/hris_hiring/webresources/personProfile/searchByName/";
+var url_searchByPersonNames = url_origin + "/hris_hiring/webresources/personProfile/searchByNames";
 
 var url_addCandidates = url_origin + "/hris_hiring/webresources/endorsements/save";
 var url_addCandidatesUnique = url_origin + "/hris_hiring/webresources/endorsements/saveUnique";
@@ -315,8 +316,6 @@ function getActivities(callback) {
                 activities = data;
             }
             if (callback && typeof (callback) === "function") {
-                //do something here from your call back function
-                //console.log("Calling the callback inside the function getActivities...")
                 callback(data);
             }
         },
@@ -325,7 +324,26 @@ function getActivities(callback) {
         }
     });
 }
-;
+
+
+function searchByPersonNames(person, callback) {
+    $.ajax({
+        type: 'POST',
+        url: url_searchByPersonNames,
+        contentType: 'application/json',
+        data: person,
+        //dataType: 'json',
+        success: function (data) {
+            //console.log("Success on search by person");
+            if (callback && typeof (callback) === "function") {
+                callback(data);
+            }
+        },
+        error: function (jqXHR, status) {
+            showAlert("Application Error Found: " + status);
+        }
+    });
+}
 
 function getJobQualificationByPersonID(callback) {
     $.ajax({
@@ -639,3 +657,42 @@ function activatePill(pillid) {
     $("#" + pillid).addClass("active");
 }
 
+
+// Changes XML to JSON
+function xmlToJson(xml) {
+	
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};

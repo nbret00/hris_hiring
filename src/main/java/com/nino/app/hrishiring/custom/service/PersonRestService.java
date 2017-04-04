@@ -7,7 +7,9 @@ package com.nino.app.hrishiring.custom.service;
 
 import com.nino.app.hrishiring.NsbPersonActivities;
 import com.nino.app.hrishiring.Person;
+import com.nino.app.hrishiring.data.SearchResult;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -19,6 +21,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -48,8 +51,8 @@ public class PersonRestService {
             //person.setDateOfBirth(dt.parse);
             em.persist(person);
             em.flush();
-            System.out.println("Person created ID:"+person.getIdPerson());
-            
+            System.out.println("Person created ID:" + person.getIdPerson());
+
             NsbPersonActivities ent = new NsbPersonActivities();
             //ent.setEntityName("person");
             //ent.setEntityId(person.getIdPerson());
@@ -63,44 +66,100 @@ public class PersonRestService {
         }
 
     }
-    
-    @GET
+
+    @POST
     @Path("searchByNames")
     @Consumes({MediaType.APPLICATION_JSON})
-    public List<Person> searchByNames(
+    public Response searchByNames(
             Person p
     ) {
-        List personres = null;
+        
+        //Response response;
         try {
-            String sq = "SELECT p FROM Person p WHERE ";
-            System.out.println("searchByNames sql: "+p.getFirstName());
-            if(p.getFirstName()!=""){
-                sq = sq + "p.firstName LIKE :firstName ";
-            }
-            System.out.println("searchByNames sql--: "+p.getLastName());
-            if(p.getLastName()!=""){
-                sq = sq + "OR p.lastName LIKE :lastName ";
-            }
-            System.out.println("searchByNames sql: "+sq);
-            Query q = em.createQuery(sq);
+            List personres = new ArrayList();
+            
+            String query = "SELECT p.idPerson, p.Name, p.FirstName, p.LastName, jq.company, jq.JobTitle "
+                    + "FROM hris_hiring.job_qualification jq right join hris_hiring.person p on p.idPerson = jq.person_id "
+                    + "where ";
+            
+           if (p.getName() != "") {
+                query = query + "p.Name LIKE \"%"+p.getName()+"%\"";
+            } else {
+                //System.out.println("searchByNames sql: " + p.getFirstName());
+                boolean addAND = false;
+                if (p.getFirstName() != "") {
+                    query = query + "p.firstName LIKE \""+p.getFirstName()+"%\"";
+                    addAND = true;
+                }
+                //System.out.println("searchByNames sql--: " + p.getLastName());
+                if (p.getLastName() != "") {
+                    if (addAND){
+                        query = query + " AND ";
+                    }
+                    query = query + "p.lastName LIKE \""+p.getLastName()+"%\"";
+                }
+            }            
+            System.out.println("searchByNames sql: " + query);
+            
+            List<Object[]> jq = em.createNativeQuery(query)
+                    //.setParameter("personIds", "(" + ids + ")")
+                    .getResultList();
 
-            if(p.getFirstName()!=""){
-                q.setParameter("firstName", "%"+p.getFirstName()+"%");
+            System.out.println("Job qualification #:" + jq.size());
+
+            //ArrayList alsearchresult = new ArrayList();
+            //Iterator i = jq.iterator();
+            //while (i.hasNext()) {
+            for (Object[] a : jq) {
+                //Object o = i.next();
+                //System.out.println("testing --- " + a[0]);
+
+                SearchResult sr = new SearchResult((int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5]);
+                personres.add(sr);
             }
-            if(p.getLastName()!=""){
-                q.setParameter("lastName", "%"+p.getLastName()+"%");
+/*
+            String sq = "SELECT p FROM Person p WHERE ";
+            Query q;
+            if (p.getName() != "") {
+                sq = sq + "p.name LIKE :name ";
+                q = em.createQuery(sq);
+                q.setParameter("name", "%" + p.getName() + "%");
+            } else {
+                //System.out.println("searchByNames sql: " + p.getFirstName());
+                if (p.getFirstName() != "") {
+                    sq = sq + "p.firstName LIKE :firstName ";
+                }
+                //System.out.println("searchByNames sql--: " + p.getLastName());
+                if (p.getLastName() != "") {
+                    sq = sq + "AND p.lastName LIKE :lastName ";
+                }
+                q = em.createQuery(sq);
+                if (p.getFirstName() != "") {
+                    q.setParameter("firstName", p.getFirstName() + "%");
+                }
+                if (p.getLastName() != "") {
+                    q.setParameter("lastName", p.getLastName() + "%");
+                }
             }
+            System.out.println("searchByNames sql: " + sq);
+
             personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
-            return personres;
+*/
+            List<SearchResult> list = personres;
+            GenericEntity<List<SearchResult>> entity = new GenericEntity<List<SearchResult>>(list) {
+            };
+            //response = Response.ok(entity).build();
+
+            System.out.println("Num of results: " + personres.size());
+            return Response.ok(entity).build();
         } catch (Exception e) {
             e.printStackTrace();
-            return personres;
+            return Response.ok("notok").build();
         }
-        
-    }    
-    
-        @GET
+
+    }
+
+    @GET
     @Path("searchByLastname/{lname}")
     @Consumes({MediaType.APPLICATION_JSON})
     public List<Person> searchByLastname(@PathParam("lname") String lname
@@ -109,20 +168,20 @@ public class PersonRestService {
         try {
             String sq = "SELECT p FROM Person p WHERE ";
             //if(null != person.getFirstName()){
-                sq = sq + "p.lastName LIKE :lastName";
+            sq = sq + "p.lastName LIKE :lastName";
             //}
             Query q = em.createQuery(sq);
-            q.setParameter("lastName", "%"+lname+"%");
-            
+            q.setParameter("lastName", "%" + lname + "%");
+
             personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
+            System.out.println("Num of results: " + personres.size());
             return personres;
         } catch (Exception e) {
             e.printStackTrace();
             return personres;
         }
-    }    
- 
+    }
+
     @GET
     @Path("searchByName/{name}")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -132,26 +191,26 @@ public class PersonRestService {
         try {
             String sq = "SELECT p FROM Person p WHERE ";
             //if(null != person.getFirstName()){
-                sq = sq + "p.name LIKE :name";
+            sq = sq + "p.name LIKE :name";
             //}
             Query q = em.createQuery(sq);
-            q.setParameter("name", "%"+name+"%");
-            
+            q.setParameter("name", "%" + name + "%");
+
             personres = q.getResultList();
-            System.out.println("Num of results: "+personres.size());
+            System.out.println("Num of results: " + personres.size());
             return personres;
         } catch (Exception e) {
             e.printStackTrace();
             return personres;
         }
-    }    
-    
+    }
+
     @GET
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Person get(@PathParam("id") String id
-    ){
+    ) {
         return em.find(Person.class, id);
-    } 
-    
+    }
+
 }

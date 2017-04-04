@@ -50,6 +50,7 @@ com\nino\app\hrishiring\JobQualification_.class
 com\nino\app\hrishiring\NsbActivityTp_.class
 com\nino\app\hrishiring\custom\service\JobQualificationRestService.class
 com\nino\app\hrishiring\custom\service\AccountRESTService.class
+com\nino\app\hrishiring\custom\service\PersonRestService$1.class
 com\nino\app\hrishiring\service\ApplicationConfig.class
 com\nino\app\hrishiring\NsbActivityDoc_.class
 com\nino\app\hrishiring\NsbPersonActivities.class

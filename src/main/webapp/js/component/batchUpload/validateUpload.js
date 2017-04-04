@@ -5,6 +5,9 @@
  */
 
 $(document).ready(function () {
+    
+    checkCredential();
+    
     var table_result_colsize = 11;
 
     var continueforJobMatch = new SimpleExcel.Sheet();
@@ -51,56 +54,60 @@ $(document).ready(function () {
         var recduptable = $("#duplicateTable").find("#resultBody");//.cloneNode(true);
 
         $("#dp").text(continueDataSheet["records"].length);
-        var executed = 0;
+
+
+
         continueDataSheet["records"].forEach(function (el, i) {
-            //var row = document.createElement('tr');
 
-            getPersonByName(el[0].value, function (data) {
-                var perid = $(data).find("idPerson").first().text();
-                if (perid == "") {
-                    console.log("unique with endorsement: " + withEndorsement(el));
+            setTimeout(function () {
 
-                    addRecord(el, function (peridcreated) {
-                        var msgsadd = "Added Record ID=" + peridcreated;
-                        if (withEndorsement(el)) {
-                            addEndorsement(el, peridcreated, function (data) {
+                getPersonByName(el[0].value, function (data) {
+                    var perid = $(data).find("idPerson").first().text();
+                    if (perid == "") {
+                        console.log("unique with endorsement: " + withEndorsement(el));
 
-                            });
-                        }
-                        addRecToTable(el, msgsadd, rectable);
-                        executed = executed + 1;
-                    });
-                } else {
-                    console.log("dups!!! -" + perid);
-                    if (withEndorsement(el)) {
-                        console.log("With endorsement data...");
-                        addEndorsement(el, perid, function (data) {
-                            var endorseid = $(data).find("idendorsement").text();
-                            console.log("Endorsement ID created!-" + endorseid + "-");
-                            if (endorseid != "") {
-                                addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
-                                executed = executed + 1;
-                            } else {
-                                console.log("NO endorsement ID created! Due to - " + $(data).text());
-                                addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
-                                duplicateRec.insertRecord(el);
-                                executed = executed + 1;
+                        addRecord(el, function (peridcreated) {
+                            var msgsadd = "Added Record ID=" + peridcreated;
+                            if (withEndorsement(el)) {
+                                addEndorsement(el, peridcreated, function (data) {
+
+                                });
                             }
+                            addRecToTable(el, msgsadd, rectable);
+
                         });
                     } else {
-                        addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
-                        duplicateRec.insertRecord(el);
-                        executed = executed + 1;
+                        console.log("dups!!! -" + perid);
+                        if (withEndorsement(el)) {
+                            console.log("With endorsement data...");
+                            addEndorsement(el, perid, function (data) {
+                                var endorseid = $(data).find("idendorsement").text();
+                                console.log("Endorsement ID created!-" + endorseid + "-");
+                                if (endorseid != "") {
+                                    addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
+
+                                } else {
+                                    console.log("NO endorsement ID created! Due to - " + $(data).text());
+                                    addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
+                                    duplicateRec.insertRecord(el);
+
+                                }
+                            });
+                        } else {
+                            addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
+                            duplicateRec.insertRecord(el);
+
+                        }
+
+
                     }
+                });
 
-
-                }
-            });
-
-            $("#cp").text(executed);
-
+                $("#cp").text(i + 1);
+            }, 2000, i, el);
 
         });
+        //
 
 
         $("#contBut").click(function () {
