@@ -36,6 +36,7 @@ var url_addCandidates = url_origin + "/hris_hiring/webresources/endorsements/sav
 var url_addCandidatesUnique = url_origin + "/hris_hiring/webresources/endorsements/saveUnique";
 
 var url_getEndorsement = url_origin + "/hris_hiring/webresources/endorsements/";
+url_get_endorsementbyperson = url_origin + "/hris_hiring/webresources/endorsements/byperson/";
 
 //jobss
 var url_get_companies = url_origin + "/hris_hiring/webresources/com.nino.app.hrishiring.service.company";

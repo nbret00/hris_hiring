@@ -57,6 +57,22 @@ public class EndorsementRestService {
         System.out.println("acc size: " + acc.size());
         return acc;
     }
+    
+        @GET
+    @Path("byperson/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Endorsement> getEndorsementByPersonID(@PathParam("id") int id) {
+
+        Person p = new Person();
+        p.setIdPerson(id);
+       
+        List<Endorsement> acc = (List<Endorsement>) em.createQuery("SELECT e FROM Endorsement e WHERE e.personidPerson = :personidPerson")
+                .setParameter("personidPerson", p)
+                .getResultList();
+
+        System.out.println("acc size: " + acc.size());
+        return acc;
+    }
 
     @PUT
     @Path("save")

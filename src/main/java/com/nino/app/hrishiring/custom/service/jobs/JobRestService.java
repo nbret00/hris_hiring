@@ -34,21 +34,22 @@ public class JobRestService {
 
     public JobRestService() {
     }
-    
+
     @GET
     @Path("bycompany/{companyid}")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Job> byCompany(@PathParam("companyid") int comapanyid){
-        
+    public List<Job> byCompany(@PathParam("companyid") int comapanyid) {
+
         Company c = em.find(Company.class, comapanyid);
-        
+
         List<Job> jl = em.createQuery("SELECT j FROM Job j WHERE j.companyIdclient = :companyIdclient")
                 .setParameter("companyIdclient", c)
                 .getResultList();
-        
+
         return jl;
     }
-    
+
+
     @POST
     @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -64,12 +65,12 @@ public class JobRestService {
             return Response.ok(e.getMessage()).build();
         }
 
-    }    
-    
+    }
+
     @POST
     @Path("update/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response update(@PathParam("id") Integer id,Job job) {
+    public Response update(@PathParam("id") Integer id, Job job) {
         try {
             //System.out.println("createNew " + jobqualification.getJobTitle());
             job.setIdjobpk(id);
@@ -113,13 +114,13 @@ public class JobRestService {
                 TypedQuery<Job> query
                         = em.createNamedQuery("Job.findAll", Job.class);
                 List<Job> results = query.getResultList();
-                System.out.println("Size: "+results.size());
+                System.out.println("Size: " + results.size());
                 return results;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-     
+
         }
         return null;
 

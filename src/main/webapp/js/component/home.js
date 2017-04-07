@@ -25,7 +25,6 @@ $(document).ready(function () {
 
     checkCredential(function () {
         var recid = GetURLParameter("recid");
-        console.log("person id = " + recid);
         if (recid !== undefined) {
             getPersonalProfile(recid, function () {
                 initWithProfile();
@@ -91,27 +90,21 @@ $(document).ready(function () {
         }
         ;
     });
-    //handlers
-    /* to remove
-     function initQuickPage(id) {
-     //if id not set
-     alert("initQuickPage");
-     if (id == "") {
-     //set buttom to add
-     alert("no id");
-     $("#quickpage_button").value = 'Add New';
-     } else {
-     alert("id found");
-     //load the data from service, set buttom to update  
-     $("#quickpage_button").value = 'Update';
-     }
-     }
-     */
+
 //------------------------------------General Info
     $("#generalinfopage").on("click", function (e) {
         $("#panel").remove();
         $("#section1").load("htmlcomponents/generalInformation.html", function () {
             $.getScript("js/component/generalInformation.js");
+        });
+    });
+    
+//------------------------------------Job match
+    $("#jobmatch").on("click", function (e) {
+        console.log("test1111");
+        $("#panel").remove();
+        $("#section1").load("htmlcomponents/candjobmatch/candjobsmatch.html", function () {
+            $.getScript("js/component/candjobmatch/candjobsmatch.js");
         });
     });
 //----------------------------------------------------- Person Profile
