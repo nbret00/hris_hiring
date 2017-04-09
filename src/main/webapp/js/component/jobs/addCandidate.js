@@ -46,27 +46,17 @@ $(document).ready(function () {
                     personidPerson: {idPerson: $(this).val()},
                     jobIdjobpk: {idjobpk: updateJobsID}
                 })
-                $.ajax({
-                    type: 'PUT',
-                    url: url_addCandidates,
-                    contentType: 'application/json',
-                    data: endorsement,
-                    success: function (data) {
-                        showAlert("Candidate has been added to this job opening.");
-                        $(document).find("#searchResultSelCan").empty();
-                    },
-                    error: function () {
-                        showAlert("Application Error! Please contact system admin.");
-                    }
-                });
 
-                //console.log("end: " + endorsement);
+                addEndorsement(endorsement, function () {
+                    showAlert("Candidate has been added to this job opening.");
+                    $(document).find("#searchResultSelCan").empty();
+                })
+
             } else {
                 console.log("this is false");
             }
         }
     })
-
 
 
     $("#searchNamesForm").submit(function (event) {

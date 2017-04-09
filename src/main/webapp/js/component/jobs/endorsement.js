@@ -38,8 +38,7 @@ $(document).ready(function () {
             var srow = this.rowByItem(args.item);
             console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
-            
-            
+        
         },
         fields: [
             {title: 'Rec #', name: 'personidPerson.idPerson', width: 20, key: true},

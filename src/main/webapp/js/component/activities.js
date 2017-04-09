@@ -12,12 +12,13 @@ $(document).ready(function () {
     var activity_row = document.getElementById("activityRow").cloneNode(true);
 
     $(activity_container_row).find("#activityRow").remove();
+    
     showLoaderActivities();
     init();
 
 
     function init() {
-
+        
         document.getElementById("activityform").reset();
         $("#activities-container-row").remove();
 
@@ -107,9 +108,11 @@ $(document).ready(function () {
         saveActivityHandler();
         //populate dropdown for activity type
         var sel_act_status_tp = $("#act_status_new");
+        $("#act_status_new").children().remove();
         lookupSelectValue(get_activity_status_tp, sel_act_status_tp, "nsbActivityStatusTp", "idactivityStatus", "name", "", function () {
         });
         var sel_act_tp = $("#act_type_new");
+        $("#act_type_new").children().remove();
         lookupSelectValue(get_activity_tp, sel_act_tp, "nsbActivityTp", "idActivityTp", "name", "", function () {
 
         });

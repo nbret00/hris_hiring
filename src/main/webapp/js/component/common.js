@@ -19,7 +19,7 @@ var get_activities_url = url_origin + "/hris_hiring/webresources/activities/act/
 var get_activity_status_tp = url_origin + "/hris_hiring/webresources/nsbactivitystatustp";
 var get_activity_tp = url_origin + "/hris_hiring/webresources/nsbactivitytp";
 var save_activities_url = url_origin + "/hris_hiring/webresources/activities/save";
-var update_activities_url = url_origin + "/hris_hiring/webresources/activities/";//put
+var update_activities_url = url_origin + "/hris_hiring/webresources/activities/update";//put
 var get_activityEntity_url = url_origin + "/hris_hiring/webresources/activities/activityEntity/";
 
 var get_remarks_url = url_origin + "/hris_hiring/webresources/activities/remarksByPerson/";
@@ -144,13 +144,13 @@ function lookupSelectValue(url, selinput, objname, opt_id_dom, name_dom, active_
                         $(selinput).append("<option value='" + opt_id + "'>" + opt_text + "</option>");
                     }
                 });
-                
+
                 if (callback && typeof (callback) === "function") {
                     //do something here from your call back function
                     //console.log("Calling the callback inside the function getActivities...")
                     callback(data);
                 }
-                
+
             }
         },
         error: function (jqXHR, status) {
@@ -276,7 +276,7 @@ function updateProfile(profileData, callback) {
 function updateActivity(activityData, callback) {
     $.ajax({
         type: 'PUT',
-        url: update_activities_url + working_person_id,
+        url: update_activities_url,
         contentType: 'application/json',
         data: activityData,
         success: function (data) {
@@ -287,6 +287,25 @@ function updateActivity(activityData, callback) {
         },
         error: function () {
             alert("Application Error!");
+        }
+    });
+}
+
+function addEndorsement(endorsementdata, callback) {
+    $.ajax({
+        type: 'PUT',
+        url: url_addCandidates,
+        contentType: 'application/json',
+        data: endorsementdata,
+        success: function (data) {
+            if (callback && typeof (callback) === "function") {
+                //do something here from your call back function
+                //console.log("Calling the callback inside the function getActivities...")
+                callback(data);
+            }
+        },
+        error: function () {
+            showAlert("Application Error! Please contact system admin.");
         }
     });
 }
@@ -661,39 +680,40 @@ function activatePill(pillid) {
 
 // Changes XML to JSON
 function xmlToJson(xml) {
-	
-	// Create the return object
-	var obj = {};
 
-	if (xml.nodeType == 1) { // element
-		// do attributes
-		if (xml.attributes.length > 0) {
-		obj["@attributes"] = {};
-			for (var j = 0; j < xml.attributes.length; j++) {
-				var attribute = xml.attributes.item(j);
-				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-			}
-		}
-	} else if (xml.nodeType == 3) { // text
-		obj = xml.nodeValue;
-	}
+    // Create the return object
+    var obj = {};
 
-	// do children
-	if (xml.hasChildNodes()) {
-		for(var i = 0; i < xml.childNodes.length; i++) {
-			var item = xml.childNodes.item(i);
-			var nodeName = item.nodeName;
-			if (typeof(obj[nodeName]) == "undefined") {
-				obj[nodeName] = xmlToJson(item);
-			} else {
-				if (typeof(obj[nodeName].push) == "undefined") {
-					var old = obj[nodeName];
-					obj[nodeName] = [];
-					obj[nodeName].push(old);
-				}
-				obj[nodeName].push(xmlToJson(item));
-			}
-		}
-	}
-	return obj;
-};
+    if (xml.nodeType == 1) { // element
+        // do attributes
+        if (xml.attributes.length > 0) {
+            obj["@attributes"] = {};
+            for (var j = 0; j < xml.attributes.length; j++) {
+                var attribute = xml.attributes.item(j);
+                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+    } else if (xml.nodeType == 3) { // text
+        obj = xml.nodeValue;
+    }
+
+    // do children
+    if (xml.hasChildNodes()) {
+        for (var i = 0; i < xml.childNodes.length; i++) {
+            var item = xml.childNodes.item(i);
+            var nodeName = item.nodeName;
+            if (typeof (obj[nodeName]) == "undefined") {
+                obj[nodeName] = xmlToJson(item);
+            } else {
+                if (typeof (obj[nodeName].push) == "undefined") {
+                    var old = obj[nodeName];
+                    obj[nodeName] = [];
+                    obj[nodeName].push(old);
+                }
+                obj[nodeName].push(xmlToJson(item));
+            }
+        }
+    }
+    return obj;
+}
+;

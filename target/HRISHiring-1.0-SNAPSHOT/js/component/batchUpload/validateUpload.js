@@ -55,8 +55,6 @@ $(document).ready(function () {
 
         $("#dp").text(continueDataSheet["records"].length);
 
-
-
         continueDataSheet["records"].forEach(function (el, i) {
 
             setTimeout(function () {
@@ -96,10 +94,7 @@ $(document).ready(function () {
                         } else {
                             addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
                             duplicateRec.insertRecord(el);
-
                         }
-
-
                     }
                 });
 
@@ -262,8 +257,5 @@ $(document).ready(function () {
             }
         });
     }
-
-
-
 
 })

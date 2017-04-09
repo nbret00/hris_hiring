@@ -7,6 +7,7 @@ package com.nino.app.hrishiring.custom.service;
 
 import com.nino.app.hrishiring.Contact;
 import com.nino.app.hrishiring.NsbActivities;
+import com.nino.app.hrishiring.NsbActivityStatusTp;
 import com.nino.app.hrishiring.NsbPersonActivities;
 import com.nino.app.hrishiring.NsbRemarks;
 import com.nino.app.hrishiring.Person;
@@ -175,16 +176,29 @@ public class ActivitiesServices {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("update")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, NsbActivities entity) {
+    public Response edit(@PathParam("actid") Integer actid, NsbActivities entity) {
         try {
             /*Person p = new Person();
             p.setIdPerson(id);
             entity.setPersonidPerson(p);
              */
-            System.out.println("Edit for Activities :" + id);
-            em.merge(entity);
+            //NsbActivityStatusTp nast = new NsbActivityStatusTp(Integer.parseInt(entity.getNsbActivityStatusTp()));
+            
+                    
+            NsbActivities na = em.find(NsbActivities.class, entity.getIdSourcingActivities());
+            na.setNsbActivityStatusTp(entity.getNsbActivityStatusTp());
+            na.setCreatedByName(entity.getCreatedByName());
+            na.setLastUpdatedDt(new Date());
+                       
+            //na.setNsbActivityStatusTp(entity.getNsbActivityStatusTp());
+            
+
+            
+            System.out.println("Edit for Activities :" + na.getIdSourcingActivities());
+            em.merge(na);
+            
             return Response.ok(entity).build();
         } catch (Exception e) {
             e.printStackTrace();

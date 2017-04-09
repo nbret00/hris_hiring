@@ -23,11 +23,11 @@
                                 <tr id="recmodel">
                                     <td id="jobid">
                                     </td>
-                                    <td>
+                                    <td id="jcomp">
                                     </td>
-                                    <td>
+                                    <td id="jtitle">
                                     </td>
-                                    <td>
+                                    <td id="jenddate">
                                     </td>
                                     <td>
                                     </td>
@@ -35,38 +35,29 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-12">
-                        <h5>Add job match for this candidate</h5>
-                        <P>Select Company:</P>
-
-                        <select multiple class="selectpicker" id="sel_company" style="width: 425px; height: 130px;">
-                        </select>   
+                    <div class="col-md-12" id="butdiv">
+                        <button class="btn-group-sm" id="addmatchbtn">Enable Job Match Form</button>
                     </div>
-                    <div class="col-md-12">
-                        <h5>Click on the jobs to add.</h5>
-                        <div id="section1">
-                            <div id="jsGrid"></div>
+                    <div id="addMatchDiv" class="disableddiv">
+                        <div class="col-md-12">
+                            <h5>Add job match for this candidate</h5>
+                            <P>Select Company:</P>
+
+                            <select multiple class="selectpicker" id="sel_company" style="width: 425px; height: 130px;">
+                            </select>   
                         </div>
-                    </div>   
+                        <div class="col-md-12">
+                            <h5>Click on the jobs to match.</h5>
+                            <div id="section1">
+                                <div id="jsGrid"></div>
+                            </div>
+                        </div> 
+                    </div>
                 </div>
 
             </div>
 
-            <div class="col-md-12">
-                <br>
-                <div class="row" id="section2">
-                    <div class="col-md-12">
 
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12" id="rem_container"><div id="loader_section2"></div>
-
-                    </div>
-                </div>
-
-
-            </div>
 
         </div> 
 

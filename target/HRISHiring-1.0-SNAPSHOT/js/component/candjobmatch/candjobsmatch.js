@@ -9,70 +9,55 @@ $(document).ready(function () {
         console.log("credential = " + credentialID);
         init();
     });
+    var recset = $("#recmodel").clone(true);
 
+    function loadJobMatching() {
+        $("#recmodel").remove();
+        var lookup_url_get_endorsementbyperson = url_get_endorsementbyperson + working_person_id;
+        console.log("url: " + lookup_url_get_endorsementbyperson);
+        getGeneric(lookup_url_get_endorsementbyperson, function (data) {
 
+            $(data).find("endorsement").each(function () {
+                var perrecset = $(recset).clone();
+                console.log("data:" + $(this).find("jobIdjobpk").find("title").text());
+                $(perrecset).find("#jobid").text($(this).find("jobIdjobpk").find("idjobpk").text());
+                $(perrecset).find("#jcomp").text($(this).find("jobIdjobpk").find("companyIdclient").find("companyName").text());
+                $(perrecset).find("#jtitle").text($(this).find("jobIdjobpk").find("title").text());
+                $(perrecset).find("#jenddate").text(FormatTimestamp($(this).find("endorsedDate").text()));
+                $("#tbody").append(perrecset);
+            })
+
+        });
+    }
 
     function init() {
-        var lookup_url_get_endorsementbyperson = url_get_endorsementbyperson + working_person_id;
-        getGeneric(url_get_endorsementbyperson, function (data) {
-            $(data).find("endorsement").each(function(){
-                console.log("data:"+$(this).find("jobIdjobpk").find("title").text());
-            })
-            
-            
-        })
-        getGeneric(url_get_companies, function (data) {
+        loadJobMatching();
 
-            $(data).find("company").each(function () {
-                var opt_id = $(this).find("idclient").text();
-                var opt_text = "(" + opt_id + ") " + $(this).children("companyName").text();
-                console.log("option text: " + opt_text);
+        $("#addmatchbtn").click(function () {
+            $("#addMatchDiv").removeClass("disableddiv");
+            getGeneric(url_get_companies, function (data) {
+                $(data).find("company").each(function () {
+                    var opt_id = $(this).find("idclient").text();
+                    var opt_text = "(" + opt_id + ") " + $(this).children("companyName").text();
+                    console.log("option text: " + opt_text);
 
-                $("#sel_company").append("<option value='" + opt_id + "'>" + opt_text + "</option>");
+                    $("#sel_company").append("<option value='" + opt_id + "'>" + opt_text + "</option>");
 
+                });
+                $("#sel_company").click(function () {
+                    console.log("value selected : " + $(this).val());
+                    updateCompanyID = $(this).val();
+                    updateCompanyName = $(this).text();
+                    $("#jsGrid").jsGrid("loadData").done(function () {
+                    });
+                })
+                $("#butdiv").addClass("disableddiv");
             });
-            $("#sel_company").click(function () {
-                console.log("value selected : " + $(this).val());
-                updateCompanyID = $(this).val();
-                updateCompanyName = $(this).text();
-                $("#parag_company").text("Create Job for the selected company");
-                $("#jsGrid").jsGrid("loadData").done(function () {
-                });
-            })
-            $("#parag_company").click(function () {
-                $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-                    updateJobsID = "";
-                    $.getScript("js/component/jobs/updateJobs.js");
-                    $("#endorsement-but").text("");
-                    $("#addcand-but").text("");
-                });
-            })
         });
-        /*
-         lookupSelectValue(url_get_companies, sel_company, "company", "idclient", "companyName", "", function () {
-         console.log("Called getFramework act status");
-         
-         $("#sel_company").click(function () {
-         console.log("value selected : " + $(this).val());
-         updateCompanyID = $(this).val();
-         updateCompanyName = $(this).text();
-         $("#parag_company").text("Create Job for the selected company");
-         $("#jsGrid").jsGrid("loadData").done(function () {
-         });
-         })
-         
-         $("#parag_company").click(function () {
-         
-         $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-         updateJobsID = "";
-         $.getScript("js/component/jobs/updateJobs.js");
-         $("#endorsement-but").text("");
-         $("#addcand-but").text("");
-         });
-         
-         })
-         })
-         */
+
+
+
+
     }
 
     $("#jsGrid").jsGrid({
@@ -97,12 +82,24 @@ $(document).ready(function () {
         rowClick: function (args) {
             //var srow = this.rowByItem(args.item);
             //$(srow).addClass("selected-row");
-
             console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
-            $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-                $.getScript("js/component/jobs/updateJobs.js");
-            });
+            var r = confirm("Click OK to continue adding job match - " + args.item.title);
+            if (r) {
+                var endorsement = JSON.stringify({
+                    companyIdclient: {idclient: updateCompanyID},
+                    personidPerson: {idPerson: working_person_id},
+                    jobIdjobpk: {idjobpk: updateJobsID}
+                })
+                addEndorsement(endorsement, function () {
+                    showAlert("Job match successfully added.");
+                    $("#panel").remove();
+                    $("#section1").load("htmlcomponents/candjobmatch/candjobsmatch.html", function () {
+                        $.getScript("js/component/candjobmatch/candjobsmatch.js");
+                    });
+                })
+            }
+
 
         },
         fields: [
@@ -112,6 +109,7 @@ $(document).ready(function () {
             {title: 'Closing Date', name: 'closingDate', type: 'text', width: 50},
         ]
     });
+
 })
 
 
