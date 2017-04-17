@@ -110,8 +110,21 @@ public class EndorsementRestService {
                     .setParameter("jobIdjobpk", j)
                     .setParameter("personidPerson", p)
                     .getResultList();
-
-            if (acc.isEmpty()) {
+            
+            Company ic = em.find(Company.class, c.getIdclient());
+            if (null == ic.getIdclient()){
+                System.out.println("Company does not exist");
+                return Response.ok(e).build();//just return without ID
+            }
+            
+            Job ij = em.find(Job.class, j.getIdjobpk());
+            if (null == ij.getIdjobpk()){
+                System.out.println("Job does not exist");
+                return Response.ok(e).build();//just return without ID
+            }
+            
+            System.out.println("acc+"+acc.size());
+            if (acc.size() == 0) {
                 e.setStatus("Matched");
                 Date d = new Date();
                 e.setEndorsedDate(d);
@@ -120,13 +133,13 @@ public class EndorsementRestService {
                
                 System.out.println("Save Endorsement: " + e.getIdendorsement());
             }
-
+            //will return no pk id if not created
             return Response.ok(e).build();
         } catch (Exception em) {
             em.printStackTrace();
-            emsg = em.getLocalizedMessage();
+            System.out.println("responding okayyy");
+            return Response.ok(e).build();
         }
-        return Response.ok(emsg).build();
     }
 
 }

@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+checkCredential(function () {
+    console.log("Credential checked! " + credentialID);
+});
 
 $(document).ready(function () {
-    
-    checkCredential();
-    
+
+
+
     var table_result_colsize = 11;
 
     var continueforJobMatch = new SimpleExcel.Sheet();
@@ -15,6 +18,7 @@ $(document).ready(function () {
     duplicateRec.setDelimiter(',');
 
     init();
+
 
     //$("#section1").find("#resultTable").remove();
     //$("#section1").find("#duplicateTable").remove();
@@ -31,19 +35,22 @@ $(document).ready(function () {
 
     function addRecToTable(el, msgsadd, table) {
         var row = document.createElement('tr');
+        var limit = table_result_colsize - 2;
         el.forEach(function (el, i) {
-            if (i == table_result_colsize) {
-                return;
-            }
-            var cell = document.createElement('td');
-            if (i == table_result_colsize - 1) {
-                cell.innerHTML = msgsadd;
+            if (i > limit) {
+                //console.log("limit=" + limit);
             } else {
+                var cell = document.createElement('td');
                 cell.innerHTML = el.value;
+                console.log("value: " + i + "=" + el.value)
+                row.appendChild(cell);
+                table.append(row);
             }
-            row.appendChild(cell);
-            table.append(row);
         });
+        var cell = document.createElement('td');
+        cell.innerHTML = msgsadd;
+        row.appendChild(cell);
+        table.append(row);
         //continueforJobMatch.insertRecord(el);
     }
 
@@ -56,51 +63,60 @@ $(document).ready(function () {
         $("#dp").text(continueDataSheet["records"].length);
 
         continueDataSheet["records"].forEach(function (el, i) {
-
             setTimeout(function () {
-
-                getPersonByName(el[0].value, function (data) {
-                    var perid = $(data).find("idPerson").first().text();
-                    if (perid == "") {
-                        console.log("unique with endorsement: " + withEndorsement(el));
-
-                        addRecord(el, function (peridcreated) {
-                            var msgsadd = "Added Record ID=" + peridcreated;
-                            if (withEndorsement(el)) {
-                                addEndorsement(el, peridcreated, function (data) {
-
-                                });
-                            }
-                            addRecToTable(el, msgsadd, rectable);
-
-                        });
+                batchCreate(el, function (data) {
+                    var statuscd = $(data).find("statusID").text();
+                    var syslog = $(data).find("transactionLog").text();
+                    //console.log("status ID: " + statuscd);
+                    //console.log("message: " + syslog);
+                    if (statuscd == 100) {
+                        addRecToTable(el, syslog, rectable);
                     } else {
-                        console.log("dups!!! -" + perid);
-                        if (withEndorsement(el)) {
-                            console.log("With endorsement data...");
-                            addEndorsement(el, perid, function (data) {
-                                var endorseid = $(data).find("idendorsement").text();
-                                console.log("Endorsement ID created!-" + endorseid + "-");
-                                if (endorseid != "") {
-                                    addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
-
-                                } else {
-                                    console.log("NO endorsement ID created! Due to - " + $(data).text());
-                                    addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
-                                    duplicateRec.insertRecord(el);
-
-                                }
-                            });
-                        } else {
-                            addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
-                            duplicateRec.insertRecord(el);
-                        }
+                        addRecToTable(el, syslog, recduptable);
+                        duplicateRec.insertRecord(el);
                     }
                 });
-
                 $("#cp").text(i + 1);
-            }, 2000, i, el);
-
+            }, 2000)
+            /**
+             setTimeout(function () {
+             getPersonByName(el[0].value, function (data) {
+             var perid = $(data).find("idPerson").first().text();
+             if (perid == "") {
+             console.log("unique with endorsement: " + withEndorsement(el));
+             
+             addRecord(el, function (peridcreated) {
+             var msgsadd = "Added Record ID=" + peridcreated;
+             addRecToTable(el, msgsadd, rectable);
+             
+             });
+             } else {
+             console.log("dups!!! -" + perid);
+             if (withEndorsement(el)) {
+             console.log("With endorsement data...");
+             addEndorsement(el, perid, function (data) {
+             var endorseid = $(data).find("idendorsement").text();
+             console.log("Endorsement ID created!-" + endorseid + "-");
+             if (endorseid != "") {
+             addRecToTable(el, "Dup RecID:" + perid + "; Added Endorsement (ID=" + endorseid + ")", rectable);
+             
+             } else {
+             console.log("NO endorsement ID created! Due to - " + $(data).text());
+             addRecToTable(el, "Dup Rec ID:" + perid + "; Unable to add endorsement.", recduptable);
+             duplicateRec.insertRecord(el);
+             
+             }
+             });
+             } else {
+             addRecToTable(el, "Dup Rec ID:" + perid, recduptable);
+             duplicateRec.insertRecord(el);
+             }
+             }
+             });
+             
+             $("#cp").text(i + 1);//counter
+             }, 2000, i, el);
+             **/
         });
         //
 
@@ -154,8 +170,100 @@ $(document).ready(function () {
         });
     }
 
+    function batchCreate(el, callback) {
+        console.log("hit1");
+        var batchUploadData = JSON.stringify({
+            name: el[0].value,
+            fname: el[1].value,
+            lname: el[2].value,
+            company: el[3].value,
+            jobTitle: el[4].value,
+            yrsOfExp: el[5].value,
+            mobileNum: el[6].value,
+            email: el[7].value,
+            endorsedCompanyID: el[8].value,
+            endorsedJobID: el[9].value
+        });
+        console.log("data " + batchUploadData);
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:8080/hris_hiring/webresources/batchCreate/create/" + credentialPersonName,
+            contentType: 'application/json',
+            data: batchUploadData,
+            success: function (data) {
+                if (callback && typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            error: function () {
+                console.log("ERROR ENCOUNTERED CREATING ACTIVITY");
+            }
+        });
+    }
+    function saveJobQualification1(el, pidq, callback) {
+        var jqdataap = el[3].value + el[4].value + el[5].value;
+        if (jqdataap.length > 0) {
+            var jqdata = JSON.stringify({
+                personId: {idPerson: pidq},
+                company: el[3].value,
+                jobTitle: el[4].value,
+                yrsOfExperience: el[5].value
+            });
+            saveJobQualification(jqdata, function () {
+                console.log("Job qualification saved!");
+                if (callback && typeof (callback) === "function") {
+                    callback(pidq);
+                }
+            });
+        } else {
+            if (callback && typeof (callback) === "function") {
+                callback(pidq);
+            }
+        }
+    }
+
+    function saveContact1(el, pidq, callback) {
+        var condataap = el[6].value + el[7].value;
+        if (condataap.length > 0) {
+            var upload_contactdata = JSON.stringify({
+                personidPerson: {idPerson: pidq},
+                cellphoneNum: el[6].value,
+                email: el[7].value
+            });
+            saveContact(upload_contactdata, function () {
+                console.log("Contacts successfully saved");
+                if (callback && typeof (callback) === "function") {
+                    callback();
+                }
+            });
+        } else {
+            if (callback && typeof (callback) === "function") {
+                callback();
+            }
+        }
+    }
+
+    function saveActivity1(pid, callback) {
+        console.log("saveActivity----> ");
+        getActivityEntityID1(pid, function (aeid) {
+            console.log("Fazzzz " + aeid);
+            if (aeid !== "") {
+                createActivity(aeid, function () {
+                    if (callback && typeof (callback) === "function") {
+                        callback();
+                    }
+                })
+            } else {
+                if (callback && typeof (callback) === "function") {
+                    callback();
+                }
+            }
+        });
+    }
+
     function addRecord(el, callback) {
         //continueData = continueData + el;
+        var msg = "ok";
         var uploadpersondata = JSON.stringify({
             name: el[0].value,
             firstName: el[1].value,
@@ -164,42 +272,28 @@ $(document).ready(function () {
         //console.log("Person to add: " + JSON.stringify(uploadpersondata));
 
         if (JSON.stringify(uploadpersondata).length > 0) {
+            //note: this transaction has to be managed on serverside for rollback mechanism
             saveProfile(uploadpersondata, function (data) {
                 var pidq = $(data).find("idPerson").text();
-                var jqdataap = el[3].value + el[4].value + el[5].value;
-                if (jqdataap.length > 0) {
-                    var jqdata = JSON.stringify({
-                        personId: {idPerson: pidq},
-                        company: el[3].value,
-                        jobTitle: el[4].value,
-                        yrsOfExperience: el[5].value
+                if (pidq !== "") {
+                    saveJobQualification1(el, pidq, function () {
+                        saveContact1(el, pidq, function () {
+                            console.log("------------->" + get_activityEntity_url);
+                            saveActivity1(pidq, function () {
+                                if (withEndorsement(el)) {
+                                    console.log("has endorsement!");
+                                    addEndorsement(el, pidq, function (data) {
+                                        if (callback && typeof (callback) === "function") {
+                                            callback(pidq);
+                                        }
+                                    });
+                                }
+                            });
+                        });
                     });
-                    saveJobQualification(jqdata, function () {
-                        console.log("Job qualification saved!");
-                    });
+                } else {
+                    console.log("Warning: no profile created for new candidate1");
                 }
-                var condataap = el[6].value + el[7].value;
-                if (condataap.length > 0) {
-                    var upload_contactdata = JSON.stringify({
-                        personidPerson: {idPerson: pidq},
-                        cellphoneNum: el[6].value,
-                        email: el[7].value
-                    });
-                    saveContact(upload_contactdata, function () {
-                        console.log("Contacts successfully saved");
-                    });
-                }
-                getActivityEntityID1(pidq, function (entid) {
-                    activityEntityID = entid;//need optimization
-                    createActivity(function () {
-                        if (callback && typeof (callback) === "function") {
-                            //do something here from your call back function
-                            //console.log("Calling the callback inside the function getActivities...")
-                            callback(pidq);
-                        }
-                    });
-                });
-
             });
         }
     }
@@ -229,7 +323,7 @@ $(document).ready(function () {
         });
     }
 
-    function createActivity(callback) {
+    function createActivity(aeid, callback) {
         var activityData = JSON.stringify({
             //idSourcingActivities: working_activity_id,
             createdBy: credentialPersonID,
@@ -238,7 +332,7 @@ $(document).ready(function () {
             description: "Initial creation of record from batch upload.",
             nsbActivityStatusTp: {idactivityStatus: "1"},
             nsbActivityTp: {idActivityTp: "1"},
-            nsbEntityActivities: {idpersonactivities: activityEntityID}
+            nsbEntityActivities: {idpersonactivities: aeid}
         });
 
         $.ajax({
@@ -257,5 +351,25 @@ $(document).ready(function () {
             }
         });
     }
+
+
+    function getActivityEntityID1(pid1, callback) {
+        console.log("Hit! - " + get_activityEntity_url + pid1);
+        $.ajax({
+            type: 'GET',
+            url: get_activityEntity_url + pid1,
+            success: function (data) {
+                activityEntityID = $(data).find("idpersonactivities").text();
+                console.log("activityEntityID: " + activityEntityID);
+                if (callback && typeof (callback) === "function") {
+                    callback(activityEntityID);
+                }
+            },
+            error: function (jqXHR, status) {
+                showAlert("Application Error Found: " + status);
+            }
+        });
+    }
+
 
 })

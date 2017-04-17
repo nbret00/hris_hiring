@@ -483,22 +483,6 @@ function getActivityEntityID(callback) {
     });
 }
 
-function getActivityEntityID1(pid, callback) {
-    $.ajax({
-        type: 'GET',
-        url: get_activityEntity_url + pid,
-        success: function (data) {
-            activityEntityID = $(data).find("idpersonactivities").text();
-            if (callback && typeof (callback) === "function") {
-                callback(activityEntityID);
-            }
-        },
-        error: function (jqXHR, status) {
-            showAlert("Application Error Found: " + status);
-        }
-    });
-}
-
 function getActivityRemarks(activity_id, callback) {
     console.log("URL: " + get_remarks_url + activity_id);
     $.ajax({

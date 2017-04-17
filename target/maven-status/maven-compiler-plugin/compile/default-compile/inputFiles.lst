@@ -1,6 +1,7 @@
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\EndorsementFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\jobs\JobRestService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbPersonActivities.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\BatchCreateService.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\AbstractFacade.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\JobQualification.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\custom\service\JobQualificationRestService.java
@@ -43,6 +44,7 @@ C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Stage.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Endorsement.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\IndustryLevelFacadeREST.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\service\JobQualificationFacadeREST.java
+C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\data\BatchUploadData.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\NsbActivityDoc.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Industries.java
 C:\mydev\hris_hiring\src\main\java\com\nino\app\hrishiring\Job.java

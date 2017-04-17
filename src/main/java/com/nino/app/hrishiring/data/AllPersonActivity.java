@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AllPersonActivity implements Serializable{
 
+    private String name;
     private String fname;
     private String lname;
     private String jobTitle;
@@ -28,8 +29,9 @@ public class AllPersonActivity implements Serializable{
     
     public AllPersonActivity(){}
 
-    public AllPersonActivity(int pid, String fname, String lname, String jobTitle, String company, String yrsOfExp, int activity, int activityTp, String endorsedCompany, String endorsedJob) {
+    public AllPersonActivity(int pid, String name, String fname, String lname, String jobTitle, String company, String yrsOfExp, int activity, int activityTp, String endorsedCompany, String endorsedJob) {
         this.pid = pid;
+        this.name = name;
         this.fname = fname;
         this.lname = lname;
         this.jobTitle = jobTitle;
@@ -41,33 +43,13 @@ public class AllPersonActivity implements Serializable{
         this.endorsedJob = endorsedJob;
     }
 
-    public String getEndorsedCompany() {
-        return endorsedCompany;
+    public String getName() {
+        return name;
     }
 
-    public void setEndorsedCompany(String endorsedCompany) {
-        this.endorsedCompany = endorsedCompany;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public String getEndorsedJob() {
-        return endorsedJob;
-    }
-
-    public void setEndorsedJob(String endorsedJob) {
-        this.endorsedJob = endorsedJob;
-    }
-    
-    
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
-    
-    
 
     public String getFname() {
         return fname;
@@ -109,6 +91,22 @@ public class AllPersonActivity implements Serializable{
         this.yrsOfExp = yrsOfExp;
     }
 
+    public String getEndorsedCompany() {
+        return endorsedCompany;
+    }
+
+    public void setEndorsedCompany(String endorsedCompany) {
+        this.endorsedCompany = endorsedCompany;
+    }
+
+    public String getEndorsedJob() {
+        return endorsedJob;
+    }
+
+    public void setEndorsedJob(String endorsedJob) {
+        this.endorsedJob = endorsedJob;
+    }
+
     public int getActivity() {
         return activity;
     }
@@ -117,13 +115,22 @@ public class AllPersonActivity implements Serializable{
         this.activity = activity;
     }
 
-    public int getActivtyTp() {
+    public int getActivityTp() {
         return activityTp;
     }
 
-    public void setActivtyTp(int activityTp) {
+    public void setActivityTp(int activityTp) {
         this.activityTp = activityTp;
     }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
     
     
             

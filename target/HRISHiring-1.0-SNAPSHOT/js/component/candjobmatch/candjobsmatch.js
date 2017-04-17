@@ -6,9 +6,9 @@ var updateCompanyName = "";
 $(document).ready(function () {
 
     checkCredential(function () {
-        console.log("credential = " + credentialID);
         init();
     });
+
     var recset = $("#recmodel").clone(true);
 
     function loadJobMatching() {
@@ -16,7 +16,6 @@ $(document).ready(function () {
         var lookup_url_get_endorsementbyperson = url_get_endorsementbyperson + working_person_id;
         console.log("url: " + lookup_url_get_endorsementbyperson);
         getGeneric(lookup_url_get_endorsementbyperson, function (data) {
-
             $(data).find("endorsement").each(function () {
                 var perrecset = $(recset).clone();
                 console.log("data:" + $(this).find("jobIdjobpk").find("title").text());
@@ -25,8 +24,7 @@ $(document).ready(function () {
                 $(perrecset).find("#jtitle").text($(this).find("jobIdjobpk").find("title").text());
                 $(perrecset).find("#jenddate").text(FormatTimestamp($(this).find("endorsedDate").text()));
                 $("#tbody").append(perrecset);
-            })
-
+            });
         });
     }
 
@@ -54,10 +52,6 @@ $(document).ready(function () {
                 $("#butdiv").addClass("disableddiv");
             });
         });
-
-
-
-
     }
 
     $("#jsGrid").jsGrid({

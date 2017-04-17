@@ -113,13 +113,13 @@ public class JobQualificationRestService {
                 //ArrayList alsearchresult = new ArrayList();
                 //Iterator i = jq.iterator();
                 //while (i.hasNext()) {
-                for (Object[] a : jq) {
+                //for (Object[] a : jq) {
                     //Object o = i.next();
-                    System.out.println("testing --- "+a[0]);
+                    //System.out.println("testing --- "+a[0]);
                     
                     //SearchResult sr = new SearchResult((int)a[0],(String)a[1],(String)a[2],"",(String)a[3]);
                     //alsearchresult.add(sr);
-                }
+                //}
                 
             }
 

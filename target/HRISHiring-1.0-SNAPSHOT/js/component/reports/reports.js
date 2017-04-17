@@ -35,7 +35,7 @@ $(document).ready(function () {
 
     $("#jsGridReports").jsGrid({
         width: "100%",
-        height: 300,
+        height: 500,
         sorting: true,
         paging: true,
         pageSize: 20,
@@ -81,6 +81,7 @@ $(document).ready(function () {
         },
         fields: [
             {title: 'Person #', name: 'pid', width: 30, key: true},
+            {title: 'Name', name: 'name', type: 'text', filtering: false, width: 50},
             {title: 'First name', name: 'fname', type: 'text', filtering: false, width: 50},
             {title: 'Last name', name: 'lname', type: 'text', filtering: false, width: 50},
             {title: 'Job Title', name: 'jobTitle', type: 'text', filtering: false, width: 50},

@@ -58,49 +58,28 @@ $(document).ready(function () {
         }
     })
 
-
-    $("#searchNamesForm").submit(function (event) {
+    function getSearchFormData() {
+        var person = JSON.stringify({
+            firstName: $("#FirstName").val(),
+            lastName: $("#LastName").val(),
+            name: $("#FullName").val()
+        });
+        return person;
+    }
+    
+    $("#searchNamesFormGen").submit(function (event) {
         event.preventDefault();
-        var search_url = "";
-        var form_fname = $("#FirstName").val();
-        //console.log("form_fname: " + form_fname);
-        var form_lname = $("#LastName").val();
-        //console.log("form_lname: " + form_lname);
-
-        if (form_fname != "" && form_lname == "") {
-            //console.log("search for f name");
-            search_url = url_searchByNames + $("#FirstName").val();
-        }
-        if (form_lname != "" && form_fname == "") {
-            search_url = "" + $("#LastName").val();
-            //console.log("search for l name");
-        }
-        if (form_fname != "" && form_lname != "") {
-            //console.log("search for f and l name");
-        }
-        $("#FirstName").val("");
-        $("#LastName").val("");
 
         $(document).find("#searchResultSelCan").empty();
-
         var foreachresRecCol = $(document).find("#searchResultSelCan");
-        $.ajax({
-            type: 'GET',
-            url: search_url,
-            success: function (data) {
-                console.log("data cound!!!" + $(data).find("searchResult").size());// + data.find("firstname").text());
-                if ($(data).find("searchResult").size() > 0) {
-                    $(data).find("searchResult").each(function () {
-
-                        //var option = document.createElement("option");
-                        //option.text = $(this).find("firstname").text();
-                        foreachresRecCol.append("<option value='" + $(this).find("personID").text() + "'>" + $(this).find("firstname").text() + "</option>");//add(option);
-
-                    });
-
-                } else {
+        searchByPersonNames(getSearchFormData(), function (data) {
+            if ($(data).find("searchResult").size() > 0) {
+                $(data).find("searchResult").each(function () {
+                    console.log("data");
+                    foreachresRecCol.append("<option value='" + $(this).find("personID").text() + "'>" + $(this).find("name").text() + "</option>");//add(option);
+                });
+            } else {
                     foreachresRecCol.append("<option>No result found.</option>");
-                }
             }
         });
     })

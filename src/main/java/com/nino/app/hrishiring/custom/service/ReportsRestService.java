@@ -49,8 +49,9 @@ public class ReportsRestService {
     ) {
         String query = "SELECT "
                 + "p.idPerson, "
+                + "p.Name, "
                 + "p.FirstName, "
-                + "p.FirstName, "
+                + "p.LastName, "
                 + "j.JobTitle, "
                 + "j.company, "
                 + "j.YrsOfExperience, "
@@ -110,10 +111,10 @@ public class ReportsRestService {
             //while (i.hasNext()) {
             for (Object[] a : jq) {
                 //Object o = i.next();
-                System.out.println("testing --- " + a[0]);
+                //System.out.println("testing --- " + a[0]);
 
                 AllPersonActivity sr = new AllPersonActivity(
-                        (int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (int) a[6], (int) a[7], (String) a[8], (String) a[9]);
+                        (int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5], (String) a[6], (int) a[7], (int) a[8], (String) a[9], (String) a[10]);
 
                 alsearchresult.add(sr);
             }

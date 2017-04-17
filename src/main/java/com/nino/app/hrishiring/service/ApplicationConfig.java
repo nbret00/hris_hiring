@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.nino.app.hrishiring.custom.service.AccountRESTService.class);
         resources.add(com.nino.app.hrishiring.custom.service.ActivitiesServices.class);
         resources.add(com.nino.app.hrishiring.custom.service.ApplicantRestservice.class);
+        resources.add(com.nino.app.hrishiring.custom.service.BatchCreateService.class);
         resources.add(com.nino.app.hrishiring.custom.service.ContactRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.EndorsementRestService.class);
         resources.add(com.nino.app.hrishiring.custom.service.JobQualificationRestService.class);

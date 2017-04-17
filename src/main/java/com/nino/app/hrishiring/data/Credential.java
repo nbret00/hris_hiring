@@ -6,6 +6,7 @@
 package com.nino.app.hrishiring.data;
 
 import com.nino.app.hrishiring.Person;
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author nbret00
  */
 @XmlRootElement
-public class Credential {
+public class Credential implements Serializable{
     
     private int accountID;
     private String Username;

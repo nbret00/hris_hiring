@@ -6,7 +6,7 @@ var updateCompanyName = "";
 $(document).ready(function () {
 
     checkCredential(function () {
-        console.log("credential = " + credentialID);
+        //console.log("credential = " + credentialID);
         init();
     });
 

@@ -110,6 +110,8 @@ public class AccountRESTService {
 
         return Response.ok("ok").build();
     }
+    
+    
 
     @POST
     @Consumes("application/x-www-form-urlencoded")
@@ -128,11 +130,11 @@ public class AccountRESTService {
                     .setParameter("username", u)
                     .setParameter("password", p)
                     .getResultList();
-            System.out.println("size : " + acc.size());
+            //System.out.println("size : " + acc.size());
 
             if (acc.size() > 0) {
 
-                System.out.println("data" + acc.get(0).getUsername());
+                //System.out.println("data" + acc.get(0).getUsername());
                 cred.setRole(acc.get(0).getRole());
                 cred.setUsername(acc.get(0).getUsername());
                 cred.setAccountID(acc.get(0).getIdhrisAccount().intValue());

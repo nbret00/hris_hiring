@@ -83,12 +83,12 @@ public class PersonRestService {
                     + "where ";
             
            if (p.getName() != "") {
-                query = query + "p.Name LIKE \"%"+p.getName()+"%\"";
+                query = query + "p.Name = \""+p.getName()+"\"";
             } else {
                 //System.out.println("searchByNames sql: " + p.getFirstName());
                 boolean addAND = false;
                 if (p.getFirstName() != "") {
-                    query = query + "p.firstName LIKE \""+p.getFirstName()+"%\"";
+                    query = query + "p.firstName = \""+p.getFirstName()+"\"";
                     addAND = true;
                 }
                 //System.out.println("searchByNames sql--: " + p.getLastName());
@@ -96,7 +96,7 @@ public class PersonRestService {
                     if (addAND){
                         query = query + " AND ";
                     }
-                    query = query + "p.lastName LIKE \""+p.getLastName()+"%\"";
+                    query = query + "p.lastName = \""+p.getLastName()+"\"";
                 }
             }            
             System.out.println("searchByNames sql: " + query);
@@ -117,34 +117,6 @@ public class PersonRestService {
                 SearchResult sr = new SearchResult((int) a[0], (String) a[1], (String) a[2], (String) a[3], (String) a[4], (String) a[5]);
                 personres.add(sr);
             }
-/*
-            String sq = "SELECT p FROM Person p WHERE ";
-            Query q;
-            if (p.getName() != "") {
-                sq = sq + "p.name LIKE :name ";
-                q = em.createQuery(sq);
-                q.setParameter("name", "%" + p.getName() + "%");
-            } else {
-                //System.out.println("searchByNames sql: " + p.getFirstName());
-                if (p.getFirstName() != "") {
-                    sq = sq + "p.firstName LIKE :firstName ";
-                }
-                //System.out.println("searchByNames sql--: " + p.getLastName());
-                if (p.getLastName() != "") {
-                    sq = sq + "AND p.lastName LIKE :lastName ";
-                }
-                q = em.createQuery(sq);
-                if (p.getFirstName() != "") {
-                    q.setParameter("firstName", p.getFirstName() + "%");
-                }
-                if (p.getLastName() != "") {
-                    q.setParameter("lastName", p.getLastName() + "%");
-                }
-            }
-            System.out.println("searchByNames sql: " + sq);
-
-            personres = q.getResultList();
-*/
             List<SearchResult> list = personres;
             GenericEntity<List<SearchResult>> entity = new GenericEntity<List<SearchResult>>(list) {
             };
