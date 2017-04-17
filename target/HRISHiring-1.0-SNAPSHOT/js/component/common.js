@@ -48,6 +48,8 @@ var url_updateJob = url_origin + "/hris_hiring/webresources/jobs/update/";
 //Reports
 var url_get_inittemp = url_origin + "/hris_hiring/webresources/reports/allPersonActivities";
 
+var save_createbatch_url = url_origin +"/hris_hiring/webresources/batchCreate/create/"
+
 var activityEntityID = null;
 
 var working_jobqualification_id = "";

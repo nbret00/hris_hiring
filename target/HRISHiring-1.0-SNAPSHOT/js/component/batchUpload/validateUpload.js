@@ -187,7 +187,7 @@ $(document).ready(function () {
         console.log("data " + batchUploadData);
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/hris_hiring/webresources/batchCreate/create/" + credentialPersonName,
+            url: save_createbatch_url + credentialPersonName,
             contentType: 'application/json',
             data: batchUploadData,
             success: function (data) {
