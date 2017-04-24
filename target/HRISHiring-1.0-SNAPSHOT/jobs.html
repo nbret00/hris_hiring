@@ -24,7 +24,8 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
-
+        <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+        
         <style>
             body {
                 padding-top: 50px;
@@ -74,25 +75,28 @@
 
                     <br/><div id="loader_comp"></div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <P>Select Company:</P>
-                                    
-                                        <select multiple class="selectpicker" id="sel_company" style="width: 250px; height: 100px;">
-                                        </select>   
+                        
+                        <div class="col-md-12">
+                            <strong>Select Company:</strong>
+
+                            <select multiple class="selectpicker" id="sel_company" style="width: 100%; height: 150px;">
+                            </select>   
                         </div>
-                        <div class="col-md-6">
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            
-                            <a href="#"><p id="add_newCompanyLink">Add New Company</p></a>
-                            <a href="#"><p id="parag_company"></p></a>
-                            
+                        
+                        <div class="col-md-12">
+
+                            <ul class="nav nav-pills">
+                                <li class="disabled" id="add_newCompanyLink"><a href="#">Add New Company</a></li>
+                                <li class="disabled" id="parag_company"><a href="#">Create Job</a></li>
+                            </ul>
+
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <br/>
-                            <div id="section1">
+                            <div id="section1" class="panel panel-default pad5">
+                                <strong id="jobsel">Select jobs:</strong>
                                 <div id="jsGrid"></div>
                             </div>
                         </div>                        
@@ -104,16 +108,14 @@
                     <br>
                     <div class="row" id="section2">
                         <div class="col-md-12">
-
+                            
                         </div>
                     </div>
                     <div class="row">
+                        
                         <div class="col-md-12" id="rem_container"><div id="loader_section2"></div>
-
                         </div>
                     </div>
-
-
                 </div>
 
             </div>
@@ -145,6 +147,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/bootstrap-datepicker.js"></script>
 
         <script src="js/main.js"></script>
 

@@ -1,11 +1,6 @@
 <div class="panel panel-default pad5" id="panel">
     <div class="row">
         <div class="col-md-12">
-            <ul class="nav nav-pills">
-                <li role="presentation" id="endorcement_pill"><a href="#" id="jobsum-but">Job Summary</a></li>
-                <li role="presentation" id="endorcement_pill" ><a href="#" id="endorsement-but">Matches</a></li>
-                <li role="presentation" id="endorcement_pill" class="active"><a href="#" id="addcand-but">Add Candidates</a></li>
-            </ul>
 
             <div class="row" id="alertplace-form"></div><p>
             <p id="msg">Search for candidate to endorse on this job.</p>
@@ -38,6 +33,18 @@
 
         </form>    
 
+            
+            <!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">The following records found from search.</h4>
+            </div>
+            <div class="modal-body">
+                <p>Search Result:</p>
+
             <div id="resultDivContainer">
                 <div class="row" id="searchResultDiv">
                     <div class="col-md-12">
@@ -53,6 +60,14 @@
             </div>
 
 
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
         </div>

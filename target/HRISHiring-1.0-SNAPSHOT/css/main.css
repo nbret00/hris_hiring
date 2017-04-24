@@ -3,12 +3,26 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-    .selected-row > td {
-        background-color: #c4e2ff;
-        background: #c4e2ff;
-        color: red;
-        border-color: #c4e2ff;
-    }
+
+body *
+{
+   font-size: .97em !important;
+   font-family: Arial !important;
+}
+
+label {
+    color: grey
+}
+
+.selected-row > td {
+    background:#c4e2ff;
+    border-color:#c4e2ff;
+    text-decoration: underline;
+}
+
+.sample:focus {
+    width: 500px;
+}
 
 .loader-sm {
     border: 8px solid #f3f3f3; /* Light grey */
@@ -21,12 +35,12 @@
 }
 
 .overlay_center {
-margin: auto;
-position: absolute;
-top: 50px; left: 50px;
-bottom: 50px; right: 50px;
-color: #FFF;
-z-index:5;
+    margin: auto;
+    position: absolute;
+    top: 50px; left: 50px;
+    bottom: 50px; right: 50px;
+    color: #FFF;
+    z-index:5;
 }
 
 @keyframes spin {

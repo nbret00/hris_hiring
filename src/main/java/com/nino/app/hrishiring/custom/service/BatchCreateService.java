@@ -142,6 +142,7 @@ public class BatchCreateService {
                     message = message + "Rec already exist ";
                     Person p1 = pr.get(0);//get the first
                     if (data.getEndorsedCompanyID() == 0 || data.getEndorsedJobID() == 0) {
+                        data.setStatusID(500);
                         message = message + "; Input has no endorsement.";
                     } else {
                         message = addEndorsement(data, p1, message);
@@ -152,7 +153,7 @@ public class BatchCreateService {
                         }
                     }
                     data.setTransactionLog(message);
-                    data.setStatusID(500);
+                    
                 }
             }
             System.out.println("message: " + message);

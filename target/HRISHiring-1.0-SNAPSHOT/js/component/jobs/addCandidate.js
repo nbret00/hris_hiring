@@ -78,6 +78,7 @@ $(document).ready(function () {
                     console.log("data");
                     foreachresRecCol.append("<option value='" + $(this).find("personID").text() + "'>" + $(this).find("name").text() + "</option>");//add(option);
                 });
+                $("#myModal").modal();
             } else {
                     foreachresRecCol.append("<option>No result found.</option>");
             }

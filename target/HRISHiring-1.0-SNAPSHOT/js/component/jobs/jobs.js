@@ -27,7 +27,8 @@ $(document).ready(function () {
                 console.log("value selected : " + $(this).val());
                 updateCompanyID = $(this).val();
                 updateCompanyName = $(this).text();
-                $("#parag_company").text("Create Job for the selected company");
+                //$("#parag_company").text("Create Job for the selected company");
+                $("#parag_company").removeClass("disabled");
                 $("#jsGrid").jsGrid("loadData").done(function () {
                 });
             })
@@ -68,8 +69,8 @@ $(document).ready(function () {
     }
 
     $("#jsGrid").jsGrid({
-        width: 570,
-        height: 450,
+        width: "100%",
+        height: "470",
         sorting: true,
         paging: true,
         autoload: false,
@@ -87,13 +88,20 @@ $(document).ready(function () {
             }
         },
         rowClick: function (args) {
-            //var srow = this.rowByItem(args.item);
-            //$(srow).addClass("selected-row");
+            //TODO: clicked means selected and should highlight
+            var srow = this.rowByItem(args.item);
+            //console.log("test111");
+            
+            //$(this).addClass("selected-row");
+            
+            //$(srow).removeClass();
+            $("#jsgrid,tr").removeClass();
+            $(srow).addClass("selected-row");
 
-            console.log("Test click " + args.item.idjobpk);
+            //console.log("Test click " + args.item.idjobpk);
             updateJobsID = args.item.idjobpk;
-            $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-                $.getScript("js/component/jobs/updateJobs.js");
+            $("#rem_container").load("htmlcomponents/jobs/jobdetail.html", function () {
+                $.getScript("js/component/jobs/jobdetail.js");
             });
 
         },

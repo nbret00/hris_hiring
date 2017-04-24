@@ -2,26 +2,11 @@
 
 
 $(document).ready(function () {
+    
+    checkCredential();
 
     var update_jobs_data = null;
-
-    console.log("ID: " + updateJobsID);
-    $("#endorsement-but").click(function () {
-        $("#rem_container").load("htmlcomponents/jobs/endorsement.html", function () {
-            $.getScript("js/component/jobs/endorsement.js");
-        });
-    })
-    $("#addcand-but").click(function () {
-        $("#rem_container").load("htmlcomponents/jobs/addCandidate.html", function () {
-            $.getScript("js/component/jobs/addCandidate.js");
-        });
-    })
-    $("#jobsum-but").click(function () {
-        $("#rem_container").load("htmlcomponents/jobs/updateJobs.html", function () {
-            $.getScript("js/component/jobs/updateJobs.js");
-        });
-    })
-
+    $.getScript("js/component/jobs/jobsnavbar.js");
     init();
 
     function init() {
@@ -39,6 +24,13 @@ $(document).ready(function () {
                 }
             })
         }
+
+            $('.date').datepicker({
+                //defaultViewDate: { year: 1977, month: 04, day: 25 },
+                todayBtn: "linked",
+                autoclose: true,
+                todayHighlight: true
+            });
     }
 
     function setFormData(result) {
@@ -59,11 +51,11 @@ $(document).ready(function () {
     function getFormData() {
         var fd = JSON.stringify({
             title: $("#jobtitle").val(),
-            description: $("#description_short").text(),
-            descriptionLong: $("#description_long").text(),
+            description: $("#description_short").val(),
+            descriptionLong: $("#description_long").val(),
             qualifications: $("#qualification").val(),
             responsibility: $("#targetposition").val(),
-            dateRecieved: $("#dateRecieved").val(),
+            dateRecieved: new Date($("#dateRecieved").val()),
             closingDate: $("#dateClosing").val(),
             openPosition: $("#openPosition").val(),
             status: $("#status").val(),
@@ -72,6 +64,7 @@ $(document).ready(function () {
             ptargetToMatch: $("#targetMatch").val(),
             companyIdclient: {idclient: updateCompanyID}
         });
+        console.log("form data:" + fd);
         return fd;
     }
 
@@ -105,10 +98,11 @@ $(document).ready(function () {
                 data: getFormData(),
                 success: function (data) {
                     update_jobs_data = data;
-                    setFormData(data);
-                    $("#jsGrid").jsGrid("loadData").done(function () {
-
-                    });
+                    
+                     $("#rem_container").load("htmlcomponents/jobs/jobdetail.html", function () {
+                     $.getScript("js/component/jobs/jobdetail.js");
+                     });
+                     
                 }
             })
         })

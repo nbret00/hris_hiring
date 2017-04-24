@@ -1,97 +1,108 @@
-<div class="panel panel-default pad5" id="panel">
-    
-    <ul class="nav nav-pills">
-        <li role="presentation" id="endorcement_pill" class="active"><a href="#" id="jobsum-but">Job Summary</a></li>
-        <li role="presentation" id="endorcement_pill"><a href="#" id="endorsement-but">Matches</a></li>
-        <li role="presentation" id="endorcement_pill"><a href="#" id="addcand-but">Add Candidates</a></li>
+<div class="panel panel-default" id="panel">    
+
+    <ul class="nav nav-tabs">
+        <li role="presentation" id="endorcement_pill" class="active"><a href="#">Update Job</a></li>
+        <li role="presentation" id="endorcement_pill"><a href="#" id="job-match-but">Cancel</a></li>
     </ul>
-                        
-<div class="panel-body" id="contact_panel">
-    <form class="form-horizontal" id="jobForm">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="name" class="col-sm-3 control-label input-sm">Job Title</label>
-                    <div class="col-sm-9">
-                        <input required type="text" class="form-control input-sm" id="jobtitle">
+
+    <div class="panel-body" id="contact_panel">
+        <form class="form-horizontal" id="jobForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label small">Job Title</label>
+                        <div class="col-sm-9">
+                            <input required type="text" class="form-control input-sm" id="jobtitle">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Description (Short)</label>
-                    <div class="col-sm-9">
-                        <textarea class="form-control input-sm" id="description_short"></textarea>
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Description (Short)</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control input-sm" id="description_short"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label input-sm">Description (long)</label>
-                    <div class="col-sm-9">
-                        <textarea class="form-control input-sm" id="description_long"></textarea>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label input-sm">Description (long)</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control input-sm" id="description_long"></textarea>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label for="tel" class="col-sm-3 control-label input-sm">Qualification</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="qualification">
+                        </div>
+                    </div>                                            
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label input-sm">Target Position</label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control input-sm" id="targetposition">
+                        </div>
                     </div>
-                </div> 
-                <div class="form-group">
-                    <label for="tel" class="col-sm-3 control-label input-sm">Qualification</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control input-sm" id="qualification">
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Date Received</label>
+                        <div class="col-sm-9">
+
+                            <div class="input-group date col-sm-5" id="datepicker">
+                                <input type="text" class="form-control" id="dateRecieved">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div><font style="font-size: smaller; color: gray">mm/dd/yyyy</font>
+                        </div>
                     </div>
-                </div>                                            
-                <div class="form-group">
-                    <label class="col-sm-3 control-label input-sm">Target Position</label>
-                    <div class="col-sm-4">
-                        <input type="date" class="form-control input-sm" id="targetposition">
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Closing Date</label>
+                        <div class="col-sm-9">
+                            <div class="input-group date col-sm-5" id="datepicker">
+                                <input type="text" class="form-control" id="dateClosing">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div> <font style="font-size: smaller; color: gray">mm/dd/yyyy</font>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Date Received</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control input-sm" id="dateRecieved">
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Open Position</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control input-sm" id="openPosition">
+                        </div>
+                    </div>               
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Status</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control input-sm" id="status">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Closing Date</label>
-                    <div class="col-sm-4">
-                        <input type="date" class="form-control input-sm" id="dateClosing">
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Target To Endorse</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control input-sm" id="targetEndorse">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Open Position</label>
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control input-sm" id="openPosition">
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Target To Match</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control input-sm" id="targetMatch">
+                        </div>
+                    </div>                
+                    <div class="form-group">
+                        <label for="fname" class="col-sm-3 control-label input-sm">Assigned To</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="assignedTo">
+                        </div>
+                    </div>                
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-6" id="updateJobBut">
+                            <button type="button" class="btn btn-default" id="jobBut">Update</button>
+                            <button type="button" class="btn btn-default" id="cancelBut">Cancel</button>
+                        </div>
                     </div>
-                </div>               
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Status</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control input-sm" id="status">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Target To Endorse</label>
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control input-sm" id="targetEndorse">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Target To Match</label>
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control input-sm" id="targetMatch">
-                    </div>
-                </div>                
-                <div class="form-group">
-                    <label for="fname" class="col-sm-3 control-label input-sm">Assigned To</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control input-sm" id="assignedTo">
-                    </div>
-                </div>                
-                
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10" id="updateJobBut">
-                        <button type="submit" class="btn btn-default" id="jobBut">Update</button>
-                    </div>
+
                 </div>
 
             </div>
-
-        </div>
-    </form>                             
-</div>
+        </form>                             
+    </div>
 </div>
